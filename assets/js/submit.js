@@ -1,4 +1,4 @@
-const SUBMIT_EMAIL = 'queencityconnect123@gmail.com';
+const SUBMIT_EMAIL = 'awarrierkarate183@gmail.com';
 
 let lastSubmission = null;
 
@@ -64,7 +64,13 @@ async function sendSubmissionEmail(payload) {
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok || String(data.success) === 'false') {
-    throw new Error(data.message || 'Email could not be sent.');
+    const msg = String(data.message || '');
+    if (msg.toLowerCase().includes('activation')) {
+      throw new Error(
+        'Check ' + SUBMIT_EMAIL + ' for an email from FormSubmit and click Activate Form. After that, submissions will arrive in the inbox.'
+      );
+    }
+    throw new Error(msg || 'Email could not be sent.');
   }
 }
 
@@ -150,8 +156,8 @@ async function submitForm() {
     showSuccess();
   } catch (e) {
     showSubmitError(
-      'We could not email this submission. Please try again, or send the details directly to ' +
-      SUBMIT_EMAIL + '.'
+      (e && e.message) ||
+      ('We could not email this submission. Please try again, or send the details directly to ' + SUBMIT_EMAIL + '.')
     );
     console.error('Resource email failed', e);
   } finally {
