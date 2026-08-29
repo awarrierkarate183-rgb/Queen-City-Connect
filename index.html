@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <meta name="description"
+    content="QueenCityConnect” A free community resource directory connecting Charlotte-Mecklenburg residents to food, housing, health care, and more." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QueenCityConnect — Charlotte Community Resources</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body class="dark">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Queen<span>City</span>Connect</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="hub.html">Resource Hub</a></li>
+        <li><a href="submit.html">Submit a Resource</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="hub.html" class="nav-cta">Find Resources</a>
+        <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
+          aria-label="Menu">&#9776;</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-eyebrow">Charlotte Mecklenburg County</p>
+        <h1>Every neighbor deserves <em id="typewriter">support.</em></h1>
+        <p class="hero-lead">A free, community-powered directory connecting Charlotte residents to food, housing, health
+          care, and more all in one place.</p>
+        <div class="hero-actions">
+          <a href="hub.html" class="btn-primary">Browse All Resources</a>
+          <a href="#help-now" class="btn-ghost">Get Help Now</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="assets/images/charlotte.jpg" alt="Charlotte, NC skyline" />
+        <div class="hero-photo-caption">Charlotte Mecklenburg County, NC</div>
+      </div>
+    </div>
+    <div class="scroll-indicator">&#8595;</div>
+  </section>
+
+  <!-- PHOTO BAND -->
+  <section class="photo-band">
+    <div class="photo-band-img"
+      style="background-image:url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1400&q=80')"></div>
+    <div class="photo-band-overlay"></div>
+    <div class="photo-band-content container">
+      <p class="photo-band-eyebrow">Why It Matters</p>
+      <h2>Charlotte is growing fast.<br />Our neighbors need support.</h2>
+      <p>1 in 8 Charlotte residents face food insecurity. 35% are cost-burdened by housing. Over 200,000 lack health
+        insurance. QueenCityConnect exists to connect people to the help that's already here.</p>
+      <a href="about.html" class="btn-white">Learn More About Our Mission</a>
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <section class="map-section">
+    <div class="container">
+      <div class="section-header-row">
+        <div>
+          <span class="section-eyebrow">Geography</span>
+          <h2 class="section-title">Resources Across Charlotte</h2>
+        </div>
+        <a href="hub.html">View directory &rarr;</a>
+      </div>
+      <div class="map-layout">
+        <div id="home-map"></div>
+        <div class="map-legend">
+          <h3>Categories</h3>
+          <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Food</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>Health</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Housing</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>Mental Health</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Youth</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ec4899"></span>Safety</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#6366f1"></span>Legal Aid</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#14b8a6"></span>Financial Aid</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span>Veterans</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span>Employment</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>Education</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#64748b"></span>General</div>
+          <a href="hub.html" class="btn-primary"
+            style="display:block;text-align:center;margin-top:16px;font-size:13px;padding:9px 16px">Full Directory</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="container">
+      <h2>Know a resource we&rsquo;re missing?</h2>
+      <p>Help your neighbors by adding a local organization to the directory. It takes two minutes.</p>
+      <div class="cta-band-actions">
+        <a href="submit.html" class="btn-white">Submit a Resource</a>
+        <a href="about.html" class="btn-outline-white">About This Project</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-newsletter">
+      <div class="container">
+        <div class="footer-newsletter-inner">
+          <div class="footer-newsletter-text">
+            <h2>Stay Connected</h2>
+            <p>Get updates on new Charlotte resources, community programs, and local news delivered to your inbox.</p>
+          </div>
+          <div class="footer-newsletter-form">
+            <label>Email Address</label>
+            <input type="email" placeholder="you@example.com" />
+            <button class="btn-primary" onclick="alert('Thank you for signing up!')">Sign Up</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <div class="footer-brand-name">QueenCityConnect</div>
+            <p class="footer-brand-tagline">Connecting Charlotte-Mecklenburg residents to food, housing, health care,
+              and more.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Popular Topics</h4>
+            <ul>
+              <li><a href="hub.html?category=Food">Food Assistance</a></li>
+              <li><a href="hub.html?category=Housing">Housing Support</a></li>
+              <li><a href="hub.html?category=Mental%20Health">Mental Health</a></li>
+              <li><a href="hub.html?category=Employment">Employment</a></li>
+              <li><a href="hub.html?category=Veterans">Veterans</a></li>
+              <li><a href="hub.html?category=Youth">Youth Services</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>About Project</h4>
+            <ul>
+              <li><a href="about.html">Our Mission</a></li>
+              <li><a href="about.html">How We Verify</a></li>
+              <li><a href="submit.html">Submit a Resource</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="hub.html">Full Directory</a></li>
+              <li><a href="neighborhood.html">Neighborhood Guide</a></li>
+              <li><a href="hub.html?category=General%20Support">Get Involved</a></li>
+              <li><a href="submit.html">Add a Resource</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>&copy; 2026 QueenCityConnect, Charlotte, NC</span>
+          <span>TSA Webmaster 2026</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>

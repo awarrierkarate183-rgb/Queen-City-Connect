@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <meta name="description" content="Find community resources near you by neighborhood — Uptown, East, North, South, West Charlotte, and outlying Mecklenburg communities."/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Neighborhood Guide | QueenCityConnect</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body class="dark">
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Queen<span>City</span>Connect</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="hub.html">Resource Hub</a></li>
+        <li><a href="submit.html">Submit a Resource</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="references.html">References</a></li>
+      </ul>
+      <div class="nav-right">
+  <a href="hub.html" class="nav-cta">Find Resources</a>
+  <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+</div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-header" style="border-left:4px solid #10b981;padding-left:calc(var(--gutter) + 20px)">
+    <div class="container" style="padding-left:0">
+      <span class="page-header-eyebrow">Charlotte-Mecklenburg County</span>
+      <h1>Neighborhood Resource Guide</h1>
+      <p>Find resources close to where you live. Browse services organized by area across Charlotte and Mecklenburg County.</p>
+    </div>
+  </section>
+
+  <!-- NEIGHBORHOOD JUMP CARDS WITH PHOTOS -->
+  <section style="padding:0;background:var(--white);border-bottom:1px solid var(--rule)">
+    <div class="nbhd-hero-grid">
+
+      <!-- Uptown: actual Charlotte skyline photo -->
+      <a href="#uptown" class="nbhd-hero-card" style="background-image:url('assets/images/charlotte.jpg')">
+        <div class="nbhd-hero-overlay"></div>
+        <div class="nbhd-hero-content">
+          <span class="nbhd-hero-eyebrow">Central Charlotte</span>
+          <h3>Uptown &amp; Center City</h3>
+          <p>First Ward, Second Ward, Midtown</p>
+        </div>
+      </a>
+
+      <!-- East Charlotte: busy diverse street market -->
+      <a href="#east" class="nbhd-hero-card" style="background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80')">
+        <div class="nbhd-hero-overlay"></div>
+        <div class="nbhd-hero-content">
+          <span class="nbhd-hero-eyebrow">East Charlotte</span>
+          <h3>East Charlotte</h3>
+          <p>Plaza-Midwood, Eastway, Hickory Grove</p>
+        </div>
+      </a>
+
+      <!-- North Charlotte: suburban neighborhood street -->
+      <a href="#north" class="nbhd-hero-card" style="background-image:url('https://images.unsplash.com/photo-1449844908441-8829872d2607?w=800&q=80')">
+        <div class="nbhd-hero-overlay"></div>
+        <div class="nbhd-hero-content">
+          <span class="nbhd-hero-eyebrow">North Charlotte</span>
+          <h3>North Charlotte</h3>
+          <p>NoDa, University City, Huntersville</p>
+        </div>
+      </a>
+
+      <!-- South Charlotte: nice suburban homes -->
+      <a href="#south" class="nbhd-hero-card" style="background-image:url('https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=800&q=80')">
+        <div class="nbhd-hero-overlay"></div>
+        <div class="nbhd-hero-content">
+          <span class="nbhd-hero-eyebrow">South Charlotte</span>
+          <h3>South Charlotte</h3>
+          <p>South End, Ballantyne, Pineville</p>
+        </div>
+      </a>
+
+      <!-- West Charlotte: community volunteers together -->
+      <a href="#west" class="nbhd-hero-card" style="background-image:url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&q=80')">
+        <div class="nbhd-hero-overlay"></div>
+        <div class="nbhd-hero-content">
+          <span class="nbhd-hero-eyebrow">West Charlotte</span>
+          <h3>West Charlotte</h3>
+          <p>Westside, Brookshire, Steele Creek</p>
+        </div>
+      </a>
+
+      <!-- Outlying: small town main street -->
+      <a href="#outlying" class="nbhd-hero-card" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80')">
+        <div class="nbhd-hero-overlay"></div>
+        <div class="nbhd-hero-content">
+          <span class="nbhd-hero-eyebrow">Outlying Areas</span>
+          <h3>Outlying Communities</h3>
+          <p>Matthews, Davidson, Mint Hill, Cornelius</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section style="padding:64px 0 96px">
+    <div class="container">
+
+      <!-- UPTOWN -->
+      <div id="uptown" class="neighborhood-block">
+        <div class="nbhd-section-photo" style="background-image:url('assets/images/charlotte.jpg')">
+          <div class="nbhd-section-photo-overlay"></div>
+          <div class="nbhd-section-photo-text">
+            <span class="section-eyebrow" style="color:rgba(255,255,255,0.7)">Central Charlotte</span>
+            <h2 style="font-family:var(--font-serif);font-size:36px;color:white;letter-spacing:-0.5px;margin-bottom:8px">Uptown &amp; Center City</h2>
+            <p style="color:rgba(255,255,255,0.8);font-size:15px;max-width:520px">The heart of Charlotte, dense in services and easily accessible by transit from across the county.</p>
+          </div>
+        </div>
+        <div class="neighborhood-grid" style="margin-top:24px">
+          <div class="neighborhood-card">
+            <span class="card-category Housing">Housing</span>
+            <h3>Roof Above</h3>
+            <p>Emergency shelter and wraparound homeless services located in uptown Charlotte, serving residents 24/7.</p>
+            <div class="neighborhood-detail">945 N College Street, Charlotte, NC 28206</div>
+            <div class="neighborhood-detail">(704) 347-0278 &mdash; 24/7</div>
+            <a href="https://roofabove.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Financial-Aid">Financial Aid</span>
+            <h3>Crisis Assistance Ministry</h3>
+            <p>Emergency rent and utility assistance for Mecklenburg County families in financial crisis.</p>
+            <div class="neighborhood-detail">500-B Spratt Street, Charlotte, NC 28206</div>
+            <div class="neighborhood-detail">(704) 371-3001 &mdash; Mon&ndash;Fri 8am&ndash;4pm</div>
+            <a href="https://crisisassistance.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category General-Support">General Support</span>
+            <h3>United Way of Greater Charlotte</h3>
+            <p>Call or text 211 anytime for free referrals to hundreds of local services across Charlotte-Mecklenburg.</p>
+            <div class="neighborhood-detail">301 S Brevard St, Charlotte, NC 28202</div>
+            <div class="neighborhood-detail">211 &mdash; Available 24/7</div>
+            <a href="https://unitedwaygreaterclt.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Legal-Aid">Legal Aid</span>
+            <h3>Charlotte Center for Legal Advocacy</h3>
+            <p>Free civil legal services for low-income residents covering housing, immigration, and public benefits.</p>
+            <div class="neighborhood-detail">1431 Elizabeth Avenue, Charlotte, NC 28204</div>
+            <div class="neighborhood-detail">(704) 376-1600 &mdash; Mon&ndash;Fri 9am&ndash;5pm</div>
+            <a href="https://charlottelegaladvocacy.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Food">Food</span>
+            <h3>Loaves &amp; Fishes</h3>
+            <p>Provides a week's worth of groceries to individuals and families in short-term crisis, with 30+ locations across Charlotte.</p>
+            <div class="neighborhood-detail">820 Hamilton Street, Charlotte, NC 28206</div>
+            <div class="neighborhood-detail">(704) 376-3666 &mdash; Mon&ndash;Fri 9am&ndash;12pm</div>
+            <a href="https://loavesandfishesnc.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Housing">Housing</span>
+            <h3>Charlotte Rescue Mission</h3>
+            <p>Emergency shelter, addiction recovery programs, and life skills training for men and women in Charlotte.</p>
+            <div class="neighborhood-detail">907 N McDowell St, Charlotte, NC 28204</div>
+            <div class="neighborhood-detail">(704) 333-4673 &mdash; 24/7</div>
+            <a href="https://charlotterescuemission.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- EAST -->
+      <div id="east" class="neighborhood-block">
+        <div class="nbhd-section-photo" style="background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80')">
+          <div class="nbhd-section-photo-overlay"></div>
+          <div class="nbhd-section-photo-text">
+            <span class="section-eyebrow" style="color:rgba(255,255,255,0.7)">East Charlotte</span>
+            <h2 style="font-family:var(--font-serif);font-size:36px;color:white;letter-spacing:-0.5px;margin-bottom:8px">East Charlotte</h2>
+            <p style="color:rgba(255,255,255,0.8);font-size:15px;max-width:520px">One of Charlotte's most diverse corridors, home to large immigrant communities and growing resource needs.</p>
+          </div>
+        </div>
+        <div class="neighborhood-grid" style="margin-top:24px">
+          <div class="neighborhood-card">
+            <span class="card-category Education">Education</span>
+            <h3>Communities In Schools of CMS</h3>
+            <p>Dropout prevention coordinators placed inside Charlotte-Mecklenburg schools connecting students to community resources.</p>
+            <div class="neighborhood-detail">4801 E Independence Blvd, Charlotte, NC 28212</div>
+            <div class="neighborhood-detail">(704) 973-4890 &mdash; Mon&ndash;Fri 8am&ndash;5pm</div>
+            <a href="https://cischarlotte.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Education">Education</span>
+            <h3>Charlotte Bilingual Preschool</h3>
+            <p>High-quality bilingual early education for Spanish-speaking families, preparing children for kindergarten success.</p>
+            <div class="neighborhood-detail">1800 Prem Dr, Charlotte, NC 28205</div>
+            <div class="neighborhood-detail">(704) 334-3109 &mdash; Mon&ndash;Fri 7:30am&ndash;5:30pm</div>
+            <a href="https://charlottebilingualpreschool.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Employment">Employment</span>
+            <h3>Dress for Success Charlotte</h3>
+            <p>Professional attire and career development tools to help women in Charlotte thrive in the workforce.</p>
+            <div class="neighborhood-detail">1401 Central Ave, Charlotte, NC 28205</div>
+            <div class="neighborhood-detail">(704) 375-8898 &mdash; Tue &amp; Thu 10am&ndash;2pm</div>
+            <a href="https://charlotte.dressforsuccess.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category General-Support">General Support</span>
+            <h3>Latin American Coalition</h3>
+            <p>Empowers Latino immigrants and families through education, advocacy, and direct social services including immigration legal aid.</p>
+            <div class="neighborhood-detail">901 N Davidson St, Charlotte, NC 28206</div>
+            <div class="neighborhood-detail">(704) 334-7600 &mdash; Mon&ndash;Fri 9am&ndash;5pm</div>
+            <a href="https://latinamericancoalition.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- NORTH -->
+      <div id="north" class="neighborhood-block">
+        <div class="nbhd-section-photo" style="background-image:url('https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1200&q=80')">
+          <div class="nbhd-section-photo-overlay"></div>
+          <div class="nbhd-section-photo-text">
+            <span class="section-eyebrow" style="color:rgba(255,255,255,0.7)">North Charlotte</span>
+            <h2 style="font-family:var(--font-serif);font-size:36px;color:white;letter-spacing:-0.5px;margin-bottom:8px">North Charlotte</h2>
+            <p style="color:rgba(255,255,255,0.8);font-size:15px;max-width:520px">A rapidly growing corridor stretching from NoDa through University City to Huntersville and Davidson.</p>
+          </div>
+        </div>
+        <div class="neighborhood-grid" style="margin-top:24px">
+          <div class="neighborhood-card">
+            <span class="card-category Food">Food</span>
+            <h3>Hope Street Food Pantry</h3>
+            <p>Weekly food distributions with no referral required, offering fresh produce, meats, and shelf-stable groceries for north Charlotte families.</p>
+            <div class="neighborhood-detail">4100 Johnston Oehler Rd, Charlotte, NC 28269</div>
+            <div class="neighborhood-detail">(704) 584-9073 &mdash; Thu 4pm&ndash;7pm, Tue 10am&ndash;12pm</div>
+            <a href="https://hopestreetfoodpantry.com" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Health">Health</span>
+            <h3>Charlotte Community Health Clinic</h3>
+            <p>Primary healthcare including medical, dental, and behavioral health services for uninsured residents in north Charlotte.</p>
+            <div class="neighborhood-detail">8401 Medical Plaza Drive, Suite 300, Charlotte, NC 28262</div>
+            <div class="neighborhood-detail">(704) 316-6561 &mdash; Mon&ndash;Fri 8am&ndash;5pm</div>
+            <a href="https://charlottecommunityhealth.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Education">Education</span>
+            <h3>Ada Jenkins Center</h3>
+            <p>Community center in Davidson providing tutoring, after-school programs, and emergency assistance for north Mecklenburg families.</p>
+            <div class="neighborhood-detail">212 Gamble St, Davidson, NC 28036</div>
+            <div class="neighborhood-detail">(704) 896-0471 &mdash; Mon&ndash;Fri 8am&ndash;6pm</div>
+            <a href="https://adajenkins.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOUTH -->
+      <div id="south" class="neighborhood-block">
+        <div class="nbhd-section-photo" style="background-image:url('https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=1200&q=80')">
+          <div class="nbhd-section-photo-overlay"></div>
+          <div class="nbhd-section-photo-text">
+            <span class="section-eyebrow" style="color:rgba(255,255,255,0.7)">South Charlotte</span>
+            <h2 style="font-family:var(--font-serif);font-size:36px;color:white;letter-spacing:-0.5px;margin-bottom:8px">South Charlotte</h2>
+            <p style="color:rgba(255,255,255,0.8);font-size:15px;max-width:520px">From South End to Ballantyne, a mix of urban neighborhoods and suburban communities with growing service needs.</p>
+          </div>
+        </div>
+        <div class="neighborhood-grid" style="margin-top:24px">
+          <div class="neighborhood-card">
+            <span class="card-category Housing">Housing</span>
+            <h3>Habitat for Humanity Charlotte</h3>
+            <p>Builds affordable homes and connects low-income families to housing resources and homeownership education programs.</p>
+            <div class="neighborhood-detail">4601 Charlotte Park Drive, Suite 350, Charlotte, NC 28217</div>
+            <div class="neighborhood-detail">(704) 716-7044 &mdash; Mon&ndash;Fri 9am&ndash;5pm</div>
+            <a href="https://habitatcharlotte.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Employment">Employment</span>
+            <h3>Goodwill Industries of the Southern Piedmont</h3>
+            <p>Free job training, resume help, and job placement services connecting Charlotte residents to local employers.</p>
+            <div class="neighborhood-detail">2122 Freedom Drive, Charlotte, NC 28208</div>
+            <div class="neighborhood-detail">(704) 372-3434 &mdash; Mon&ndash;Sat 9am&ndash;5pm</div>
+            <a href="https://goodwillsp.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Veterans">Veterans</span>
+            <h3>Veterans Bridge Home</h3>
+            <p>Connects veterans and their families in Charlotte to jobs, housing, healthcare, and community support services.</p>
+            <div class="neighborhood-detail">5260 Parkway Plaza Blvd, Suite 110, Charlotte, NC 28217</div>
+            <div class="neighborhood-detail">(866) 249-6656 &mdash; Mon&ndash;Fri 8am&ndash;5pm</div>
+            <a href="https://veteransbridgehome.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Health">Health</span>
+            <h3>Care Ring</h3>
+            <p>Free and low-cost medical, dental, and pharmacy care for uninsured and underinsured Mecklenburg County residents.</p>
+            <div class="neighborhood-detail">8401 Medical Plaza Drive, Charlotte, NC 28262</div>
+            <div class="neighborhood-detail">(704) 316-6561 &mdash; Mon&ndash;Fri 8am&ndash;5pm</div>
+            <a href="https://careringnc.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEST -->
+      <div id="west" class="neighborhood-block">
+        <div class="nbhd-section-photo" style="background-image:url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1200&q=80')">
+          <div class="nbhd-section-photo-overlay"></div>
+          <div class="nbhd-section-photo-text">
+            <span class="section-eyebrow" style="color:rgba(255,255,255,0.7)">West Charlotte</span>
+            <h2 style="font-family:var(--font-serif);font-size:36px;color:white;letter-spacing:-0.5px;margin-bottom:8px">West Charlotte</h2>
+            <p style="color:rgba(255,255,255,0.8);font-size:15px;max-width:520px">A historically underserved area with strong community organizations working to close the resource gap.</p>
+          </div>
+        </div>
+        <div class="neighborhood-grid" style="margin-top:24px">
+          <div class="neighborhood-card">
+            <span class="card-category Mental-Health">Mental Health</span>
+            <h3>NAMI Charlotte</h3>
+            <p>Free mental health education, support groups, and advocacy for Charlotte-Mecklenburg residents and their families.</p>
+            <div class="neighborhood-detail">801 East Morehead Street, Suite 150, Charlotte, NC 28202</div>
+            <div class="neighborhood-detail">(704) 705-7004 &mdash; Mon&ndash;Thu 9am&ndash;5pm</div>
+            <a href="https://namicharlotte.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Education">Education</span>
+            <h3>Classroom Central</h3>
+            <p>Provides free school supplies to students and teachers in underserved Charlotte-Mecklenburg schools.</p>
+            <div class="neighborhood-detail">1201 Alleghany Street, Charlotte, NC 28208</div>
+            <div class="neighborhood-detail">(704) 333-3132 &mdash; Mon&ndash;Fri 9am&ndash;4pm</div>
+            <a href="https://classroomcentral.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Housing">Housing</span>
+            <h3>Gracious Hands</h3>
+            <p>Provides sanctuary, support, and resources to women and children experiencing homelessness in Charlotte.</p>
+            <div class="neighborhood-detail">Charlotte, NC</div>
+            <div class="neighborhood-detail">(704) 376-2054 &mdash; Mon&ndash;Fri 9am&ndash;5pm</div>
+            <a href="https://gracioushands.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Youth">Youth</span>
+            <h3>The Relatives</h3>
+            <p>Crisis center for youth ages 7&ndash;24 with emergency shelter, counseling, and a 24/7 crisis hotline.</p>
+            <div class="neighborhood-detail">2219 Freedom Dr, Charlotte, NC 28208</div>
+            <div class="neighborhood-detail">(704) 377-0602 &mdash; 24/7</div>
+            <a href="https://therelatives.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- OUTLYING -->
+      <div id="outlying" class="neighborhood-block" style="margin-bottom:0">
+        <div class="nbhd-section-photo" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80')">
+          <div class="nbhd-section-photo-overlay"></div>
+          <div class="nbhd-section-photo-text">
+            <span class="section-eyebrow" style="color:rgba(255,255,255,0.7)">Outlying Communities</span>
+            <h2 style="font-family:var(--font-serif);font-size:36px;color:white;letter-spacing:-0.5px;margin-bottom:8px">Matthews, Davidson, Mint Hill &amp; Cornelius</h2>
+            <p style="color:rgba(255,255,255,0.8);font-size:15px;max-width:520px">Mecklenburg County extends well beyond Charlotte city limits. These communities have their own local resources.</p>
+          </div>
+        </div>
+        <div class="neighborhood-grid" style="margin-top:24px">
+          <div class="neighborhood-card">
+            <span class="card-category Education">Education</span>
+            <h3>Ada Jenkins Center</h3>
+            <p>Davidson-based community center offering tutoring, after-school programs, financial literacy, and emergency assistance.</p>
+            <div class="neighborhood-detail">212 Gamble St, Davidson, NC 28036</div>
+            <div class="neighborhood-detail">(704) 896-0471 &mdash; Mon&ndash;Fri 8am&ndash;6pm</div>
+            <a href="https://adajenkins.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category Mental-Health">Mental Health</span>
+            <h3>Alexander Youth Network</h3>
+            <p>Mental and behavioral health care for children and families across Charlotte, including outlying Mecklenburg communities.</p>
+            <div class="neighborhood-detail">1717 Shetland Ave, Charlotte, NC 28205</div>
+            <div class="neighborhood-detail">(855) 362-8470 &mdash; Mon&ndash;Fri 8am&ndash;5pm</div>
+            <a href="https://alexanderyouthnetwork.org" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+          <div class="neighborhood-card">
+            <span class="card-category General-Support">General Support</span>
+            <h3>Salvation Army of Greater Charlotte</h3>
+            <p>Emergency shelter, food assistance, disaster relief, and holiday programs serving all of Mecklenburg County.</p>
+            <div class="neighborhood-detail">534 Spratt Street, Charlotte, NC 28206</div>
+            <div class="neighborhood-detail">(704) 376-5692 &mdash; Mon&ndash;Fri 8am&ndash;5pm</div>
+            <a href="https://salvationarmycarolinas.org/charlotte" target="_blank" class="neighborhood-link">Visit website &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container">
+      <h2>Can&rsquo;t find what you need?</h2>
+      <p>Search the full directory of 25+ Charlotte resources or call 211 anytime for free referrals.</p>
+      <div class="cta-band-actions">
+        <a href="hub.html" class="btn-white">Search All Resources</a>
+        <a href="submit.html" class="btn-outline-white">Submit a Resource</a>
+      </div>
+    </div>
+  </section>
+
+ <footer class="footer">
+  <div class="footer-newsletter">
+    <div class="container">
+      <div class="footer-newsletter-inner">
+        <div class="footer-newsletter-text">
+          <h2>Stay Connected</h2>
+          <p>Get updates on new Charlotte resources, community programs, and local news delivered to your inbox.</p>
+        </div>
+        <div class="footer-newsletter-form">
+          <label>Email Address</label>
+          <input type="email" placeholder="you@example.com"/>
+          <button class="btn-primary" onclick="alert('Thank you for signing up!')">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-main">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-brand-name">QueenCityConnect</div>
+          <p class="footer-brand-tagline">Connecting Charlotte-Mecklenburg residents to food, housing, health care, and more.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Popular Topics</h4>
+          <ul>
+            <li><a href="hub.html?category=Food">Food Assistance</a></li>
+            <li><a href="hub.html?category=Housing">Housing Support</a></li>
+            <li><a href="hub.html?category=Mental%20Health">Mental Health</a></li>
+            <li><a href="hub.html?category=Employment">Employment</a></li>
+            <li><a href="hub.html?category=Veterans">Veterans</a></li>
+            <li><a href="hub.html?category=Youth">Youth Services</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>About Project</h4>
+          <ul>
+            <li><a href="about.html">Our Mission</a></li>
+            <li><a href="about.html">How We Verify</a></li>
+            <li><a href="references.html">References</a></li>
+            <li><a href="submit.html">Submit a Resource</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="hub.html">Full Directory</a></li>
+            <li><a href="neighborhood.html">Neighborhood Guide</a></li>
+            <li><a href="hub.html?category=General%20Support">Get Involved</a></li>
+            <li><a href="submit.html">Add a Resource</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 QueenCityConnect, Charlotte, NC</span>
+        <span>TSA Webmaster 2026</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
