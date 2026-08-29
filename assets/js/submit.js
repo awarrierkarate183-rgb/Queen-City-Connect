@@ -1,4 +1,4 @@
-const SUBMIT_EMAIL = 'awarrierkarate183@gmail.com';
+const SUBMIT_EMAIL = 'queencityconnect@gmail.com';
 
 let lastSubmission = null;
 
@@ -193,7 +193,28 @@ function resetForm() {
   showSubmitError('');
   form.classList.remove('hidden');
   success.classList.add('hidden');
+  const panel = document.getElementById('hub-submit');
+  if (panel) {
+    openHubSubmit(true);
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openHubSubmit(open) {
+  const panel = document.getElementById('hub-submit');
+  const toggle = document.getElementById('hub-submit-toggle');
+  const body = document.getElementById('hub-submit-body');
+  if (!panel || !toggle || !body) return;
+  const shouldOpen = open === undefined ? !panel.classList.contains('is-open') : !!open;
+  panel.classList.toggle('is-open', shouldOpen);
+  toggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+  body.hidden = !shouldOpen;
+}
+
+function toggleHubSubmit() {
+  openHubSubmit();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -208,4 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('submit') === '1' || window.location.hash === '#submit') {
+    openHubSubmit(true);
+  }
 });

@@ -352,4 +352,28 @@ document.getElementById('search-input').addEventListener('input', e => {
   if (currentView === 'map') renderMap();
 });
 
+function toggleHubFilters() {
+  const masthead = document.getElementById('hub-masthead');
+  const toggle = document.getElementById('hub-title-toggle');
+  if (!masthead || !toggle) return;
+  const open = !masthead.classList.contains('is-open');
+  masthead.classList.toggle('is-open', open);
+  toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+function initHubTitleFade() {
+  const scroll = document.querySelector('.hub-scroll');
+  const title = document.getElementById('hub-title-block');
+  if (!scroll || !title) return;
+  const update = () => {
+    const t = Math.min(1, scroll.scrollTop / 70);
+    title.style.opacity = String(1 - t);
+    title.style.transform = `translateY(${-10 * t}px)`;
+    title.classList.toggle('is-faded', t > 0.85);
+  };
+  scroll.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
 loadResources();
+initHubTitleFade();

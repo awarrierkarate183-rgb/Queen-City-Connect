@@ -31,61 +31,64 @@
     </div>
   </nav>
 
-  <section class="hub-controls">
-    <div class="container">
-      <div class="search-bar">
-        <span class="search-icon">&#x2315;</span>
-        <input type="text" id="search-input" placeholder="Search by name, category, or keyword..." />
-      </div>
-      <div class="hub-filter-row">
-        <span class="sort-label">Filter by:</span>
-        <select class="hub-select" id="category-select" multiple size="1" onchange="onMultiCategorySelect(this)">
-          <option value="All" selected>All Categories</option>
-          <option value="Food">Food</option>
-          <option value="Housing">Housing</option>
-          <option value="Health">Health</option>
-          <option value="Mental Health">Mental Health</option>
-          <option value="Youth">Youth</option>
-          <option value="Safety">Safety</option>
-          <option value="Legal Aid">Legal Aid</option>
-          <option value="Financial Aid">Financial Aid</option>
-          <option value="Veterans">Veterans</option>
-          <option value="Employment">Employment</option>
-          <option value="Education">Education</option>
-          <option value="General Support">General Support</option>
-        </select>
-        <select class="hub-select" id="hours-select" onchange="onHoursSelect(this.value)">
-          <option value="All">All Hours</option>
-          <option value="24/7">24/7 Services</option>
-          <option value="Weekday">Weekday Only</option>
-        </select>
-        <select class="hub-select" id="sort-select" onchange="onSortSelect(this.value)">
-          <option value="default">Sort: Default</option>
-          <option value="az">Sort: A to Z</option>
-          <option value="za">Sort: Z to A</option>
-        </select>
-        <button class="filter-btn clear-btn" onclick="clearAllFilters()">Clear All</button>
-      </div>
-      <p class="hub-filter-hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories.</p>
-      <div class="hub-toolbar">
-        <div class="results-count" id="results-count"></div>
-        <div class="view-toggle">
-          <button class="view-btn active" id="btn-list" onclick="setView('list')">List</button>
-          <button class="view-btn" id="btn-map" onclick="setView('map')">Map</button>
+  <header class="hub-masthead is-open" id="hub-masthead">
+    <div class="hub-title-block" id="hub-title-block">
+      <span class="section-eyebrow">Charlotte-Mecklenburg County</span>
+      <h1 class="section-title">Community Resource Hub</h1>
+    </div>
+    <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="true"
+      aria-controls="hub-controls" onclick="toggleHubFilters()">
+      <span>Filters &amp; Search</span>
+      <span class="hub-title-chevron" aria-hidden="true"></span>
+    </button>
+    <section class="hub-controls" id="hub-controls">
+      <div class="container">
+        <div class="search-bar">
+          <span class="search-icon">&#x2315;</span>
+          <input type="text" id="search-input" placeholder="Search by name, category, or keyword..." />
+        </div>
+        <div class="hub-filter-row">
+          <span class="sort-label">Filter by:</span>
+          <select class="hub-select" id="category-select" multiple size="1" onchange="onMultiCategorySelect(this)">
+            <option value="All" selected>All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Housing">Housing</option>
+            <option value="Health">Health</option>
+            <option value="Mental Health">Mental Health</option>
+            <option value="Youth">Youth</option>
+            <option value="Safety">Safety</option>
+            <option value="Legal Aid">Legal Aid</option>
+            <option value="Financial Aid">Financial Aid</option>
+            <option value="Veterans">Veterans</option>
+            <option value="Employment">Employment</option>
+            <option value="Education">Education</option>
+            <option value="General Support">General Support</option>
+          </select>
+          <select class="hub-select" id="hours-select" onchange="onHoursSelect(this.value)">
+            <option value="All">All Hours</option>
+            <option value="24/7">24/7 Services</option>
+            <option value="Weekday">Weekday Only</option>
+          </select>
+          <select class="hub-select" id="sort-select" onchange="onSortSelect(this.value)">
+            <option value="default">Sort: Default</option>
+            <option value="az">Sort: A to Z</option>
+            <option value="za">Sort: Z to A</option>
+          </select>
+          <button class="filter-btn clear-btn" onclick="clearAllFilters()">Clear All</button>
+        </div>
+        <p class="hub-filter-hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories.</p>
+        <div class="hub-toolbar">
+          <div class="results-count" id="results-count"></div>
+          <div class="view-toggle">
+            <button class="view-btn active" id="btn-list" onclick="setView('list')">List</button>
+            <button class="view-btn" id="btn-map" onclick="setView('map')">Map</button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </header>
 
   <div class="hub-scroll">
-  <section class="page-header hub-header">
-    <div class="container">
-      <span class="page-header-eyebrow">Charlotte-Mecklenburg County</span>
-      <h1>Charlotte Resource Directory</h1>
-      <p>Browse, search, and filter 50+ verified resources available to Charlotte-Mecklenburg residents.</p>
-    </div>
-  </section>
-
   <section class="hub-grid-section">
     <div class="container">
       <div id="list-view">

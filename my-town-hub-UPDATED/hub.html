@@ -28,7 +28,17 @@
     </div>
   </nav>
 
-  <section class="hub-controls">
+  <header class="hub-masthead is-open" id="hub-masthead">
+    <div class="hub-title-block" id="hub-title-block">
+      <span class="section-eyebrow">Charlotte-Mecklenburg County</span>
+      <h1 class="section-title">Community Resource Hub</h1>
+    </div>
+    <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="true"
+      aria-controls="hub-controls" onclick="toggleHubFilters()">
+      <span>Filters &amp; Search</span>
+      <span class="hub-title-chevron" aria-hidden="true"></span>
+    </button>
+    <section class="hub-controls" id="hub-controls">
     <div class="container">
       <div class="search-bar">
         <span class="search-icon">&#x2315;</span>
@@ -72,17 +82,10 @@
         </div>
       </div>
     </div>
-  </section>
+    </section>
+  </header>
 
   <div class="hub-scroll">
-  <section class="page-header hub-header">
-    <div class="container">
-      <span class="page-header-eyebrow">Charlotte-Mecklenburg County</span>
-      <h1>Charlotte Resource Directory</h1>
-      <p>Browse, search, and filter 50+ verified resources available to Charlotte-Mecklenburg residents.</p>
-    </div>
-  </section>
-
   <section class="hub-grid-section">
     <div class="container">
       <div id="list-view">
