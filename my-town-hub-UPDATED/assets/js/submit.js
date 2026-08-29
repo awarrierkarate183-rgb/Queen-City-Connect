@@ -1,4 +1,4 @@
-const SUBMIT_EMAIL = 'queencityconnect@gmail.com';
+const SUBMIT_EMAIL = 'queencityconnect674@gmail.com';
 
 let lastSubmission = null;
 
