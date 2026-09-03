@@ -16,9 +16,19 @@ const DATA_DIR = path.join(ROOT, 'data');
 const DB_PATH = path.join(DATA_DIR, 'users.db');
 const BASE_URL = (process.env.BASE_URL || `http://127.0.0.1:${PORT}`).replace(/\/$/, '');
 const SESSION_SECRET = process.env.SESSION_SECRET || 'queencityconnect-local-dev';
-const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || '').trim();
-const GOOGLE_CLIENT_SECRET = (process.env.GOOGLE_CLIENT_SECRET || '').trim();
-const googleEnabled = Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET);
+function readAuthConfigFile() {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'auth-config.json'), 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+const fileAuthConfig = readAuthConfigFile();
+const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || fileAuthConfig.googleClientId || '').trim();
+const GOOGLE_CLIENT_SECRET = (process.env.GOOGLE_CLIENT_SECRET || fileAuthConfig.googleClientSecret || '').trim();
+const googleEnabled = Boolean(GOOGLE_CLIENT_ID);
+const googleRedirectEnabled = Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET);
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 const db = new DatabaseSync(DB_PATH);
@@ -267,7 +277,7 @@ function createUser({ name, email, passwordHash, googleId }) {
 }
 
 function startUserSession(req, res, user) {
-  const payload = { user: publicUser(user), state: readState(user.id), googleEnabled };
+  const payload = { user: publicUser(user), state: readState(user.id), ...googlePublicConfig() };
   req.session.regenerate((err) => {
     if (err) return res.status(500).json({ error: 'Could not start a session. Try again.' });
     req.session.userId = user.id;
@@ -297,7 +307,51 @@ app.use(session({
 }));
 app.use(passport.initialize());
 
-if (googleEnabled) {
+function googlePublicConfig() {
+  return {
+    googleEnabled,
+    googleClientId: GOOGLE_CLIENT_ID,
+    googleRedirectEnabled
+  };
+}
+
+function findOrCreateGoogleUser({ googleId, email, name }) {
+  let user = statements.findByGoogle.get(googleId);
+  if (user) return user;
+  user = statements.findByEmail.get(email);
+  if (user) {
+    statements.linkGoogle.run(googleId, name, user.id);
+    return statements.findById.get(user.id);
+  }
+  return createUser({ name, email, googleId });
+}
+
+async function verifyGoogleIdToken(credential) {
+  if (!GOOGLE_CLIENT_ID) {
+    throw new Error('Google Sign-In is not configured.');
+  }
+  const response = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(credential));
+  const data = await response.json();
+  if (!response.ok || data.error) {
+    throw new Error('Google Sign-In did not complete.');
+  }
+  if (String(data.aud) !== GOOGLE_CLIENT_ID) {
+    throw new Error('Google Sign-In client does not match this site.');
+  }
+  if (Number(data.exp) * 1000 < Date.now()) {
+    throw new Error('Google Sign-In expired. Try again.');
+  }
+  if (data.email_verified !== true && data.email_verified !== 'true') {
+    throw new Error('Google email is not verified.');
+  }
+  return {
+    googleId: String(data.sub),
+    email: normalizeEmail(data.email),
+    name: String(data.name || data.given_name || 'Neighbor').slice(0, 80)
+  };
+}
+
+if (googleRedirectEnabled) {
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
@@ -309,16 +363,7 @@ if (googleEnabled) {
         (profile.emails && profile.emails[0] && profile.emails[0].value) || `${googleId}@google.local`
       );
       const name = (profile.displayName || 'Neighbor').slice(0, 80);
-      let user = statements.findByGoogle.get(googleId);
-      if (!user) {
-        user = statements.findByEmail.get(email);
-        if (user) {
-          statements.linkGoogle.run(googleId, name, user.id);
-          user = statements.findById.get(user.id);
-        } else {
-          user = createUser({ name, email, googleId });
-        }
-      }
+      const user = findOrCreateGoogleUser({ googleId, email, name });
       return done(null, user);
     } catch (err) {
       return done(err);
@@ -327,43 +372,67 @@ if (googleEnabled) {
 }
 
 app.get('/api/auth/config', (_req, res) => {
-  res.json({ googleEnabled });
+  res.json(googlePublicConfig());
+});
+
+app.post('/api/auth/google/id-token', async (req, res) => {
+  const credential = String((req.body && req.body.credential) || '');
+  if (!credential) {
+    return res.status(400).json({ error: 'Google sign-in token is missing.' });
+  }
+  try {
+    const profile = await verifyGoogleIdToken(credential);
+    const user = findOrCreateGoogleUser(profile);
+    startUserSession(req, res, user);
+  } catch (err) {
+    res.status(401).json({ error: err.message || 'Google Sign-In did not complete.' });
+  }
 });
 
 app.post('/api/auth/register', (req, res) => {
-  const name = String(req.body.name || '').trim().slice(0, 80);
-  const email = normalizeEmail(req.body.email);
-  const password = String(req.body.password || '');
+  try {
+    const name = String(req.body.name || '').trim().slice(0, 80);
+    const email = normalizeEmail(req.body.email);
+    const password = String(req.body.password || '');
 
-  if (!name) return res.status(400).json({ error: 'Name is required.' });
-  if (!isValidEmail(email)) return res.status(400).json({ error: 'Enter a valid email address.' });
-  if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    if (!name) return res.status(400).json({ error: 'Name is required.' });
+    if (!isValidEmail(email)) return res.status(400).json({ error: 'Enter a valid email address.' });
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
 
-  if (statements.findByEmail.get(email)) {
-    return res.status(409).json({ error: 'An account with that email already exists. Sign in instead.' });
+    if (statements.findByEmail.get(email)) {
+      return res.status(409).json({ error: 'An account with that email already exists. Sign in instead.' });
+    }
+
+    const passwordHash = bcrypt.hashSync(password, 10);
+    const user = createUser({ name, email, passwordHash });
+    startUserSession(req, res, user);
+  } catch (err) {
+    console.error('Register failed:', err);
+    res.status(500).json({ error: 'Could not create account. Try again.' });
   }
-
-  const passwordHash = bcrypt.hashSync(password, 10);
-  const user = createUser({ name, email, passwordHash });
-  startUserSession(req, res, user);
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const email = normalizeEmail(req.body.email);
-  const password = String(req.body.password || '');
-  const user = statements.findByEmail.get(email);
+  try {
+    const email = normalizeEmail(req.body && req.body.email);
+    const password = String((req.body && req.body.password) || '');
+    const user = statements.findByEmail.get(email);
 
-  if (!user) {
-    return res.status(401).json({ error: 'Email or password is incorrect.' });
-  }
-  if (!user.password_hash) {
-    return res.status(401).json({ error: 'This account uses Google. Continue with Google instead.' });
-  }
-  if (!bcrypt.compareSync(password, user.password_hash)) {
-    return res.status(401).json({ error: 'Email or password is incorrect.' });
-  }
+    if (!user) {
+      return res.status(401).json({ error: 'Email or password is incorrect.' });
+    }
+    if (!user.password_hash) {
+      return res.status(401).json({ error: 'This account uses Google. Continue with Google instead.' });
+    }
+    if (!bcrypt.compareSync(password, user.password_hash)) {
+      return res.status(401).json({ error: 'Email or password is incorrect.' });
+    }
 
-  startUserSession(req, res, user);
+    startUserSession(req, res, user);
+  } catch (err) {
+    console.error('Login failed:', err);
+    res.status(500).json({ error: 'Could not sign in. Try again.' });
+  }
 });
 
 app.post('/api/auth/logout', (req, res) => {
@@ -374,7 +443,7 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 app.get('/api/auth/google', (req, res, next) => {
-  if (!googleEnabled) {
+  if (!googleRedirectEnabled) {
     return res.redirect('/signin.html?error=google-setup');
   }
   if (req.query.next) {
@@ -390,7 +459,7 @@ app.get('/api/auth/google', (req, res, next) => {
 });
 
 app.get('/api/auth/google/callback', (req, res, next) => {
-  if (!googleEnabled) {
+  if (!googleRedirectEnabled) {
     return res.redirect('/signin.html?error=google-setup');
   }
   passport.authenticate('google', { session: false }, (err, user) => {
@@ -411,11 +480,19 @@ app.get('/api/auth/google/callback', (req, res, next) => {
   })(req, res, next);
 });
 
-app.get('/api/me', requireAuth, (req, res) => {
+app.get('/api/me', (req, res) => {
+  if (!req.session.userId) {
+    return res.json({ user: null, state: null, ...googlePublicConfig() });
+  }
+  const user = statements.findById.get(req.session.userId);
+  if (!user) {
+    req.session.userId = null;
+    return res.json({ user: null, state: null, ...googlePublicConfig() });
+  }
   res.json({
-    user: publicUser(req.currentUser),
-    state: readState(req.currentUser.id),
-    googleEnabled
+    user: publicUser(user),
+    state: readState(user.id),
+    ...googlePublicConfig()
   });
 });
 
@@ -423,7 +500,7 @@ function saveUserState(req, res) {
   const current = readState(req.currentUser.id);
   const next = sanitizeStatePatch(req.body || {}, current);
   writeState(req.currentUser.id, next);
-  res.json({ user: publicUser(req.currentUser), state: next, googleEnabled });
+  res.json({ user: publicUser(req.currentUser), state: next, ...googlePublicConfig() });
 }
 
 app.put('/api/me/state', requireAuth, saveUserState);
@@ -486,7 +563,7 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`QueenCityConnect running at http://127.0.0.1:${PORT}`);
   if (!googleEnabled) {
-    console.log('Google Sign-In is off until GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set in .env');
+    console.log('Google Sign-In is off until GOOGLE_CLIENT_ID is set in .env or data/auth-config.json');
   }
   setTimeout(() => {
     refreshDirectoryIfStale(false).then((meta) => {

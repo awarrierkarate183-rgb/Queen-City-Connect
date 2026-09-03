@@ -63,8 +63,9 @@
         </form>
 
         <div class="auth-divider"><span>or</span></div>
+        <div id="google-signin-slot" class="auth-google-slot"></div>
         <a class="btn-ghost auth-google" id="google-btn" href="/api/auth/google">Continue with Google</a>
-        <p class="auth-hint" id="google-hint" hidden>Google Sign-In needs a Google Cloud client ID in your <code>.env</code> file. Email and password work now.</p>
+        <p class="auth-hint" id="google-hint" hidden>Google Sign-In uses your Google account. Add a Google client ID in <code>.env</code> or <code>data/auth-config.json</code> if the button does not appear. Email and password work without it.</p>
       </div>
 
       <div class="auth-card auth-saved" id="auth-saved" hidden>
@@ -91,6 +92,7 @@
     </div>
   </footer>
 
+  <script src="assets/js/analytics.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>
     function nextPage() {
@@ -205,6 +207,13 @@
       window.location.href = 'signin.html';
     });
 
+    function siteAuthPath(path) {
+      const clean = path.startsWith('/') ? path : '/' + path;
+      const pathname = window.location.pathname.replace(/\/[^/]*\.[A-Za-z0-9]+$/, '/');
+      if (pathname && pathname !== '/') return pathname.replace(/\/$/, '') + clean;
+      return clean;
+    }
+
     QCCAuth.ready.then(async () => {
       const params = new URLSearchParams(window.location.search);
       const err = params.get('error');
@@ -215,14 +224,17 @@
       }
       const googleBtn = document.getElementById('google-btn');
       const googleHint = document.getElementById('google-hint');
-      googleBtn.href = '/api/auth/google?next=' + encodeURIComponent('/' + nextPage());
-      if (!QCCAuth.googleEnabled) {
+      googleBtn.href = siteAuthPath('/api/auth/google') + '?next=' + encodeURIComponent('/' + nextPage());
+      QCCAuth.initGoogleButton('google-signin-slot');
+      if (QCCAuth.googleClientId) {
+        googleBtn.hidden = true;
+        googleHint.hidden = true;
+      } else {
+        googleHint.hidden = false;
         googleBtn.addEventListener('click', (e) => {
           e.preventDefault();
-          googleHint.hidden = false;
-          showError('Google Sign-In needs Google Cloud keys in .env. Email and password work now.');
+          showError('Google Sign-In needs a Google Cloud client ID. Email and password work now.');
         });
-        googleHint.hidden = false;
       }
       await renderSaved();
     });

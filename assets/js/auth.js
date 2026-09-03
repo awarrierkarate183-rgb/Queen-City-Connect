@@ -3,12 +3,26 @@
     user: null,
     state: null,
     googleEnabled: false,
+    googleClientId: '',
+    mode: 'server',
     ready: Promise.resolve()
   };
+
+  const USERS_KEY = 'qcc-local-users';
+  const SESSION_KEY = 'qcc-local-session';
 
   let saveTimer = null;
   let pendingPatch = {};
   let flushPromise = null;
+
+  function sitePath(path) {
+    const clean = path.startsWith('/') ? path : '/' + path;
+    const pathname = window.location.pathname.replace(/\/[^/]*\.[A-Za-z0-9]+$/, '/');
+    if (pathname && pathname !== '/') {
+      return pathname.replace(/\/$/, '') + clean;
+    }
+    return clean;
+  }
 
   function guestBookmarks() {
     try {
@@ -51,6 +65,192 @@
     return String(name || 'Account').trim().split(/\s+/)[0];
   }
 
+  function normalizeEmail(email) {
+    return String(email || '').trim().toLowerCase();
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function loadLocalUsers() {
+    try {
+      return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  function saveLocalUsers(users) {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
+
+  function defaultState() {
+    return {
+      bookmarks: [],
+      hubPrefs: { categories: ['All'], search: '', hours: 'All', sort: 'best', view: 'list' },
+      recentlyViewed: [],
+      submissions: [],
+      newsletterEmail: null,
+      activity: []
+    };
+  }
+
+  function publicLocalUser(user) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      hasGoogle: Boolean(user.googleId),
+      hasPassword: Boolean(user.passwordHash)
+    };
+  }
+
+  function localSessionPayload(user) {
+    localStorage.setItem(SESSION_KEY, String(user.id));
+    return {
+      user: publicLocalUser(user),
+      state: Object.assign(defaultState(), user.state || {}),
+      googleEnabled: QCCAuth.googleEnabled,
+      googleClientId: QCCAuth.googleClientId
+    };
+  }
+
+  function bytesToB64(bytes) {
+    let binary = '';
+    const arr = new Uint8Array(bytes);
+    for (let i = 0; i < arr.length; i += 1) binary += String.fromCharCode(arr[i]);
+    return btoa(binary);
+  }
+
+  function b64ToBytes(value) {
+    const binary = atob(value);
+    const arr = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) arr[i] = binary.charCodeAt(i);
+    return arr;
+  }
+
+  async function hashPassword(password, saltB64) {
+    const salt = saltB64 ? b64ToBytes(saltB64) : crypto.getRandomValues(new Uint8Array(16));
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: 120000 }, key, 256);
+    return { hash: bytesToB64(bits), salt: bytesToB64(salt) };
+  }
+
+  function decodeJwt(token) {
+    const part = String(token || '').split('.')[1];
+    if (!part) throw new Error('Google Sign-In did not complete.');
+    const padded = part.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((part.length + 3) % 4);
+    return JSON.parse(atob(padded));
+  }
+
+  function shouldFallback(response) {
+    if (!response) return true;
+    if (response.status === 404) return true;
+    const type = response.headers.get('content-type') || '';
+    return response.status >= 400 && !type.includes('application/json');
+  }
+
+  async function localRegister(name, email, password) {
+    email = normalizeEmail(email);
+    name = String(name || '').trim().slice(0, 80);
+    if (!name) throw new Error('Name is required.');
+    if (!isValidEmail(email)) throw new Error('Enter a valid email address.');
+    if (String(password || '').length < 8) throw new Error('Password must be at least 8 characters.');
+    const users = loadLocalUsers();
+    if (users.some((user) => user.email === email)) {
+      throw new Error('An account with that email already exists. Sign in instead.');
+    }
+    const secret = await hashPassword(password);
+    const user = {
+      id: 'local-' + Date.now(),
+      name,
+      email,
+      passwordHash: secret.hash,
+      passwordSalt: secret.salt,
+      googleId: null,
+      state: defaultState()
+    };
+    users.push(user);
+    saveLocalUsers(users);
+    QCCAuth.mode = 'local';
+    return localSessionPayload(user);
+  }
+
+  async function localLogin(email, password) {
+    email = normalizeEmail(email);
+    const user = loadLocalUsers().find((item) => item.email === email);
+    if (!user || !user.passwordHash) throw new Error('Email or password is incorrect.');
+    const secret = await hashPassword(password, user.passwordSalt);
+    if (secret.hash !== user.passwordHash) throw new Error('Email or password is incorrect.');
+    QCCAuth.mode = 'local';
+    return localSessionPayload(user);
+  }
+
+  async function localGoogle(credential) {
+    const payload = decodeJwt(credential);
+    if (QCCAuth.googleClientId && payload.aud && payload.aud !== QCCAuth.googleClientId) {
+      throw new Error('Google Sign-In client does not match this site.');
+    }
+    if (payload.exp && Number(payload.exp) * 1000 < Date.now()) {
+      throw new Error('Google Sign-In expired. Try again.');
+    }
+    const email = normalizeEmail(payload.email);
+    const googleId = String(payload.sub || '');
+    const name = String(payload.name || payload.given_name || 'Neighbor').slice(0, 80);
+    if (!email || !googleId) throw new Error('Google Sign-In did not complete.');
+    const users = loadLocalUsers();
+    let user = users.find((item) => item.googleId === googleId) || users.find((item) => item.email === email);
+    if (user) {
+      user.googleId = googleId;
+      user.name = user.name || name;
+    } else {
+      user = {
+        id: 'local-' + Date.now(),
+        name,
+        email,
+        passwordHash: null,
+        passwordSalt: null,
+        googleId,
+        state: defaultState()
+      };
+      users.push(user);
+    }
+    saveLocalUsers(users);
+    QCCAuth.mode = 'local';
+    return localSessionPayload(user);
+  }
+
+  function localRefresh() {
+    const id = localStorage.getItem(SESSION_KEY);
+    if (!id) return { user: null, state: null, googleEnabled: QCCAuth.googleEnabled, googleClientId: QCCAuth.googleClientId };
+    const user = loadLocalUsers().find((item) => String(item.id) === String(id));
+    if (!user) {
+      localStorage.removeItem(SESSION_KEY);
+      return { user: null, state: null, googleEnabled: QCCAuth.googleEnabled, googleClientId: QCCAuth.googleClientId };
+    }
+    QCCAuth.mode = 'local';
+    return localSessionPayload(user);
+  }
+
+  function localSaveState(patch) {
+    const id = localStorage.getItem(SESSION_KEY);
+    const users = loadLocalUsers();
+    const user = users.find((item) => String(item.id) === String(id));
+    if (!user) return null;
+    const next = Object.assign(defaultState(), user.state || {});
+    const incoming = Object.assign({}, patch);
+    if (incoming.mergeBookmarks && Array.isArray(incoming.bookmarks)) {
+      next.bookmarks = [...new Set([...(next.bookmarks || []), ...incoming.bookmarks].map(Number).filter((n) => n > 0))];
+      delete incoming.bookmarks;
+    }
+    delete incoming.mergeBookmarks;
+    Object.assign(next, incoming);
+    user.state = next;
+    saveLocalUsers(users);
+    return localSessionPayload(user);
+  }
+
   function renderNav() {
     const host = document.getElementById('nav-account');
     if (!host) return;
@@ -74,12 +274,21 @@
   }
 
   async function api(url, options) {
-    const response = await fetch(url, {
+    const response = await fetch(sitePath(url), {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', ...(options && options.headers) },
       ...options
     });
-    const data = await response.json().catch(() => ({}));
+    const type = response.headers.get('content-type') || '';
+    const data = type.includes('application/json')
+      ? await response.json().catch(() => ({}))
+      : {};
+    if (shouldFallback(response)) {
+      const error = new Error('API_FALLBACK');
+      error.status = response.status;
+      error.fallback = true;
+      throw error;
+    }
     if (!response.ok) {
       const error = new Error(data.error || 'Request failed.');
       error.status = response.status;
@@ -91,7 +300,8 @@
   QCCAuth.applySession = function (data) {
     QCCAuth.user = data.user || null;
     QCCAuth.state = data.state || null;
-    QCCAuth.googleEnabled = Boolean(data.googleEnabled);
+    if (data.googleEnabled != null) QCCAuth.googleEnabled = Boolean(data.googleEnabled);
+    if (data.googleClientId) QCCAuth.googleClientId = data.googleClientId;
     if (QCCAuth.user && QCCAuth.state && Array.isArray(QCCAuth.state.bookmarks)) {
       localStorage.setItem('clt-bookmarks', JSON.stringify(QCCAuth.state.bookmarks));
     }
@@ -99,16 +309,38 @@
     return data;
   };
 
+  async function loadPublicConfig() {
+    try {
+      const data = await api('/api/auth/config');
+      QCCAuth.googleEnabled = Boolean(data.googleEnabled || data.googleClientId);
+      QCCAuth.googleClientId = data.googleClientId || '';
+      QCCAuth.mode = 'server';
+      return data;
+    } catch {
+      try {
+        const data = await fetch(sitePath('/data/auth-config.json')).then((r) => r.json());
+        QCCAuth.googleClientId = data.googleClientId || '';
+        QCCAuth.googleEnabled = Boolean(QCCAuth.googleClientId);
+        QCCAuth.mode = 'local';
+        return data;
+      } catch {
+        QCCAuth.googleEnabled = false;
+        QCCAuth.googleClientId = '';
+        QCCAuth.mode = 'local';
+        return null;
+      }
+    }
+  }
+
   QCCAuth.refresh = async function () {
     try {
       const data = await api('/api/me');
+      QCCAuth.mode = 'server';
       return QCCAuth.applySession(data);
-    } catch {
-      try {
-        const config = await fetch('/api/auth/config', { credentials: 'include' }).then((r) => r.json());
-        QCCAuth.googleEnabled = Boolean(config.googleEnabled);
-      } catch {
-        QCCAuth.googleEnabled = false;
+    } catch (err) {
+      await loadPublicConfig();
+      if (err && err.fallback) {
+        return QCCAuth.applySession(localRefresh());
       }
       QCCAuth.user = null;
       QCCAuth.state = null;
@@ -121,6 +353,12 @@
     clearTimeout(saveTimer);
     saveTimer = null;
     if (!QCCAuth.user || !Object.keys(pendingPatch).length) {
+      return QCCAuth.state;
+    }
+    if (QCCAuth.mode === 'local') {
+      const data = localSaveState(pendingPatch);
+      pendingPatch = {};
+      if (data) QCCAuth.applySession(data);
       return QCCAuth.state;
     }
     if (flushPromise) return flushPromise;
@@ -169,6 +407,10 @@
       patch.submissions = [...(QCCAuth.state && QCCAuth.state.submissions ? QCCAuth.state.submissions : []), ...submissions];
     }
     if (!patch.bookmarks && !patch.submissions) return;
+    if (QCCAuth.mode === 'local') {
+      QCCAuth.applySession(localSaveState(patch));
+      return;
+    }
     const data = await api('/api/me/state', {
       method: 'PUT',
       body: JSON.stringify(patch)
@@ -176,35 +418,71 @@
     QCCAuth.applySession(data);
   };
 
+  function canFallback(err) {
+    return Boolean(err && (err.fallback || err.name === 'TypeError' || /Failed to fetch|NetworkError/i.test(err.message || '')));
+  }
+
   QCCAuth.login = async function (email, password) {
     sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
-    const data = await api('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password })
-    });
-    QCCAuth.applySession(data);
+    try {
+      const data = await api('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      });
+      QCCAuth.mode = 'server';
+      QCCAuth.applySession(data);
+    } catch (err) {
+      if (!canFallback(err)) throw err;
+      QCCAuth.applySession(await localLogin(email, password));
+    }
     await QCCAuth.mergeGuestOnLogin();
-    return data;
+    return QCCAuth;
   };
 
   QCCAuth.register = async function (name, email, password) {
     sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
-    const data = await api('/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password })
-    });
-    QCCAuth.applySession(data);
+    try {
+      const data = await api('/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password })
+      });
+      QCCAuth.mode = 'server';
+      QCCAuth.applySession(data);
+    } catch (err) {
+      if (!canFallback(err)) throw err;
+      QCCAuth.applySession(await localRegister(name, email, password));
+    }
     await QCCAuth.mergeGuestOnLogin();
-    return data;
+    return QCCAuth;
+  };
+
+  QCCAuth.loginWithGoogle = async function (credential) {
+    sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
+    try {
+      const data = await api('/api/auth/google/id-token', {
+        method: 'POST',
+        body: JSON.stringify({ credential })
+      });
+      QCCAuth.mode = 'server';
+      QCCAuth.applySession(data);
+    } catch (err) {
+      if (!canFallback(err)) throw err;
+      QCCAuth.applySession(await localGoogle(credential));
+    }
+    await QCCAuth.mergeGuestOnLogin();
+    return QCCAuth;
   };
 
   QCCAuth.logout = async function () {
     await QCCAuth.flushSave();
     try {
-      await api('/api/auth/logout', { method: 'POST', body: '{}' });
+      if (QCCAuth.mode === 'server') {
+        await api('/api/auth/logout', { method: 'POST', body: '{}' });
+      }
     } catch {
       /* still clear client session */
     }
+    localStorage.removeItem(SESSION_KEY);
     QCCAuth.user = null;
     QCCAuth.state = null;
     pendingPatch = {};
@@ -245,15 +523,73 @@
     return QCCAuth.saveState({ submissions }, { immediate: true });
   };
 
+  QCCAuth.initGoogleButton = function (elementId) {
+    const host = document.getElementById(elementId);
+    if (!host) return;
+    if (!QCCAuth.googleClientId) {
+      host.hidden = true;
+      return;
+    }
+    host.hidden = false;
+    const start = () => {
+      if (!window.google || !window.google.accounts || !window.google.accounts.id) return false;
+      window.google.accounts.id.initialize({
+        client_id: QCCAuth.googleClientId,
+        callback: async (response) => {
+          try {
+            await QCCAuth.loginWithGoogle(response.credential);
+            const params = new URLSearchParams(window.location.search);
+            const next = params.get('next') || 'hub.html';
+            window.location.href = next.includes('://') ? 'hub.html' : next;
+          } catch (err) {
+            const el = document.getElementById('auth-error');
+            if (el) {
+              el.hidden = false;
+              el.textContent = err.message || 'Google Sign-In did not complete.';
+            }
+          }
+        }
+      });
+      host.innerHTML = '';
+      window.google.accounts.id.renderButton(host, {
+        type: 'standard',
+        theme: 'filled_black',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        width: 360
+      });
+      return true;
+    };
+    if (start()) return;
+    const existing = document.querySelector('script[data-qcc-gis]');
+    if (existing) {
+      existing.addEventListener('load', start);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.dataset.qccGis = 'true';
+    script.addEventListener('load', start);
+    document.head.appendChild(script);
+  };
+
   function flushOnLeave() {
     if (!QCCAuth.user || !Object.keys(pendingPatch).length) return;
+    if (QCCAuth.mode === 'local') {
+      localSaveState(pendingPatch);
+      pendingPatch = {};
+      return;
+    }
     const toSend = pendingPatch;
     pendingPatch = {};
     const body = JSON.stringify(toSend);
     if (navigator.sendBeacon) {
-      navigator.sendBeacon('/api/me/state', new Blob([body], { type: 'application/json' }));
+      navigator.sendBeacon(sitePath('/api/me/state'), new Blob([body], { type: 'application/json' }));
     } else {
-      fetch('/api/me/state', {
+      fetch(sitePath('/api/me/state'), {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

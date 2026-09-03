@@ -3735,6 +3735,18 @@
     width: 100%;
   }
 
+  .auth-google-slot {
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
+    margin-bottom: 12px;
+  }
+
+  .auth-google-slot iframe,
+  .auth-google-slot div {
+    margin: 0 auto;
+  }
+
   .auth-divider {
     display: flex;
     align-items: center;
