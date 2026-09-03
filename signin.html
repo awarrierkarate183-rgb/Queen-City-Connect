@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <meta name="description" content="Sign in or create a QueenCityConnect account to save bookmarks, filters, and resources you use." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In | QueenCityConnect</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body class="dark">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Queen<span>City</span>Connect</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="hub.html">Resource Hub</a></li>
+        <li><a href="submit.html">Submit a Resource</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-right">
+        <div class="nav-account" id="nav-account"></div>
+        <a href="hub.html" class="nav-cta">Find Resources</a>
+        <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
+          aria-label="Menu">&#9776;</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="auth-page">
+    <div class="container">
+      <div class="auth-card" id="auth-forms">
+        <span class="section-eyebrow">Your Account</span>
+        <h1 class="section-title" id="auth-title">Sign in</h1>
+        <p class="section-sub" id="auth-lead">Save bookmarks, filters, and the resources you use. Passwords are stored securely in the site database.</p>
+
+        <div class="auth-tabs" role="tablist">
+          <button type="button" class="auth-tab is-active" id="tab-signin" data-mode="signin">Sign in</button>
+          <button type="button" class="auth-tab" id="tab-register" data-mode="register">Create account</button>
+        </div>
+
+        <p class="auth-error" id="auth-error" hidden></p>
+
+        <form id="signin-form" class="auth-form">
+          <label for="signin-email">Email</label>
+          <input type="email" id="signin-email" name="email" autocomplete="email" required />
+          <label for="signin-password">Password</label>
+          <input type="password" id="signin-password" name="password" autocomplete="current-password" required />
+          <button type="submit" class="btn-primary auth-submit">Sign In</button>
+        </form>
+
+        <form id="register-form" class="auth-form" hidden>
+          <label for="register-name">Name</label>
+          <input type="text" id="register-name" name="name" autocomplete="name" required />
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" name="email" autocomplete="email" required />
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" name="password" autocomplete="new-password" minlength="8" required />
+          <p class="auth-hint">Use at least 8 characters. Your password is hashed before it is saved.</p>
+          <button type="submit" class="btn-primary auth-submit">Create Account</button>
+        </form>
+
+        <div class="auth-divider"><span>or</span></div>
+        <a class="btn-ghost auth-google" id="google-btn" href="/api/auth/google">Continue with Google</a>
+        <p class="auth-hint" id="google-hint" hidden>Google Sign-In needs a Google Cloud client ID in your <code>.env</code> file. Email and password work now.</p>
+      </div>
+
+      <div class="auth-card auth-saved" id="auth-saved" hidden>
+        <span class="section-eyebrow">Signed in</span>
+        <h1 class="section-title">Your saved resources</h1>
+        <p class="section-sub" id="saved-lead"></p>
+        <ul class="saved-list" id="saved-list"></ul>
+        <div class="cta-band-actions" style="justify-content:flex-start;margin-top:24px">
+          <a href="hub.html" class="btn-primary">Open Resource Hub</a>
+          <button type="button" class="btn-ghost" id="saved-sign-out">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-bottom">
+          <span>&copy; 2026 QueenCityConnect, Charlotte, NC</span>
+          <span>TSA Webmaster 2026</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/auth.js"></script>
+  <script>
+    function nextPage() {
+      const params = new URLSearchParams(window.location.search);
+      const next = params.get('next') || 'hub.html';
+      return next.startsWith('/') || next.includes('://') ? 'hub.html' : next;
+    }
+
+    function showError(message) {
+      const el = document.getElementById('auth-error');
+      if (!message) {
+        el.hidden = true;
+        el.textContent = '';
+        return;
+      }
+      el.hidden = false;
+      el.textContent = message;
+    }
+
+    function setMode(mode) {
+      const signin = mode === 'signin';
+      document.getElementById('tab-signin').classList.toggle('is-active', signin);
+      document.getElementById('tab-register').classList.toggle('is-active', !signin);
+      document.getElementById('signin-form').hidden = !signin;
+      document.getElementById('register-form').hidden = signin;
+      document.getElementById('auth-title').textContent = signin ? 'Sign in' : 'Create an account';
+      document.getElementById('auth-lead').textContent = signin
+        ? 'Welcome back. Your bookmarks and hub choices are waiting.'
+        : 'Create an account to keep bookmarks, filters, and submissions saved to you.';
+      showError('');
+    }
+
+    async function renderSaved() {
+      const forms = document.getElementById('auth-forms');
+      const saved = document.getElementById('auth-saved');
+      if (!QCCAuth.user) {
+        forms.hidden = false;
+        saved.hidden = true;
+        return;
+      }
+      forms.hidden = true;
+      saved.hidden = false;
+      document.getElementById('saved-lead').textContent =
+        'Signed in as ' + QCCAuth.user.name + ' (' + QCCAuth.user.email + '). Bookmarks and hub choices stay with this account.';
+      const list = document.getElementById('saved-list');
+      const ids = (QCCAuth.state && QCCAuth.state.bookmarks) || [];
+      if (!ids.length) {
+        list.innerHTML = '<li class="saved-empty">No saved resources yet. Open the Hub and tap the heart on a listing.</li>';
+        return;
+      }
+      try {
+        const data = await fetch('/data/resources.json').then((r) => r.json());
+        const byId = {};
+        (data.resources || []).forEach((r) => { byId[r.id] = r; });
+        list.innerHTML = ids.map((id) => {
+          const resource = byId[id];
+          if (!resource) return '<li>Saved resource #' + id + '</li>';
+          return '<li><a href="hub.html">' + resource.name + '</a><span>' + resource.category + '</span></li>';
+        }).join('');
+      } catch {
+        list.innerHTML = '<li>' + ids.length + ' saved resource' + (ids.length === 1 ? '' : 's') + '</li>';
+      }
+    }
+
+    document.querySelectorAll('.auth-tab').forEach((tab) => {
+      tab.addEventListener('click', () => setMode(tab.dataset.mode));
+    });
+
+    document.getElementById('signin-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError('');
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      try {
+        await QCCAuth.login(
+          document.getElementById('signin-email').value,
+          document.getElementById('signin-password').value
+        );
+        await QCCAuth.flushSave();
+        window.location.href = nextPage();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+        showError(err.message || 'Could not sign in.');
+      }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError('');
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+      try {
+        await QCCAuth.register(
+          document.getElementById('register-name').value,
+          document.getElementById('register-email').value,
+          document.getElementById('register-password').value
+        );
+        await QCCAuth.flushSave();
+        window.location.href = nextPage();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+        showError(err.message || 'Could not create account.');
+      }
+    });
+
+    document.getElementById('saved-sign-out').addEventListener('click', async () => {
+      await QCCAuth.logout();
+      window.location.href = 'signin.html';
+    });
+
+    QCCAuth.ready.then(async () => {
+      const params = new URLSearchParams(window.location.search);
+      const err = params.get('error');
+      if (err === 'google-setup') {
+        showError('Google Sign-In is not set up yet. Use email and password, or add Google keys to your .env file.');
+      } else if (err === 'google') {
+        showError('Google Sign-In did not complete. Try again, or use email and password.');
+      }
+      const googleBtn = document.getElementById('google-btn');
+      const googleHint = document.getElementById('google-hint');
+      googleBtn.href = '/api/auth/google?next=' + encodeURIComponent('/' + nextPage());
+      if (!QCCAuth.googleEnabled) {
+        googleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          googleHint.hidden = false;
+          showError('Google Sign-In needs Google Cloud keys in .env. Email and password work now.');
+        });
+        googleHint.hidden = false;
+      }
+      await renderSaved();
+    });
+  </script>
+</body>
+
+</html>

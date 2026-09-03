@@ -24,6 +24,10 @@ function buildSubmissionPayload() {
 }
 
 function saveSubmission(payload) {
+  if (window.QCCAuth && typeof QCCAuth.appendSubmission === 'function') {
+    QCCAuth.appendSubmission(payload);
+    return;
+  }
   const existing = JSON.parse(localStorage.getItem('clt-submissions') || '[]');
   existing.push(payload);
   localStorage.setItem('clt-submissions', JSON.stringify(existing));

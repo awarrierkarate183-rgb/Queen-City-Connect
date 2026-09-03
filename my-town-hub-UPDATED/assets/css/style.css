@@ -579,33 +579,38 @@ body {
 
 /* ─── CTA BAND ─── */
 .cta-band {
-  padding: 88px 0 120px;
+  padding: 72px 0;
   margin: 0;
-  background: linear-gradient(180deg, #1a5c38 0%, #175233 58%, #123c26 82%, #111111 100%);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
 }
-body.dark .cta-band {
-  background: linear-gradient(180deg, #1a5c38 0%, #175233 58%, #123c26 82%, #111111 100%);
+.cta-band-card {
+  display: grid;
+  grid-template-columns: 1.4fr auto;
+  gap: 40px;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 36px 40px;
 }
-body.dark .cta-band h2 { color: white; }
-body.dark .cta-band p { color: rgba(255,255,255,0.8); }
-body.dark .btn-white { background: white; color: #1a1a1a; }
-body.dark .btn-outline-white { color: white; border-color: rgba(255,255,255,0.5); }
-.cta-band h2 {
-  font-family: var(--font-serif);
-  font-size: 42px; color: white;
-  letter-spacing: -0.5px; margin-bottom: 12px;
+.cta-band-copy .section-eyebrow {
+  color: var(--accent);
+  margin-bottom: 8px;
 }
-.cta-band .container {
-  text-align: center;
+.cta-band-copy .section-title {
+  margin-bottom: 10px;
 }
-.cta-band p {
-  font-size: 16px; color: rgba(255,255,255,0.65);
-  margin-bottom: 32px; max-width: 440px;
-  margin-left: auto; margin-right: auto;
+.cta-band-copy .section-sub {
+  margin: 0;
+  max-width: 520px;
 }
 .cta-band-actions {
-  display: flex; gap: 12px;
-  justify-content: center; flex-wrap: wrap;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 /* ─── FOOTER ─── */
@@ -1192,6 +1197,7 @@ body.dark .form-card, body.dark .submit-info-card { background: #231f1b; border-
 body.dark .about-card, body.dark .about-stats-card,
 body.dark .about-who-card, body.dark .numbers-card { background: #231f1b; border-color: #2e2924; }
 body.dark .doc-link, body.dark .ref-list li, body.dark .map-legend { background: #231f1b; border-color: #2e2924; }
+body.dark .cta-band-card { background: #231f1b; border-color: #2e2924; border-left-color: var(--accent); }
 body.dark .numbers-card:hover { background: #1a1714; }
 body.dark .map-section { background: #1a1714; border-color: #2e2924; }
 body.dark .page-header { background: #1a1714; border-color: #2e2924; }
@@ -1216,6 +1222,12 @@ body.dark .footer-bottom { border-color: #2e2924; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 16px 0; }
   .map-layout { grid-template-columns: 1fr; }
+  .cta-band-card {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 28px 24px;
+  }
+  .cta-band-actions { justify-content: flex-start; }
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
   .about-grid { grid-template-columns: 1fr; }
   .numbers-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1249,7 +1261,9 @@ body.dark .footer-bottom { border-color: #2e2924; }
   .form-group.full { grid-column: 1; }
   .page-header h1 { font-size: 34px; }
   .section-title { font-size: 26px; }
-  .cta-band h2 { font-size: 30px; }
+  .cta-band { padding: 48px 0; }
+  .cta-band-actions .btn-primary,
+  .cta-band-actions .btn-ghost { text-align: center; }
 
   .crisis-bar-inner {
     flex-direction: column;
@@ -1632,14 +1646,11 @@ html {
   padding: 32px;
 }
 
-/* ─── CTA BAND DARK MODE FIX ─── */
+/* ─── CTA BAND ─── */
 body.dark .cta-band {
-  background: linear-gradient(180deg, #1a5c38 0%, #175233 58%, #123c26 82%, #111111 100%);
+  background: var(--paper);
+  border-color: var(--rule);
 }
-body.dark .cta-band h2 { color: white; }
-body.dark .cta-band p { color: rgba(255,255,255,0.82); }
-body.dark .btn-white { background: white; color: #1a1a1a; }
-body.dark .btn-outline-white { color: white; border-color: rgba(255,255,255,0.5); }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1000px) {

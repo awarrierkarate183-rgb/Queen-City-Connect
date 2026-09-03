@@ -23,6 +23,7 @@
         <li><a href="about.html">About</a></li>
       </ul>
       <div class="nav-right">
+        <div class="nav-account" id="nav-account"></div>
         <a href="hub.html" class="nav-cta">Find Resources</a>
         <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
           aria-label="Menu">&#9776;</button>
@@ -77,7 +78,7 @@
         <div class="about-card">
           <span class="about-card-num">02</span>
           <h3>Local and Verified</h3>
-          <p>Every listing is a real Charlotte-Mecklenburg organization with verified contact info and hours.</p>
+          <p>Verified local nonprofits are ranked first. The map also includes live, geolocated schools, clinics, shelters, and community sites that refresh every two weeks.</p>
         </div>
         <div class="about-card">
           <span class="about-card-num">03</span>
@@ -183,11 +184,16 @@
 
   <section class="cta-band">
     <div class="container">
-      <h2>Know a resource we&rsquo;re missing?</h2>
-      <p>Help your neighbors by adding a local organization to the directory.</p>
-      <div class="cta-band-actions">
-        <a href="submit.html" class="btn-white">Submit a Resource</a>
-        <a href="hub.html" class="btn-outline-white">Browse the Hub</a>
+      <div class="cta-band-card">
+        <div class="cta-band-copy">
+          <span class="section-eyebrow">Get Involved</span>
+          <h2 class="section-title">Know a resource we&rsquo;re missing?</h2>
+          <p class="section-sub">Help your neighbors by adding a local organization to the directory.</p>
+        </div>
+        <div class="cta-band-actions">
+          <a href="submit.html" class="btn-primary">Submit a Resource</a>
+          <a href="hub.html" class="btn-ghost">Browse the Hub</a>
+        </div>
       </div>
     </div>
   </section>
@@ -203,7 +209,7 @@
           <div class="footer-newsletter-form">
             <label>Email Address</label>
             <input type="email" placeholder="you@example.com" />
-            <button class="btn-primary" onclick="alert('Thank you for signing up!')">Sign Up</button>
+            <button type="button" class="btn-primary newsletter-signup-btn">Sign Up</button>
           </div>
         </div>
       </div>
@@ -253,6 +259,7 @@
     </div>
   </footer>
 
+  <script src="assets/js/auth.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 

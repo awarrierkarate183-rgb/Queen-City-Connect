@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <meta name="description"
-    content="Browse and search 50+ verified community resources in Charlotte-Mecklenburg County. Filter by food, housing, health, mental health, and more." />
+    content="Browse a live, auto-updating directory of community resources in Charlotte-Mecklenburg County. Filter by food, housing, health, mental health, and more." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resource Hub | QueenCityConnect</title>
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -24,6 +24,7 @@
         <li><a href="about.html">About</a></li>
       </ul>
       <div class="nav-right">
+        <div class="nav-account" id="nav-account"></div>
         <a href="hub.html" class="nav-cta">Find Resources</a>
         <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
           aria-label="Menu">&#9776;</button>
@@ -70,13 +71,14 @@
             <option value="Weekday">Weekday Only</option>
           </select>
           <select class="hub-select" id="sort-select" onchange="onSortSelect(this.value)">
-            <option value="default">Sort: Default</option>
+            <option value="best" selected>Sort: Best match</option>
             <option value="az">Sort: A to Z</option>
             <option value="za">Sort: Z to A</option>
           </select>
           <button class="filter-btn clear-btn" onclick="clearAllFilters()">Clear All</button>
         </div>
-        <p class="hub-filter-hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories.</p>
+        <p class="hub-filter-hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories. The directory auto-refreshes every 2 weeks from live map data, with verified QueenCityConnect listings ranked first.</p>
+        <p class="hub-filter-hint" id="directory-updated"></p>
         <div class="hub-toolbar">
           <div class="results-count" id="results-count"></div>
           <div class="view-toggle">
@@ -93,13 +95,34 @@
     <div class="container">
       <div id="list-view">
         <div class="resource-grid" id="resource-grid"></div>
+        <div class="load-more-wrap" id="load-more-wrap">
+          <button type="button" class="btn-primary" onclick="loadMoreResources()">Load more resources</button>
+        </div>
         <div class="no-results hidden" id="no-results">
           <p>No resources found matching your search.</p>
           <button class="btn-secondary" onclick="clearAllFilters()">Clear Filters</button>
         </div>
       </div>
       <div id="map-view" class="hidden">
-        <div id="map"></div>
+        <div class="map-layout map-layout-hub">
+          <div id="map"></div>
+          <div class="map-legend">
+            <h3>Categories</h3>
+            <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Food</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>Health</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Housing</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>Mental Health</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Youth</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ec4899"></span>Safety</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#6366f1"></span>Legal Aid</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#14b8a6"></span>Financial Aid</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span>Veterans</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span>Employment</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>Education</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#94a3b8"></span>General</div>
+            <p class="map-legend-note">Each dot is one mapped location at its real latitude and longitude. Click a dot for details.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -115,7 +138,7 @@
           <div class="footer-newsletter-form">
             <label>Email Address</label>
             <input type="email" placeholder="you@example.com" />
-            <button class="btn-primary" onclick="alert('Thank you for signing up!')">Sign Up</button>
+            <button type="button" class="btn-primary newsletter-signup-btn">Sign Up</button>
           </div>
         </div>
       </div>
@@ -167,6 +190,8 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/map-points.js"></script>
+  <script src="assets/js/auth.js"></script>
   <script src="assets/js/hub.js"></script>
   <script src="assets/js/main.js"></script>
   <script>
@@ -178,34 +203,42 @@
       } else {
         selected.forEach(v => activeCategories.add(v));
       }
+      visibleCount = 24;
       renderResources();
       if (currentView === 'map') renderMap();
+      persistHubState();
     }
 
     function onHoursSelect(val) {
       hoursFilter = val;
+      visibleCount = 24;
       renderResources();
       if (currentView === 'map') renderMap();
+      persistHubState();
     }
 
     function onSortSelect(val) {
       sortOrder = val;
+      visibleCount = 24;
       renderResources();
+      persistHubState();
     }
 
     function clearAllFilters() {
       activeCategories.clear();
       activeCategories.add('All');
       hoursFilter = 'All';
-      sortOrder = 'default';
+      sortOrder = 'best';
       searchQuery = '';
+      visibleCount = 24;
       document.getElementById('search-input').value = '';
       const sel = document.getElementById('category-select');
       Array.from(sel.options).forEach(o => o.selected = o.value === 'All');
       document.getElementById('hours-select').value = 'All';
-      document.getElementById('sort-select').value = 'default';
+      document.getElementById('sort-select').value = 'best';
       renderResources();
       if (currentView === 'map') renderMap();
+      persistHubState();
     }
   </script>
 </body>

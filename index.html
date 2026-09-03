@@ -22,6 +22,7 @@
         <li><a href="about.html">About</a></li>
       </ul>
       <div class="nav-right">
+        <div class="nav-account" id="nav-account"></div>
         <a href="hub.html" class="nav-cta">Find Resources</a>
         <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
           aria-label="Menu">&#9776;</button>
@@ -89,7 +90,7 @@
           <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span>Veterans</div>
           <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span>Employment</div>
           <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>Education</div>
-          <div class="legend-item"><span class="legend-dot" style="background:#64748b"></span>General</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#94a3b8"></span>General</div>
           <a href="hub.html" class="btn-primary"
             style="display:block;text-align:center;margin-top:16px;font-size:13px;padding:9px 16px">Full Directory</a>
         </div>
@@ -100,11 +101,17 @@
   <!-- CTA -->
   <section class="cta-band">
     <div class="container">
-      <h2>Know a resource we&rsquo;re missing?</h2>
-      <p>Help your neighbors by adding a local organization to the directory. It takes two minutes.</p>
-      <div class="cta-band-actions">
-        <a href="submit.html" class="btn-white">Submit a Resource</a>
-        <a href="about.html" class="btn-outline-white">About This Project</a>
+      <div class="cta-band-card">
+        <div class="cta-band-copy">
+          <span class="section-eyebrow">Get Involved</span>
+          <h2 class="section-title">Know a resource we&rsquo;re missing?</h2>
+          <p class="section-sub">Help your neighbors by adding a local organization to the directory. It takes two
+            minutes.</p>
+        </div>
+        <div class="cta-band-actions">
+          <a href="submit.html" class="btn-primary">Submit a Resource</a>
+          <a href="about.html" class="btn-ghost">About This Project</a>
+        </div>
       </div>
     </div>
   </section>
@@ -121,7 +128,7 @@
           <div class="footer-newsletter-form">
             <label>Email Address</label>
             <input type="email" placeholder="you@example.com" />
-            <button class="btn-primary" onclick="alert('Thank you for signing up!')">Sign Up</button>
+            <button type="button" class="btn-primary newsletter-signup-btn">Sign Up</button>
           </div>
         </div>
       </div>
@@ -173,6 +180,8 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/map-points.js"></script>
+  <script src="assets/js/auth.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 

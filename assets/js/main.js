@@ -53,107 +53,17 @@ async function loadSpotlight() {
 }
 
 // ─── HOMEPAGE MAP ───
-const coordinates = {
-  "Nourish Up": [35.2397, -80.8329],
-  "Roof Above": [35.2368, -80.8364],
-  "NAMI Charlotte": [35.2085, -80.8391],
-  "Crisis Assistance Ministry": [35.2397, -80.834],
-  "The Relatives": [35.2201, -80.8712],
-  "Hope Street Food Pantry": [35.3412, -80.7923],
-  "Alexander Youth Network": [35.2271, -80.8101],
-  "Care Ring": [35.1401, -80.9312],
-  "Safe Alliance": [35.2289, -80.8321],
-  "United Way of Greater Charlotte": [35.2241, -80.8431],
-  "Charlotte Center for Legal Advocacy": [35.2118, -80.8401],
-  "Mobile Crisis Team (CriSys)": [35.2271, -80.852],
-  "Veterans Bridge Home": [35.1801, -80.9012],
-  "Mecklenburg County Veterans Services": [35.2198, -80.8743],
-  "Goodwill Industries of the Southern Piedmont": [35.2198, -80.8712],
-  "Habitat for Humanity Charlotte": [35.1912, -80.9101],
-  "Charlotte Rescue Mission": [35.2312, -80.8289],
-  "Loaves & Fishes": [35.2412, -80.8312],
-  "Charlotte Community Health Clinic": [35.3185, -80.7589],
-  "Salvation Army of Greater Charlotte": [35.2389, -80.8334],
-  "Classroom Central": [35.2234, -80.8756],
-  "Communities In Schools of CMS": [35.1989, -80.7823],
-  "Gracious Hands": [35.2156, -80.8523],
-  "Charlotte Bilingual Preschool": [35.2312, -80.8012],
-  "Hospitality House of Charlotte": [35.2178, -80.8267],
-  "Passage Home": [35.2156, -80.8534],
-  "Second Harvest Food Bank of Metrolina": [35.2198, -80.8445],
-  "Charlotte Family Housing": [35.2334, -80.8312],
-  "Behavioral Health Center of Mecklenburg County": [35.1723, -80.8134],
-  "Thompson Child & Family Focus": [35.1156, -80.7023],
-  "Latin American Coalition": [35.2378, -80.8256],
-  "Ada Jenkins Center": [35.4998, -80.8134],
-  "NC MedAssist": [35.2089, -80.8312],
-  "Dress for Success Charlotte": [35.2134, -80.8089],
-  "Mecklenburg County DSS": [35.1734, -80.8145],
-  "Catholic Charities Diocese of Charlotte": [35.2089, -80.8534],
-  "Time Out Youth Center": [35.2134, -80.8001],
-  "Anuvia Prevention and Recovery Center": [35.1756, -80.8134],
-  "Dilworth Soup Kitchen": [35.2089, -80.8423],
-  "International House Charlotte": [35.2156, -80.8001],
-  "RAIN of North Carolina": [35.2267, -80.8378],
-  "Crossroads Charlotte": [35.2201, -80.8456],
-  "McLeod Addictive Disease Center": [35.1923, -80.8756],
-  "Monarch NC": [35.1989, -80.7934],
-  "Center for Community Transitions": [35.2934, -80.7823],
-  "Transcend Charlotte": [35.2134, -80.8012],
-  "Carolina Refugee Resettlement Agency": [35.2134, -80.7934],
-  "Family Support Services of Mecklenburg": [35.2312, -80.8401],
-  "StepUp Ministry": [35.2289, -80.8089],
-  "Friendship Trays": [35.2267, -80.8045]
-};
-
-const categoryColors = {
-  "Food": "#ef4444",
-  "Housing": "#10b981",
-  "Health": "#3b82f6",
-  "Mental Health": "#8b5cf6",
-  "Youth": "#f59e0b",
-  "Safety": "#ec4899",
-  "Legal Aid": "#6366f1",
-  "Financial Aid": "#14b8a6",
-  "General Support": "#64748b",
-  "Veterans": "#dc2626",
-  "Employment": "#16a34a",
-  "Education": "#7c3aed"
-};
-
 async function loadHomeMap() {
   const mapEl = document.getElementById('home-map');
-  if (!mapEl || typeof L === 'undefined') return;
-  const map = L.map('home-map').setView([35.2271, -80.8431], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+  if (!mapEl || typeof L === 'undefined' || !window.QCCMap) return;
+  const map = window.QCCMap.create('home-map');
+  const layer = L.layerGroup().addTo(map);
   try {
     const response = await fetch('/data/resources.json');
     const data = await response.json();
-    data.resources.forEach(resource => {
-      const coords = coordinates[resource.name];
-      if (!coords) return;
-      const color = categoryColors[resource.category] || '#64748b';
-      const icon = L.divIcon({
-        html: `<div style="width:12px;height:12px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.25)"></div>`,
-        className: '',
-        iconSize: [12, 12],
-        iconAnchor: [6, 6]
-      });
-      const marker = L.marker(coords, { icon }).addTo(map);
-      marker.bindPopup(`
-        <div style="min-width:200px;font-family:'DM Sans',system-ui,sans-serif;padding:4px">
-          <strong style="font-size:14px;color:#1a1a1a;display:block;margin-bottom:4px">${resource.name}</strong>
-          <span style="font-size:11px;color:#9a9a9a;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">${resource.category}</span>
-          <hr style="border:none;border-top:1px solid #e8e4df;margin:8px 0"/>
-          <span style="font-size:12px;color:#3d3d3d;display:block;margin-bottom:3px">${resource.phone}</span>
-          <span style="font-size:12px;color:#3d3d3d;display:block;margin-bottom:10px">${resource.hours}</span>
-          <a href="${resource.website}" target="_blank" style="font-size:13px;color:#1a5c38;font-weight:600;text-decoration:none">Visit website &rarr;</a>
-        </div>
-      `);
-    });
-  } catch(e) {
+    window.QCCMap.draw(layer, data.resources || []);
+    setTimeout(() => map.invalidateSize(), 80);
+  } catch (e) {
     console.error('Could not load map data', e);
   }
 }
@@ -336,6 +246,27 @@ function toggleDark() {
   });
 })();
 
+function initNewsletter() {
+  document.querySelectorAll('.footer-newsletter-form').forEach(form => {
+    const input = form.querySelector('input[type="email"]');
+    const btn = form.querySelector('.newsletter-signup-btn') || form.querySelector('button');
+    if (!input || !btn) return;
+    btn.addEventListener('click', async () => {
+      const email = input.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (window.QCCAuth && QCCAuth.user) {
+        await QCCAuth.saveState({ newsletterEmail: email }, { immediate: true });
+        alert('You are signed up. This email is saved to your account.');
+        return;
+      }
+      alert('Thank you for signing up! Create an account to keep this email saved.');
+    });
+  });
+}
+
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', () => {
   loadSpotlight();
@@ -347,4 +278,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initNavbar();
   initCardTilt();
+  initNewsletter();
 });

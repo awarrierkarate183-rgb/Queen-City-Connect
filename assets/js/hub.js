@@ -2,79 +2,13 @@ let allResources = [];
 let activeCategories = new Set(['All']);
 let searchQuery = '';
 let hoursFilter = 'All';
-let sortOrder = 'default';
+let sortOrder = 'best';
 let currentView = 'list';
 let map = null;
-let markers = [];
+let pointsLayer = null;
 let bookmarks = JSON.parse(localStorage.getItem('clt-bookmarks') || '[]');
-
-const coordinates = {
-  "Nourish Up": [35.2397, -80.8329],
-  "Roof Above": [35.2368, -80.8364],
-  "NAMI Charlotte": [35.2085, -80.8391],
-  "Crisis Assistance Ministry": [35.2397, -80.834],
-  "The Relatives": [35.2201, -80.8712],
-  "Hope Street Food Pantry": [35.3412, -80.7923],
-  "Alexander Youth Network": [35.2271, -80.8101],
-  "Care Ring": [35.1401, -80.9312],
-  "Safe Alliance": [35.2289, -80.8321],
-  "United Way of Greater Charlotte": [35.2241, -80.8431],
-  "Charlotte Center for Legal Advocacy": [35.2118, -80.8401],
-  "Mobile Crisis Team (CriSys)": [35.2271, -80.852],
-  "Veterans Bridge Home": [35.1801, -80.9012],
-  "Mecklenburg County Veterans Services": [35.2198, -80.8743],
-  "Goodwill Industries of the Southern Piedmont": [35.2198, -80.8712],
-  "Habitat for Humanity Charlotte": [35.1912, -80.9101],
-  "Charlotte Rescue Mission": [35.2312, -80.8289],
-  "Loaves & Fishes": [35.2412, -80.8312],
-  "Charlotte Community Health Clinic": [35.3185, -80.7589],
-  "Salvation Army of Greater Charlotte": [35.2389, -80.8334],
-  "Classroom Central": [35.2234, -80.8756],
-  "Communities In Schools of CMS": [35.1989, -80.7823],
-  "Gracious Hands": [35.2156, -80.8523],
-  "Charlotte Bilingual Preschool": [35.2312, -80.8012],
-  "Hospitality House of Charlotte": [35.2178, -80.8267],
-  "Passage Home": [35.2156, -80.8534],
-  "Second Harvest Food Bank of Metrolina": [35.2198, -80.8445],
-  "Charlotte Family Housing": [35.2334, -80.8312],
-  "Behavioral Health Center of Mecklenburg County": [35.1723, -80.8134],
-  "Thompson Child & Family Focus": [35.1156, -80.7023],
-  "Latin American Coalition": [35.2378, -80.8256],
-  "Ada Jenkins Center": [35.4998, -80.8134],
-  "NC MedAssist": [35.2089, -80.8312],
-  "Dress for Success Charlotte": [35.2134, -80.8089],
-  "Mecklenburg County DSS": [35.1734, -80.8145],
-  "Catholic Charities Diocese of Charlotte": [35.2089, -80.8534],
-  "Time Out Youth Center": [35.2134, -80.8001],
-  "Anuvia Prevention and Recovery Center": [35.1756, -80.8134],
-  "Dilworth Soup Kitchen": [35.2089, -80.8423],
-  "International House Charlotte": [35.2156, -80.8001],
-  "RAIN of North Carolina": [35.2267, -80.8378],
-  "Crossroads Charlotte": [35.2201, -80.8456],
-  "McLeod Addictive Disease Center": [35.1923, -80.8756],
-  "Monarch NC": [35.1989, -80.7934],
-  "Center for Community Transitions": [35.2934, -80.7823],
-  "Transcend Charlotte": [35.2134, -80.8012],
-  "Carolina Refugee Resettlement Agency": [35.2134, -80.7934],
-  "Family Support Services of Mecklenburg": [35.2312, -80.8401],
-  "StepUp Ministry": [35.2289, -80.8089],
-  "Friendship Trays": [35.2267, -80.8045]
-};
-
-const categoryColors = {
-  "Food": "#ef4444",
-  "Housing": "#10b981",
-  "Health": "#3b82f6",
-  "Mental Health": "#8b5cf6",
-  "Youth": "#f59e0b",
-  "Safety": "#ec4899",
-  "Legal Aid": "#6366f1",
-  "Financial Aid": "#14b8a6",
-  "General Support": "#64748b",
-  "Veterans": "#dc2626",
-  "Employment": "#16a34a",
-  "Education": "#7c3aed"
-};
+let hubHydrating = false;
+let visibleCount = 24;
 
 const resourcePhotos = {
   "Nourish Up": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80",
@@ -130,7 +64,73 @@ const resourcePhotos = {
 };
 
 // ─── LOAD ───
+function applySavedHubPrefs() {
+  if (!window.QCCAuth || !QCCAuth.user || !QCCAuth.state) return;
+
+  if (Array.isArray(QCCAuth.state.bookmarks)) {
+    bookmarks = QCCAuth.state.bookmarks.map(Number);
+    localStorage.setItem('clt-bookmarks', JSON.stringify(bookmarks));
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('category')) return;
+
+  const prefs = QCCAuth.state.hubPrefs;
+  if (!prefs) return;
+
+  if (Array.isArray(prefs.categories) && prefs.categories.length) {
+    activeCategories = new Set(prefs.categories);
+    const sel = document.getElementById('category-select');
+    if (sel) {
+      Array.from(sel.options).forEach(o => {
+        o.selected = activeCategories.has(o.value);
+      });
+    }
+  }
+
+  if (typeof prefs.search === 'string') {
+    searchQuery = prefs.search.toLowerCase().trim();
+    const input = document.getElementById('search-input');
+    if (input) input.value = prefs.search;
+  }
+
+  if (prefs.hours) {
+    hoursFilter = prefs.hours;
+    const hours = document.getElementById('hours-select');
+    if (hours) hours.value = prefs.hours;
+  }
+
+  if (prefs.sort) {
+    sortOrder = prefs.sort === 'default' ? 'best' : prefs.sort;
+    const sort = document.getElementById('sort-select');
+    if (sort) sort.value = sortOrder;
+  }
+
+  if (prefs.view === 'map' || prefs.view === 'list') {
+    setView(prefs.view);
+  }
+}
+
+function persistHubState(immediate) {
+  bookmarks = bookmarks.map(Number).filter((n) => n > 0);
+  localStorage.setItem('clt-bookmarks', JSON.stringify(bookmarks));
+  if (hubHydrating || !window.QCCAuth || !QCCAuth.user) return;
+  QCCAuth.saveState({
+    bookmarks,
+    hubPrefs: {
+      categories: [...activeCategories],
+      search: document.getElementById('search-input') ? document.getElementById('search-input').value : searchQuery,
+      hours: hoursFilter,
+      sort: sortOrder,
+      view: currentView
+    }
+  }, { immediate: !!immediate });
+}
+
 async function loadResources() {
+  if (window.QCCAuth && QCCAuth.ready) {
+    await QCCAuth.ready;
+  }
   try {
     const response = await fetch('/data/resources.json');
     const data = await response.json();
@@ -139,6 +139,7 @@ async function loadResources() {
     const params = new URLSearchParams(window.location.search);
     const urlCategory = params.get('category');
 
+    hubHydrating = true;
     if (urlCategory) {
       activeCategories.clear();
       activeCategories.add(urlCategory);
@@ -149,9 +150,13 @@ async function loadResources() {
         });
       }
     }
+    applySavedHubPrefs();
+    hubHydrating = false;
 
     renderResources();
+    loadDirectoryMeta();
   } catch(e) {
+    hubHydrating = false;
     console.error('Could not load resources', e);
   }
 }
@@ -162,11 +167,8 @@ function getFiltered() {
     const matchCategory =
       activeCategories.has('All') ||
       activeCategories.has(r.category);
-    const matchSearch =
-      r.name.toLowerCase().includes(searchQuery) ||
-      r.category.toLowerCase().includes(searchQuery) ||
-      r.description.toLowerCase().includes(searchQuery) ||
-      r.address.toLowerCase().includes(searchQuery);
+    const hay = `${r.name} ${r.category} ${r.description} ${r.address}`.toLowerCase();
+    const matchSearch = !searchQuery || hay.includes(searchQuery);
     const matchHours =
       hoursFilter === 'All' ||
       (hoursFilter === '24/7' && r.hours === '24/7') ||
@@ -175,9 +177,28 @@ function getFiltered() {
   });
 
   if (sortOrder === 'az') results.sort((a, b) => a.name.localeCompare(b.name));
-  if (sortOrder === 'za') results.sort((a, b) => b.name.localeCompare(a.name));
+  else if (sortOrder === 'za') results.sort((a, b) => b.name.localeCompare(a.name));
+  else results.sort((a, b) => (Number(b.score) - Number(a.score)) || Number(b.verified) - Number(a.verified) || a.name.localeCompare(b.name));
 
   return results;
+}
+
+function categoryPhoto(category) {
+  const photos = {
+    "Food": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80",
+    "Housing": "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80",
+    "Health": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80",
+    "Mental Health": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&q=80",
+    "Youth": "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80",
+    "Safety": "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80",
+    "Legal Aid": "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=600&q=80",
+    "Financial Aid": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80",
+    "General Support": "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&q=80",
+    "Veterans": "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=600&q=80",
+    "Employment": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80",
+    "Education": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
+  };
+  return photos[category] || photos['General Support'];
 }
 
 // ─── RENDER CARDS ───
@@ -202,12 +223,13 @@ function renderResources() {
     const cats = [...activeCategories].join(', ');
     filterLabel = ` in <strong>${cats}</strong>`;
   }
-  countEl.innerHTML = `${filtered.length} resource${filtered.length !== 1 ? 's' : ''}${filterLabel}`;
+  const page = filtered.slice(0, visibleCount);
+  countEl.innerHTML = `${filtered.length.toLocaleString()} resource${filtered.length !== 1 ? 's' : ''}${filterLabel}`;
 
-  filtered.forEach(resource => {
-    const isBookmarked = bookmarks.includes(resource.id);
+  page.forEach(resource => {
+    const isBookmarked = bookmarks.map(Number).includes(Number(resource.id));
     const catClass = resource.category.replace(/ /g, '-');
-    const photo = resourcePhotos[resource.name] || 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&q=80';
+    const photo = resourcePhotos[resource.name] || categoryPhoto(resource.category);
     const card = document.createElement('div');
     card.classList.add('resource-card');
     card.innerHTML = `
@@ -215,6 +237,7 @@ function renderResources() {
         <div class="resource-card-photo-overlay"></div>
         <div class="resource-card-photo-top">
           <span class="card-category ${catClass}">${resource.category}</span>
+          ${resource.verified ? '<span class="badge-24">Verified</span>' : ''}
           ${resource.hours === '24/7' ? '<span class="badge-24">24/7</span>' : ''}
           <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
             onclick="toggleBookmark(${resource.id}, this)"
@@ -239,7 +262,7 @@ function renderResources() {
           </div>
         </div>
         <div class="card-actions">
-          <a href="${resource.website}" target="_blank" class="btn-secondary">Visit Website</a>
+          <a href="${resource.website}" target="_blank" class="btn-secondary" onclick="trackResourceUse(${resource.id}, 'website')">Visit Website</a>
           <button class="btn-print" onclick="printCard(${resource.id})">Print</button>
         </div>
       </div>
@@ -247,48 +270,33 @@ function renderResources() {
     grid.appendChild(card);
   });
 
+  const more = document.getElementById('load-more-wrap');
+  if (more) more.classList.toggle('hidden', visibleCount >= filtered.length);
+
   if (typeof initScrollAnimations === 'function') initScrollAnimations();
+}
+
+function loadMoreResources() {
+  visibleCount += 24;
+  renderResources();
 }
 
 // ─── MAP VIEW ───
 function initMap() {
   if (map) return;
-  map = L.map('map').setView([35.2271, -80.8431], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+  map = window.QCCMap.create('map');
+  pointsLayer = L.layerGroup().addTo(map);
 }
 
 function renderMap() {
   initMap();
-  markers.forEach(m => map.removeLayer(m));
-  markers = [];
-
-  getFiltered().forEach(resource => {
-    const coords = coordinates[resource.name];
-    if (!coords) return;
-    const color = categoryColors[resource.category] || '#64748b';
-    const icon = L.divIcon({
-      html: `<div style="width:12px;height:12px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.25)"></div>`,
-      className: '',
-      iconSize: [12, 12],
-      iconAnchor: [6, 6]
-    });
-    const marker = L.marker(coords, { icon }).addTo(map);
-    marker.bindPopup(`
-      <div style="min-width:200px;font-family:'DM Sans',system-ui,sans-serif;padding:4px">
-        <strong style="font-size:14px;color:#1a1a1a;display:block;margin-bottom:4px">${resource.name}</strong>
-        <span style="font-size:11px;color:#9a9a9a;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">${resource.category}</span>
-        <hr style="border:none;border-top:1px solid #e8e4df;margin:8px 0"/>
-        <span style="font-size:12px;color:#3d3d3d;display:block;margin-bottom:3px">${resource.phone}</span>
-        <span style="font-size:12px;color:#3d3d3d;display:block;margin-bottom:10px">${resource.hours}</span>
-        <a href="${resource.website}" target="_blank" style="font-size:13px;color:#1a5c38;font-weight:600;text-decoration:none">Visit website &rarr;</a>
-      </div>
-    `);
-    markers.push(marker);
-  });
-
-  setTimeout(() => map.invalidateSize(), 100);
+  const bounds = window.QCCMap.draw(pointsLayer, getFiltered());
+  if (bounds.length && (!activeCategories.has('All') || searchQuery)) {
+    map.fitBounds(L.latLngBounds(bounds).pad(0.08), { maxZoom: 13, animate: false });
+  } else {
+    map.setView(window.QCCMap.charlotte, 11);
+  }
+  setTimeout(() => map.invalidateSize(), 80);
 }
 
 // ─── VIEW TOGGLE ───
@@ -299,25 +307,34 @@ function setView(view) {
   document.getElementById('btn-list').classList.toggle('active', view === 'list');
   document.getElementById('btn-map').classList.toggle('active', view === 'map');
   if (view === 'map') renderMap();
+  persistHubState();
+}
+
+function trackResourceUse(id, type) {
+  if (window.QCCAuth) QCCAuth.recordActivity(type, id);
 }
 
 // ─── BOOKMARKS ───
 function toggleBookmark(id, btn) {
-  const idx = bookmarks.indexOf(id);
+  id = Number(id);
+  const idx = bookmarks.map(Number).indexOf(id);
   if (idx === -1) {
     bookmarks.push(id);
     btn.classList.add('bookmarked');
+    if (window.QCCAuth) QCCAuth.recordActivity('bookmark', id);
   } else {
     bookmarks.splice(idx, 1);
     btn.classList.remove('bookmarked');
+    if (window.QCCAuth) QCCAuth.recordActivity('unbookmark', id);
   }
-  localStorage.setItem('clt-bookmarks', JSON.stringify(bookmarks));
+  persistHubState(true);
 }
 
 // ─── PRINT ───
 function printCard(id) {
   const resource = allResources.find(r => r.id === id);
   if (!resource) return;
+  trackResourceUse(id, 'print');
   const win = window.open('', '_blank');
   win.document.write(`
     <!DOCTYPE html><html><head>
@@ -348,8 +365,10 @@ function printCard(id) {
 // ─── SEARCH ───
 document.getElementById('search-input').addEventListener('input', e => {
   searchQuery = e.target.value.toLowerCase().trim();
+  visibleCount = 24;
   renderResources();
   if (currentView === 'map') renderMap();
+  persistHubState();
 });
 
 function toggleHubFilters() {
@@ -373,6 +392,19 @@ function initHubTitleFade() {
   };
   scroll.addEventListener('scroll', update, { passive: true });
   update();
+}
+
+async function loadDirectoryMeta() {
+  const el = document.getElementById('directory-updated');
+  if (!el) return;
+  try {
+    const meta = await fetch('/api/resources/meta').then((r) => r.json());
+    const count = Number(meta.count || allResources.length).toLocaleString();
+    const when = meta.lastUpdated ? new Date(meta.lastUpdated).toLocaleDateString() : 'today';
+    el.textContent = `${count} listings in Charlotte-Mecklenburg · updated ${when} · auto-refreshes every 2 weeks`;
+  } catch {
+    el.textContent = `${allResources.length.toLocaleString()} listings in Charlotte-Mecklenburg`;
+  }
 }
 
 loadResources();
