@@ -1,3 +1,11 @@
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 let allResources = [];
 let activeCategories = new Set(['All']);
 let searchQuery = '';
@@ -239,14 +247,14 @@ function renderResources() {
   let filterLabel = '';
   if (!activeCategories.has('All') && activeCategories.size > 0) {
     const cats = [...activeCategories].join(', ');
-    filterLabel = ` in <strong>${cats}</strong>`;
+    filterLabel = ` in <strong>${escapeHtml(cats)}</strong>`;
   }
   const page = filtered.slice(0, visibleCount);
   countEl.innerHTML = `${filtered.length.toLocaleString()} resource${filtered.length !== 1 ? 's' : ''}${filterLabel}`;
 
   page.forEach(resource => {
     const isBookmarked = bookmarks.map(Number).includes(Number(resource.id));
-    const catClass = resource.category.replace(/ /g, '-');
+    const catClass = escapeHtml(String(resource.category || '').replace(/ /g, '-'));
     const photo = (window.QCCPhotos && window.QCCPhotos.forResource(resource)) || categoryPhoto(resource.category);
     const card = document.createElement('div');
     card.classList.add('resource-card');
@@ -259,13 +267,13 @@ function renderResources() {
     const website = contact ? contact.usableWebsite(resource.website) : (resource.website && resource.website !== '#' ? resource.website : '');
     const maps = contact ? contact.mapsHref(resource.address) : '';
     card.innerHTML = `
-      <div class="resource-card-photo" style="background-image:url('${photo}')">
+      <div class="resource-card-photo" style="background-image:url('${escapeHtml(photo)}')">
         <div class="resource-card-photo-overlay"></div>
         <div class="resource-card-photo-top">
-          <span class="card-category ${catClass}">${resource.category}</span>
+          <span class="card-category ${catClass}">${escapeHtml(resource.category)}</span>
           ${resource.verified ? '<span class="badge-24">Verified</span>' : ''}
           <button type="button" class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
-            onclick="toggleBookmark(${resource.id}, this)"
+            onclick="toggleBookmark(${Number(resource.id)}, this)"
             aria-pressed="${isBookmarked ? 'true' : 'false'}"
             aria-label="${isBookmarked ? 'Remove from saved' : 'Save resource'}"
             title="${isBookmarked ? 'Saved — click to remove' : 'Save to your account'}">
@@ -274,27 +282,27 @@ function renderResources() {
         </div>
       </div>
       <div class="resource-card-body">
-        <h3>${resource.name}</h3>
-        ${oppLabel ? `<p class="card-opps">${oppLabel}</p>` : ''}
-        <p>${resource.description}</p>
+        <h3>${escapeHtml(resource.name)}</h3>
+        ${oppLabel ? `<p class="card-opps">${escapeHtml(oppLabel)}</p>` : ''}
+        <p>${escapeHtml(resource.description)}</p>
         <div class="card-details">
           ${resource.address ? `<div class="detail-row">
             <span class="detail-label">Address</span>
-            ${maps ? `<a href="${maps}" target="_blank" rel="noopener">${resource.address}</a>` : `<span>${resource.address}</span>`}
+            ${maps ? `<a href="${escapeHtml(maps)}" target="_blank" rel="noopener">${escapeHtml(resource.address)}</a>` : `<span>${escapeHtml(resource.address)}</span>`}
           </div>` : ''}
           ${phone ? `<div class="detail-row">
             <span class="detail-label">Phone</span>
-            ${tel ? `<a href="${tel}">${phone}</a>` : `<span>${phone}</span>`}
+            ${tel ? `<a href="${escapeHtml(tel)}">${escapeHtml(phone)}</a>` : `<span>${escapeHtml(phone)}</span>`}
           </div>` : ''}
           ${resource.hours ? `<div class="detail-row">
             <span class="detail-label">Hours</span>
-            <span>${resource.hours}</span>
+            <span>${escapeHtml(resource.hours)}</span>
           </div>` : ''}
         </div>
         <div class="card-actions">
-          ${tel ? `<a href="${tel}" class="btn-primary" onclick="trackResourceUse(${resource.id}, 'call')">Call</a>` : ''}
-          ${website ? `<a href="${website}" target="_blank" rel="noopener" class="btn-secondary" onclick="trackResourceUse(${resource.id}, 'website')">Website</a>` : ''}
-          <button class="btn-print" onclick="printCard(${resource.id})">Print</button>
+          ${tel ? `<a href="${escapeHtml(tel)}" class="btn-primary" onclick="trackResourceUse(${Number(resource.id)}, 'call')">Call</a>` : ''}
+          ${website ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener" class="btn-secondary" onclick="trackResourceUse(${Number(resource.id)}, 'website')">Website</a>` : ''}
+          <button class="btn-print" onclick="printCard(${Number(resource.id)})">Print</button>
         </div>
       </div>
     `;
@@ -386,10 +394,11 @@ function printCard(id) {
   const resource = allResources.find(r => r.id === id);
   if (!resource) return;
   trackResourceUse(id, 'print');
+  const website = window.QCCContact ? window.QCCContact.usableWebsite(resource.website) : (resource.website && resource.website !== '#' ? resource.website : '');
   const win = window.open('', '_blank');
   win.document.write(`
     <!DOCTYPE html><html><head>
-    <title>${resource.name} - QueenCityConnect</title>
+    <title>${escapeHtml(resource.name)} - QueenCityConnect</title>
     <style>
       body{font-family:Georgia,serif;padding:40px;color:#1a1a1a;max-width:560px}
       h1{font-size:24px;margin-bottom:4px}
@@ -399,13 +408,13 @@ function printCard(id) {
       .lbl{font-weight:700;display:inline-block;min-width:60px}
       .foot{margin-top:40px;font-size:11px;color:#9a9a9a;border-top:1px solid #e8e4df;padding-top:12px}
     </style></head><body>
-    <h1>${resource.name}</h1>
-    <span class="cat">${resource.category}</span>
-    <p>${resource.description}</p>
-    <div class="row"><span class="lbl">Address</span>${resource.address}</div>
-    <div class="row"><span class="lbl">Phone</span>${resource.phone}</div>
-    <div class="row"><span class="lbl">Hours</span>${resource.hours}</div>
-    <div class="row"><span class="lbl">Website</span>${resource.website}</div>
+    <h1>${escapeHtml(resource.name)}</h1>
+    <span class="cat">${escapeHtml(resource.category)}</span>
+    <p>${escapeHtml(resource.description)}</p>
+    <div class="row"><span class="lbl">Address</span>${escapeHtml(resource.address || '')}</div>
+    <div class="row"><span class="lbl">Phone</span>${escapeHtml(resource.phone || '')}</div>
+    <div class="row"><span class="lbl">Hours</span>${escapeHtml(resource.hours || '')}</div>
+    ${website ? `<div class="row"><span class="lbl">Website</span>${escapeHtml(website)}</div>` : ''}
     <div class="foot">QueenCityConnect - Charlotte Community Resource Directory</div>
     <script>window.onload=()=>{window.print();window.close()}<\/script>
     </body></html>
@@ -414,13 +423,16 @@ function printCard(id) {
 }
 
 // ─── SEARCH ───
-document.getElementById('search-input').addEventListener('input', e => {
-  searchQuery = e.target.value.toLowerCase().trim();
-  visibleCount = 24;
-  renderResources();
-  if (currentView === 'map') renderMap();
-  persistHubState();
-});
+const searchInput = document.getElementById('search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', e => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    visibleCount = 24;
+    renderResources();
+    if (currentView === 'map') renderMap();
+    persistHubState();
+  });
+}
 
 let hubFiltersPinned = false;
 

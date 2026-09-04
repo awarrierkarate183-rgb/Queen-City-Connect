@@ -45,7 +45,7 @@ async function loadHomeMap() {
   const map = window.QCCMap.create('home-map');
   const layer = L.layerGroup().addTo(map);
   try {
-    const response = await fetch('/data/resources.json');
+    const response = await fetch('data/resources.json');
     const data = await response.json();
     window.QCCMap.draw(layer, data.resources || []);
     setTimeout(() => map.invalidateSize(), 80);
@@ -58,7 +58,7 @@ async function loadHomeMap() {
 function initTypewriter() {
   const el = document.getElementById('typewriter');
   if (!el) return;
-  const words = ['a way in.', 'a first job.', 'volunteer hours.', 'real help.'];
+  const words = ['support.', 'community.', 'a neighborhood.', 'a school that fits.', 'a way to help.'];
   let wordIndex = 0;
   let charIndex = 0;
   let deleting = false;
@@ -239,16 +239,22 @@ function initNewsletter() {
     if (!input || !btn) return;
     btn.addEventListener('click', async () => {
       const email = input.value.trim();
+      let note = form.querySelector('.newsletter-note');
+      if (!note) {
+        note = document.createElement('p');
+        note.className = 'newsletter-note';
+        form.appendChild(note);
+      }
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert('Please enter a valid email address.');
+        note.textContent = 'Enter a valid email address.';
         return;
       }
       if (window.QCCAuth && QCCAuth.user) {
         await QCCAuth.saveState({ newsletterEmail: email }, { immediate: true });
-        alert('You are signed up. This email is saved to your account.');
+        note.textContent = 'Saved to your account. We will use this email for updates.';
         return;
       }
-      alert('Thank you for signing up! Create an account to keep this email saved.');
+      note.textContent = 'Thanks — create an account to keep this email saved on every device.';
     });
   });
 }

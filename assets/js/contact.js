@@ -3,7 +3,7 @@ window.QCCContact = {
 
   usablePhone: function (phone) {
     const raw = String(phone || '').trim();
-    if (!raw || /^see listing$/i.test(raw) || /^n\/?a$/i.test(raw)) return '';
+    if (!raw || /^see (listing|website)$/i.test(raw) || /^n\/?a$/i.test(raw)) return '';
     const digits = raw.replace(/[^\d]/g, '');
     return digits.length >= 3 ? raw : '';
   },

@@ -1,3 +1,11 @@
+function escapeMapHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 window.QCCMap = {
   categoryColors: {
     "Food": "#ef4444",
@@ -59,12 +67,12 @@ window.QCCMap = {
     const photo = window.QCCPhotos ? window.QCCPhotos.forResource(resource) : '';
     return `
       <div class="qcc-map-popup">
-        ${photo ? `<div class="qcc-map-popup-photo" style="background-image:url('${photo}')"></div>` : ''}
-        <strong>${resource.name || ''}</strong>
-        <span class="qcc-map-popup-cat"><i style="background:${color}"></i>${resource.category || ''}${resource.verified ? ' · Verified' : ''}</span>
-        ${address ? (maps ? `<a href="${maps}" target="_blank" rel="noopener">${address}</a>` : `<span>${address}</span>`) : ''}
-        ${phone ? (tel ? `<a href="${tel}">${phone}</a>` : `<span>${phone}</span>`) : ''}
-        ${website ? `<a href="${website}" target="_blank" rel="noopener">Visit website &rarr;</a>` : ''}
+        ${photo ? `<div class="qcc-map-popup-photo" style="background-image:url('${escapeMapHtml(photo)}')"></div>` : ''}
+        <strong>${escapeMapHtml(resource.name)}</strong>
+        <span class="qcc-map-popup-cat"><i style="background:${escapeMapHtml(color)}"></i>${escapeMapHtml(resource.category)}${resource.verified ? ' · Verified' : ''}</span>
+        ${address ? (maps ? `<a href="${escapeMapHtml(maps)}" target="_blank" rel="noopener">${escapeMapHtml(address)}</a>` : `<span>${escapeMapHtml(address)}</span>`) : ''}
+        ${phone ? (tel ? `<a href="${escapeMapHtml(tel)}">${escapeMapHtml(phone)}</a>` : `<span>${escapeMapHtml(phone)}</span>`) : ''}
+        ${website ? `<a href="${escapeMapHtml(website)}" target="_blank" rel="noopener">Visit website &rarr;</a>` : ''}
       </div>
     `;
   },

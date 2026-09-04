@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <meta name="description"
-    content="Find volunteer hours, internships, and real help near you in Charlotte-Mecklenburg — built for high school students." />
+    content="Find schools, neighborhood services, clinics, and community help across Charlotte-Mecklenburg." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Opportunities | QueenCityConnect</title>
+  <title>Community Directory | QueenCityConnect</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
@@ -20,6 +20,7 @@
       <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="hub.html">Resource Hub</a></li>
+        <li><a href="neighborhood.html">Neighborhoods</a></li>
         <li><a href="submit.html">Submit a Resource</a></li>
         <li><a href="about.html">About</a></li>
       </ul>
@@ -34,8 +35,8 @@
 
   <header class="hub-masthead is-open" id="hub-masthead">
     <div class="hub-title-block" id="hub-title-block">
-      <span class="section-eyebrow">Charlotte-Mecklenburg · High school</span>
-      <h1 class="section-title">Find your next opportunity</h1>
+      <span class="section-eyebrow">Schools · Neighborhoods · Communities · Areas</span>
+      <h1 class="section-title">Find help near you</h1>
     </div>
     <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="true"
       aria-controls="hub-controls" onclick="toggleHubFilters()">
@@ -46,7 +47,7 @@
       <div class="container">
         <div class="search-bar">
           <span class="search-icon">&#x2315;</span>
-          <input type="text" id="search-input" placeholder="Search internships, volunteer sites, clinics..." />
+          <input type="text" id="search-input" placeholder="Search schools, neighborhoods, clinics, libraries, community groups..." />
         </div>
         <div class="hub-filter-row">
           <span class="sort-label">Filter by:</span>
@@ -85,7 +86,7 @@
           </select>
           <button class="filter-btn clear-btn" onclick="clearAllFilters()">Clear All</button>
         </div>
-        <p class="hub-filter-hint">Every pin is a real Mecklenburg-area place. Filter by volunteer, internships, or help. Verified listings stay on top.</p>
+        <p class="hub-filter-hint">Schools, neighborhoods, rec centers, clinics, libraries, and community groups across Mecklenburg and nearby towns. Filter by volunteer, internships, or help.</p>
         <p class="hub-filter-hint" id="directory-updated"></p>
       </div>
     </section>
@@ -171,7 +172,8 @@
               <li><a href="hub.html?category=Mental%20Health">Mental Health</a></li>
               <li><a href="hub.html?category=Employment">Employment</a></li>
               <li><a href="hub.html?category=Veterans">Veterans</a></li>
-              <li><a href="hub.html?category=Youth">Youth Services</a></li>
+              <li><a href="hub.html?category=Education">Schools &amp; Education</a></li>
+              <li><a href="hub.html?category=Youth">Youth &amp; Students</a></li>
             </ul>
           </div>
           <div class="footer-col">
