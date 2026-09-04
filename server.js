@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
@@ -9,6 +10,7 @@ const { DatabaseSync } = require('node:sqlite');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { updateResources } = require('./scripts/update-resources');
+const { sendMail, notifyNewAccount, mailConfigured, NOTIFY_EMAIL } = require('./mail');
 
 const PORT = Number(process.env.PORT) || 8000;
 const ROOT = __dirname;
@@ -48,6 +50,20 @@ db.exec(`
     updated_at TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+  CREATE TABLE IF NOT EXISTS password_resets (
+    token_hash TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    expires INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+  CREATE TABLE IF NOT EXISTS login_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    method TEXT NOT NULL,
+    at TEXT NOT NULL,
+    ip TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
 `);
 
 const statements = {
@@ -66,7 +82,13 @@ const statements = {
     ON CONFLICT(user_id) DO UPDATE SET
       state_json = excluded.state_json,
       updated_at = excluded.updated_at
-  `)
+  `),
+  updatePassword: db.prepare('UPDATE users SET password_hash = ? WHERE id = ?'),
+  insertReset: db.prepare('INSERT INTO password_resets (token_hash, user_id, expires) VALUES (?, ?, ?)'),
+  findReset: db.prepare('SELECT * FROM password_resets WHERE token_hash = ?'),
+  deleteReset: db.prepare('DELETE FROM password_resets WHERE token_hash = ?'),
+  deleteResetsForUser: db.prepare('DELETE FROM password_resets WHERE user_id = ?'),
+  insertLogin: db.prepare('INSERT INTO login_events (user_id, method, at, ip) VALUES (?, ?, ?, ?)')
 };
 
 db.exec(`
@@ -149,7 +171,8 @@ function defaultState() {
       search: '',
       hours: 'All',
       sort: 'default',
-      view: 'list'
+      view: 'list',
+      opportunity: 'All'
     },
     recentlyViewed: [],
     submissions: [],
@@ -229,7 +252,8 @@ function sanitizeStatePatch(incoming, current) {
       search: typeof prefs.search === 'string' ? prefs.search.slice(0, 120) : current.hubPrefs.search,
       hours: typeof prefs.hours === 'string' ? prefs.hours : current.hubPrefs.hours,
       sort: typeof prefs.sort === 'string' ? prefs.sort : current.hubPrefs.sort,
-      view: prefs.view === 'map' ? 'map' : prefs.view === 'list' ? 'list' : current.hubPrefs.view
+      view: prefs.view === 'map' ? 'map' : prefs.view === 'list' ? 'list' : current.hubPrefs.view,
+      opportunity: typeof prefs.opportunity === 'string' ? prefs.opportunity.slice(0, 40) : current.hubPrefs.opportunity
     };
   }
 
@@ -276,15 +300,43 @@ function createUser({ name, email, passwordHash, googleId }) {
   return user;
 }
 
-function startUserSession(req, res, user) {
-  const payload = { user: publicUser(user), state: readState(user.id), ...googlePublicConfig() };
+function hashToken(token) {
+  return crypto.createHash('sha256').update(String(token)).digest('hex');
+}
+
+function logLoginEvent(req, user, method) {
+  try {
+    statements.insertLogin.run(
+      user.id,
+      String(method || 'password').slice(0, 40),
+      new Date().toISOString(),
+      String((req.headers['x-forwarded-for'] || req.ip || '')).slice(0, 80)
+    );
+  } catch (err) {
+    console.error('Could not log sign-in:', err.message || err);
+  }
+}
+
+function attachSession(req, user, callback) {
   req.session.regenerate((err) => {
-    if (err) return res.status(500).json({ error: 'Could not start a session. Try again.' });
+    if (err) return callback(err);
     req.session.userId = user.id;
-    req.session.save((saveErr) => {
-      if (saveErr) return res.status(500).json({ error: 'Could not save your session. Try again.' });
-      res.json(payload);
-    });
+    req.session.save(callback);
+  });
+}
+
+function startUserSession(req, res, user, method) {
+  logLoginEvent(req, user, method);
+  const payload = { user: publicUser(user), state: readState(user.id), ...googlePublicConfig() };
+  attachSession(req, user, (err) => {
+    if (err) return res.status(500).json({ error: 'Could not start a session. Try again.' });
+    res.json(payload);
+  });
+}
+
+function queueNewAccountEmail(user, method) {
+  notifyNewAccount(user, method, BASE_URL).catch((err) => {
+    console.error('Welcome email failed:', err.message || err);
   });
 }
 
@@ -296,12 +348,14 @@ app.use(session({
   name: 'qcc.sid',
   secret: SESSION_SECRET,
   resave: false,
+  rolling: true,
   saveUninitialized: false,
   store: new SqliteSessionStore(),
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
+    secure: BASE_URL.startsWith('https://'),
     maxAge: 1000 * 60 * 60 * 24 * 30
   }
 }));
@@ -317,13 +371,13 @@ function googlePublicConfig() {
 
 function findOrCreateGoogleUser({ googleId, email, name }) {
   let user = statements.findByGoogle.get(googleId);
-  if (user) return user;
+  if (user) return { user, created: false };
   user = statements.findByEmail.get(email);
   if (user) {
     statements.linkGoogle.run(googleId, name, user.id);
-    return statements.findById.get(user.id);
+    return { user: statements.findById.get(user.id), created: false };
   }
-  return createUser({ name, email, googleId });
+  return { user: createUser({ name, email, googleId }), created: true };
 }
 
 async function verifyGoogleIdToken(credential) {
@@ -363,7 +417,8 @@ if (googleRedirectEnabled) {
         (profile.emails && profile.emails[0] && profile.emails[0].value) || `${googleId}@google.local`
       );
       const name = (profile.displayName || 'Neighbor').slice(0, 80);
-      const user = findOrCreateGoogleUser({ googleId, email, name });
+      const { user, created } = findOrCreateGoogleUser({ googleId, email, name });
+      if (created) queueNewAccountEmail(user, 'google');
       return done(null, user);
     } catch (err) {
       return done(err);
@@ -382,8 +437,9 @@ app.post('/api/auth/google/id-token', async (req, res) => {
   }
   try {
     const profile = await verifyGoogleIdToken(credential);
-    const user = findOrCreateGoogleUser(profile);
-    startUserSession(req, res, user);
+    const { user, created } = findOrCreateGoogleUser(profile);
+    if (created) queueNewAccountEmail(user, 'google');
+    startUserSession(req, res, user, 'google');
   } catch (err) {
     res.status(401).json({ error: err.message || 'Google Sign-In did not complete.' });
   }
@@ -405,7 +461,8 @@ app.post('/api/auth/register', (req, res) => {
 
     const passwordHash = bcrypt.hashSync(password, 10);
     const user = createUser({ name, email, passwordHash });
-    startUserSession(req, res, user);
+    queueNewAccountEmail(user, 'password');
+    startUserSession(req, res, user, 'register');
   } catch (err) {
     console.error('Register failed:', err);
     res.status(500).json({ error: 'Could not create account. Try again.' });
@@ -428,7 +485,7 @@ app.post('/api/auth/login', (req, res) => {
       return res.status(401).json({ error: 'Email or password is incorrect.' });
     }
 
-    startUserSession(req, res, user);
+    startUserSession(req, res, user, 'password');
   } catch (err) {
     console.error('Login failed:', err);
     res.status(500).json({ error: 'Could not sign in. Try again.' });
@@ -440,6 +497,123 @@ app.post('/api/auth/logout', (req, res) => {
     res.clearCookie('qcc.sid', { path: '/' });
     res.json({ ok: true });
   });
+});
+
+app.post('/api/auth/forgot', (req, res) => {
+  const generic = {
+    ok: true,
+    message: 'If that email is on file, we sent a reset link. Check your inbox and spam folder.'
+  };
+  try {
+    const email = normalizeEmail(req.body && req.body.email);
+    if (!isValidEmail(email)) return res.json(generic);
+    const user = statements.findByEmail.get(email);
+    if (!user) return res.json(generic);
+
+    if (!user.password_hash) {
+      sendMail({
+        to: user.email,
+        subject: 'Sign in to QueenCityConnect',
+        text: `This QueenCityConnect account uses Google Sign-In. Open ${BASE_URL}/signin.html and choose Continue with Google.\n\nIf you did not ask for this, you can ignore this email.`
+      }).catch((err) => console.error('Forgot-password email failed:', err.message || err));
+      return res.json(generic);
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const tokenHash = hashToken(token);
+    const expires = Date.now() + 60 * 60 * 1000;
+    statements.deleteResetsForUser.run(user.id);
+    statements.insertReset.run(tokenHash, user.id, expires);
+    const link = `${BASE_URL}/reset.html?token=${encodeURIComponent(token)}`;
+    sendMail({
+      to: user.email,
+      subject: 'Reset your QueenCityConnect password',
+      text: `Reset your password (this link expires in 1 hour):\n${link}\n\nIf you did not ask for this, ignore this email.`
+    }).then((sent) => {
+      if (!sent) console.log('[mail skipped] password reset link:', link);
+    }).catch((err) => console.error('Forgot-password email failed:', err.message || err));
+    res.json(generic);
+  } catch (err) {
+    console.error('Forgot password failed:', err);
+    res.json(generic);
+  }
+});
+
+app.post('/api/submit', async (req, res) => {
+  try {
+    const org = (req.body && req.body.organization) || {};
+    const person = (req.body && req.body.submitter) || {};
+    const name = String(org.name || '').trim();
+    const phone = String(org.phone || '').trim();
+    const description = String(org.description || '').trim();
+    const submitterName = String(person.name || '').trim();
+    if (!name || !phone || !description || !submitterName) {
+      return res.status(400).json({ error: 'Organization name, phone, description, and your name are required.' });
+    }
+    const text = [
+      'New QueenCityConnect resource submission',
+      '',
+      `Organization: ${name}`,
+      `Category: ${org.category || 'Not provided'}`,
+      `Phone: ${phone}`,
+      `Website: ${org.website || 'Not provided'}`,
+      `Address: ${org.address || 'Not provided'}`,
+      `Hours: ${org.hours || 'Not provided'}`,
+      `Service area: ${org.serviceArea || 'Not provided'}`,
+      '',
+      description,
+      '',
+      `Submitted by: ${submitterName}`,
+      `Submitter email: ${person.email || 'Not provided'}`,
+      `Connection: ${person.role || 'Not provided'}`,
+      `Time: ${new Date().toISOString()}`
+    ].join('\n');
+    const sent = await sendMail({
+      to: NOTIFY_EMAIL,
+      subject: `New QueenCityConnect resource: ${name}`.slice(0, 120),
+      text
+    });
+    const submitterEmail = normalizeEmail(person.email);
+    if (submitterEmail && isValidEmail(submitterEmail)) {
+      await sendMail({
+        to: submitterEmail,
+        subject: 'We received your QueenCityConnect submission',
+        text: `Hi ${submitterName},\n\nWe received your listing for ${name}. Our team will review it before it goes live.\n\n— QueenCityConnect`
+      });
+    }
+    if (!sent) {
+      return res.status(503).json({ error: 'Email is not configured on the server yet.', fallback: true });
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Resource submission email failed:', err);
+    res.status(500).json({ error: 'Could not send the submission.', fallback: true });
+  }
+});
+
+app.post('/api/auth/reset', (req, res) => {
+  try {
+    const token = String((req.body && req.body.token) || '');
+    const password = String((req.body && req.body.password) || '');
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    }
+    const row = statements.findReset.get(hashToken(token));
+    if (!row || Number(row.expires) < Date.now()) {
+      return res.status(400).json({ error: 'This reset link is invalid or expired. Request a new one.' });
+    }
+    const passwordHash = bcrypt.hashSync(password, 10);
+    statements.updatePassword.run(passwordHash, row.user_id);
+    statements.deleteResetsForUser.run(row.user_id);
+    const user = statements.findById.get(row.user_id);
+    if (!user) {
+      return res.status(400).json({ error: 'This reset link is invalid or expired. Request a new one.' });
+    }
+    startUserSession(req, res, user, 'reset');
+  } catch (err) {
+    console.error('Password reset failed:', err);
+    res.status(500).json({ error: 'Could not reset password. Try again.' });
+  }
 });
 
 app.get('/api/auth/google', (req, res, next) => {
@@ -466,16 +640,13 @@ app.get('/api/auth/google/callback', (req, res, next) => {
     if (err || !user) {
       return res.redirect('/signin.html?error=google');
     }
-    const nextUrl = req.session.afterLogin || '/hub.html';
+    const nextUrl = req.session.afterLogin || '/saved.html';
     delete req.session.afterLogin;
-    const safeNext = String(nextUrl).startsWith('/') ? nextUrl : '/hub.html';
-    req.session.regenerate((regenErr) => {
-      if (regenErr) return res.redirect('/signin.html?error=google');
-      req.session.userId = user.id;
-      req.session.save((saveErr) => {
-        if (saveErr) return res.redirect('/signin.html?error=google');
-        res.redirect(safeNext);
-      });
+    const safeNext = String(nextUrl).startsWith('/') ? nextUrl : '/saved.html';
+    logLoginEvent(req, user, 'google');
+    attachSession(req, user, (sessionErr) => {
+      if (sessionErr) return res.redirect('/signin.html?error=google');
+      res.redirect(safeNext);
     });
   })(req, res, next);
 });
@@ -564,6 +735,9 @@ app.listen(PORT, () => {
   console.log(`QueenCityConnect running at http://127.0.0.1:${PORT}`);
   if (!googleEnabled) {
     console.log('Google Sign-In is off until GOOGLE_CLIENT_ID is set in .env or data/auth-config.json');
+  }
+  if (!mailConfigured()) {
+    console.log('Account emails are off until GMAIL_USER and GMAIL_APP_PASSWORD are set in .env');
   }
   setTimeout(() => {
     refreshDirectoryIfStale(false).then((meta) => {

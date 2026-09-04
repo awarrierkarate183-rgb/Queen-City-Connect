@@ -156,7 +156,22 @@ async function submitForm() {
 
   setSubmitBusy(true);
   try {
-    await sendSubmissionEmail(payload);
+    let emailed = false;
+    try {
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok) emailed = true;
+      else if (data.fallback || response.status === 404 || response.status === 503) emailed = false;
+      else throw new Error(data.error || 'Email could not be sent.');
+    } catch (err) {
+      if (err && !err.message.includes('fetch') && !err.message.includes('Failed')) throw err;
+    }
+    if (!emailed) await sendSubmissionEmail(payload);
     showSuccess();
   } catch (e) {
     showSubmitError(

@@ -9,6 +9,7 @@ const { enrichResources } = require('./ai-resources');
 const ROOT = path.join(__dirname, '..');
 const CURATED_PATH = path.join(ROOT, 'data', 'curated-resources.json');
 const STUDENT_PATH = path.join(ROOT, 'data', 'student-resources.json');
+const LOCAL_PATH = path.join(ROOT, 'data', 'local-sites.json');
 const OUT_PATH = path.join(ROOT, 'data', 'resources.json');
 const META_PATH = path.join(ROOT, 'data', 'resources-meta.json');
 
@@ -51,7 +52,7 @@ function inCharlotteServiceArea(lat, lng, address) {
   }
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
   if (lat >= 35.17 && lat <= 35.20 && lng >= -81.05 && lng <= -81.00) return true;
-  return lat >= 35.05 && lat <= 35.52 && lng >= -81.05 && lng <= -80.64;
+  return lat >= 35.00 && lat <= 35.52 && lng >= -81.05 && lng <= -80.64;
 }
 
 function decimalPlaces(n) {
@@ -166,6 +167,7 @@ function persistCoordsFile(filePath, refined) {
 function persistCuratedCoords(refined) {
   persistCoordsFile(CURATED_PATH, refined);
   persistCoordsFile(STUDENT_PATH, refined);
+  persistCoordsFile(LOCAL_PATH, refined);
 }
 
 function categorize(tags) {
@@ -368,7 +370,7 @@ function loadJsonResources(filePath) {
 }
 
 function loadCurated() {
-  const combined = [...loadJsonResources(CURATED_PATH), ...loadJsonResources(STUDENT_PATH)];
+  const combined = [...loadJsonResources(CURATED_PATH), ...loadJsonResources(STUDENT_PATH), ...loadJsonResources(LOCAL_PATH)];
   const seen = new Set();
   return combined.map((resource, index) => {
     const key = keyName(resource.name);

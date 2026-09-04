@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -39,8 +39,8 @@
     </div>
     <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="true"
       aria-controls="hub-controls" onclick="toggleHubFilters()">
-      <span>Filters &amp; Search</span>
       <span class="hub-title-chevron" aria-hidden="true"></span>
+      <span class="hub-filter-toggle-label">Filters &amp; Search</span>
     </button>
     <section class="hub-controls" id="hub-controls">
       <div class="container">
@@ -87,15 +87,17 @@
         </div>
         <p class="hub-filter-hint">Every pin is a real Mecklenburg-area place. Filter by volunteer, internships, or help. Verified listings stay on top.</p>
         <p class="hub-filter-hint" id="directory-updated"></p>
-        <div class="hub-toolbar">
-          <div class="results-count" id="results-count"></div>
-          <div class="view-toggle">
-            <button class="view-btn active" id="btn-list" onclick="setView('list')">List</button>
-            <button class="view-btn" id="btn-map" onclick="setView('map')">Map</button>
-          </div>
-        </div>
       </div>
     </section>
+    <div class="hub-toolbar-bar">
+      <div class="hub-toolbar">
+        <div class="results-count" id="results-count"></div>
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-list" onclick="setView('list')">List</button>
+          <button class="view-btn" id="btn-map" onclick="setView('map')">Map</button>
+        </div>
+      </div>
+    </div>
   </header>
 
   <div class="hub-scroll">
@@ -176,7 +178,7 @@
             <h4>About Project</h4>
             <ul>
               <li><a href="about.html">Our Mission</a></li>
-              <li><a href="about.html">How We Verify</a></li>
+              <li><a href="about.html#verify">How We Verify</a></li>
               <li><a href="submit.html">Submit a Resource</a></li>
             </ul>
           </div>
@@ -200,6 +202,7 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/contact.js"></script>
   <script src="assets/js/map-points.js"></script>
   <script src="assets/js/photos.js"></script>
   <script src="assets/js/analytics.js"></script>

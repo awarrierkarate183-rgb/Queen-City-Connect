@@ -253,6 +253,11 @@ function renderResources() {
     const opps = resource.opportunities || [];
     const oppLabel = opps.map((o) => o === 'intern' ? 'Internship' : o === 'volunteer' ? 'Volunteer' : 'Get help').join(' · ');
     const heart = isBookmarked ? '❤' : '♡';
+    const contact = window.QCCContact;
+    const phone = contact ? contact.usablePhone(resource.phone) : (resource.phone && resource.phone !== 'See listing' ? resource.phone : '');
+    const tel = contact ? contact.telHref(resource.phone) : '';
+    const website = contact ? contact.usableWebsite(resource.website) : (resource.website && resource.website !== '#' ? resource.website : '');
+    const maps = contact ? contact.mapsHref(resource.address) : '';
     card.innerHTML = `
       <div class="resource-card-photo" style="background-image:url('${photo}')">
         <div class="resource-card-photo-overlay"></div>
@@ -263,7 +268,9 @@ function renderResources() {
             onclick="toggleBookmark(${resource.id}, this)"
             aria-pressed="${isBookmarked ? 'true' : 'false'}"
             aria-label="${isBookmarked ? 'Remove from saved' : 'Save resource'}"
-            title="${isBookmarked ? 'Saved — click to remove' : 'Save to your account'}">${heart}</button>
+            title="${isBookmarked ? 'Saved — click to remove' : 'Save to your account'}">
+            <span class="bookmark-icon" aria-hidden="true">${heart}</span>
+          </button>
         </div>
       </div>
       <div class="resource-card-body">
@@ -271,21 +278,22 @@ function renderResources() {
         ${oppLabel ? `<p class="card-opps">${oppLabel}</p>` : ''}
         <p>${resource.description}</p>
         <div class="card-details">
-          <div class="detail-row">
+          ${resource.address ? `<div class="detail-row">
             <span class="detail-label">Address</span>
-            <span>${resource.address}</span>
-          </div>
-          <div class="detail-row">
+            ${maps ? `<a href="${maps}" target="_blank" rel="noopener">${resource.address}</a>` : `<span>${resource.address}</span>`}
+          </div>` : ''}
+          ${phone ? `<div class="detail-row">
             <span class="detail-label">Phone</span>
-            <span>${resource.phone}</span>
-          </div>
-          <div class="detail-row">
+            ${tel ? `<a href="${tel}">${phone}</a>` : `<span>${phone}</span>`}
+          </div>` : ''}
+          ${resource.hours ? `<div class="detail-row">
             <span class="detail-label">Hours</span>
             <span>${resource.hours}</span>
-          </div>
+          </div>` : ''}
         </div>
         <div class="card-actions">
-          <a href="${resource.website}" target="_blank" class="btn-secondary" onclick="trackResourceUse(${resource.id}, 'website')">Visit Website</a>
+          ${tel ? `<a href="${tel}" class="btn-primary" onclick="trackResourceUse(${resource.id}, 'call')">Call</a>` : ''}
+          ${website ? `<a href="${website}" target="_blank" rel="noopener" class="btn-secondary" onclick="trackResourceUse(${resource.id}, 'website')">Website</a>` : ''}
           <button class="btn-print" onclick="printCard(${resource.id})">Print</button>
         </div>
       </div>
@@ -338,14 +346,23 @@ function trackResourceUse(id, type) {
 }
 
 // ─── BOOKMARKS ───
+function pulseBookmark(btn) {
+  if (!btn) return;
+  btn.classList.remove('is-popping');
+  void btn.offsetWidth;
+  btn.classList.add('is-popping');
+}
+
 function toggleBookmark(id, btn) {
   id = Number(id);
   const idx = bookmarks.map(Number).indexOf(id);
+  const icon = btn.querySelector('.bookmark-icon') || btn;
   if (idx === -1) {
     bookmarks.push(id);
     btn.classList.add('bookmarked');
-    btn.innerHTML = '❤';
+    icon.textContent = '❤';
     btn.setAttribute('aria-pressed', 'true');
+    btn.setAttribute('aria-label', 'Remove from saved');
     btn.title = 'Saved — click to remove';
     if (window.QCCAuth) QCCAuth.recordActivity('bookmark', id);
     if (!window.QCCAuth || !QCCAuth.user) {
@@ -354,11 +371,13 @@ function toggleBookmark(id, btn) {
   } else {
     bookmarks.splice(idx, 1);
     btn.classList.remove('bookmarked');
-    btn.innerHTML = '♡';
+    icon.textContent = '♡';
     btn.setAttribute('aria-pressed', 'false');
+    btn.setAttribute('aria-label', 'Save resource');
     btn.title = 'Save to your account';
     if (window.QCCAuth) QCCAuth.recordActivity('unbookmark', id);
   }
+  pulseBookmark(btn);
   persistHubState(true);
 }
 
@@ -403,24 +422,36 @@ document.getElementById('search-input').addEventListener('input', e => {
   persistHubState();
 });
 
-function toggleHubFilters() {
+let hubFiltersPinned = false;
+
+function setHubFilters(open, fromUser) {
   const masthead = document.getElementById('hub-masthead');
   const toggle = document.getElementById('hub-title-toggle');
   if (!masthead || !toggle) return;
-  const open = !masthead.classList.contains('is-open');
   masthead.classList.toggle('is-open', open);
   toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (fromUser) hubFiltersPinned = open;
+}
+
+function toggleHubFilters() {
+  const masthead = document.getElementById('hub-masthead');
+  if (!masthead) return;
+  setHubFilters(!masthead.classList.contains('is-open'), true);
 }
 
 function initHubTitleFade() {
   const scroll = document.querySelector('.hub-scroll');
   const title = document.getElementById('hub-title-block');
+  const masthead = document.getElementById('hub-masthead');
   if (!scroll || !title) return;
   const update = () => {
     const t = Math.min(1, scroll.scrollTop / 70);
     title.style.opacity = String(1 - t);
     title.style.transform = `translateY(${-10 * t}px)`;
     title.classList.toggle('is-faded', t > 0.85);
+    if (masthead && scroll.scrollTop > 48 && masthead.classList.contains('is-open') && !hubFiltersPinned) {
+      setHubFilters(false, false);
+    }
   };
   scroll.addEventListener('scroll', update, { passive: true });
   update();

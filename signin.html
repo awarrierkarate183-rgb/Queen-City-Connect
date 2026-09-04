@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <meta name="description" content="Sign in or create a QueenCityConnect account to save bookmarks, filters, and resources you use." />
+  <meta name="description" content="Sign in or create a QueenCityConnect account to save bookmarks, filters, and resources on any device." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In | QueenCityConnect</title>
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -34,20 +34,35 @@
       <div class="auth-card" id="auth-forms">
         <span class="section-eyebrow">Your Account</span>
         <h1 class="section-title" id="auth-title">Sign in</h1>
-        <p class="section-sub" id="auth-lead">Save bookmarks, filters, and the resources you use. Passwords are stored securely in the site database.</p>
+        <p class="section-sub" id="auth-lead">Save hearts, filters, and progress to your account. It follows you on every device.</p>
+
+        <p class="auth-error" id="auth-error" hidden></p>
+        <p class="auth-success" id="auth-success" hidden></p>
+
+        <div class="auth-google-block">
+          <div id="google-signin-slot" class="auth-google-slot"></div>
+          <a class="auth-google-btn" id="google-btn" href="/api/auth/google">
+            <span class="auth-google-icon" aria-hidden="true"></span>
+            Continue with Google
+          </a>
+          <p class="auth-hint" id="google-hint" hidden>Google Sign-In is not enabled on this copy of the site yet. Email and password still save your account on every device.</p>
+        </div>
+
+        <div class="auth-divider"><span>or email</span></div>
 
         <div class="auth-tabs" role="tablist">
           <button type="button" class="auth-tab is-active" id="tab-signin" data-mode="signin">Sign in</button>
           <button type="button" class="auth-tab" id="tab-register" data-mode="register">Create account</button>
         </div>
 
-        <p class="auth-error" id="auth-error" hidden></p>
-
         <form id="signin-form" class="auth-form">
           <label for="signin-email">Email</label>
           <input type="email" id="signin-email" name="email" autocomplete="email" required />
           <label for="signin-password">Password</label>
           <input type="password" id="signin-password" name="password" autocomplete="current-password" required />
+          <p class="auth-forgot-row">
+            <button type="button" class="auth-text-link" id="forgot-toggle">Forgot password?</button>
+          </p>
           <button type="submit" class="btn-primary auth-submit">Sign In</button>
         </form>
 
@@ -58,27 +73,17 @@
           <input type="email" id="register-email" name="email" autocomplete="email" required />
           <label for="register-password">Password</label>
           <input type="password" id="register-password" name="password" autocomplete="new-password" minlength="8" required />
-          <p class="auth-hint">Use at least 8 characters. Your password is hashed before it is saved.</p>
+          <p class="auth-hint">Use at least 8 characters. We hash your password and save bookmarks to this account on any device.</p>
           <button type="submit" class="btn-primary auth-submit">Create Account</button>
         </form>
 
-        <div class="auth-divider"><span>or</span></div>
-        <div id="google-signin-slot" class="auth-google-slot"></div>
-        <a class="btn-ghost auth-google" id="google-btn" href="/api/auth/google">Continue with Google</a>
-        <p class="auth-hint" id="google-hint" hidden>Google Sign-In uses your Google account. Add a Google client ID in <code>.env</code> or <code>data/auth-config.json</code> if the button does not appear. Email and password work without it.</p>
-      </div>
-
-      <div class="auth-card auth-saved" id="auth-saved" hidden>
-        <span class="section-eyebrow">Signed in</span>
-        <h1 class="section-title">Your saved resources</h1>
-        <p class="section-sub" id="saved-lead"></p>
-        <div class="saved-grid" id="saved-list"></div>
-        <h2 class="saved-heading">What you’ve done</h2>
-        <ul class="saved-activity" id="saved-activity"></ul>
-        <div class="cta-band-actions" style="justify-content:flex-start;margin-top:24px">
-          <a href="hub.html" class="btn-primary">Open Resource Hub</a>
-          <button type="button" class="btn-ghost" id="saved-sign-out">Sign out</button>
-        </div>
+        <form id="forgot-form" class="auth-form" hidden>
+          <label for="forgot-email">Email</label>
+          <input type="email" id="forgot-email" name="email" autocomplete="email" required />
+          <p class="auth-hint">We’ll email a reset link if this address has an account.</p>
+          <button type="submit" class="btn-primary auth-submit">Send reset link</button>
+          <button type="button" class="btn-ghost auth-submit" id="forgot-cancel">Back to sign in</button>
+        </form>
       </div>
     </div>
   </section>
@@ -95,16 +100,32 @@
   </footer>
 
   <script src="assets/js/analytics.js"></script>
+  <script src="assets/js/contact.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>
     function nextPage() {
       const params = new URLSearchParams(window.location.search);
-      const next = params.get('next') || 'hub.html';
-      return next.startsWith('/') || next.includes('://') ? 'hub.html' : next;
+      const next = params.get('next') || 'saved.html';
+      return next.startsWith('/') || next.includes('://') ? 'saved.html' : next;
     }
 
     function showError(message) {
       const el = document.getElementById('auth-error');
+      const ok = document.getElementById('auth-success');
+      ok.hidden = true;
+      if (!message) {
+        el.hidden = true;
+        el.textContent = '';
+        return;
+      }
+      el.hidden = false;
+      el.textContent = message;
+    }
+
+    function showSuccess(message) {
+      const el = document.getElementById('auth-success');
+      const err = document.getElementById('auth-error');
+      err.hidden = true;
       if (!message) {
         el.hidden = true;
         el.textContent = '';
@@ -116,102 +137,36 @@
 
     function setMode(mode) {
       const signin = mode === 'signin';
+      const forgot = mode === 'forgot';
       document.getElementById('tab-signin').classList.toggle('is-active', signin);
-      document.getElementById('tab-register').classList.toggle('is-active', !signin);
+      document.getElementById('tab-register').classList.toggle('is-active', mode === 'register');
       document.getElementById('signin-form').hidden = !signin;
-      document.getElementById('register-form').hidden = signin;
-      document.getElementById('auth-title').textContent = signin ? 'Sign in' : 'Create an account';
-      document.getElementById('auth-lead').textContent = signin
-        ? 'Welcome back. Your bookmarks and hub choices are waiting.'
-        : 'Create an account to keep bookmarks, filters, and submissions saved to you.';
+      document.getElementById('register-form').hidden = mode !== 'register';
+      document.getElementById('forgot-form').hidden = !forgot;
+      document.querySelector('.auth-tabs').hidden = forgot;
+      if (forgot) {
+        document.getElementById('auth-title').textContent = 'Reset password';
+        document.getElementById('auth-lead').textContent = 'Enter the email on your account. We’ll send a link if it matches.';
+        const fromSignin = document.getElementById('signin-email').value;
+        if (fromSignin && !document.getElementById('forgot-email').value) {
+          document.getElementById('forgot-email').value = fromSignin;
+        }
+      } else {
+        document.getElementById('auth-title').textContent = signin ? 'Sign in' : 'Create an account';
+        document.getElementById('auth-lead').textContent = signin
+          ? 'Welcome back. Your saves and hub choices are waiting on this account.'
+          : 'Create an account to keep bookmarks, filters, and submissions saved on every device.';
+      }
       showError('');
-    }
-
-    function escapeHtml(value) {
-      return String(value == null ? '' : value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function oppLabel(opps) {
-      return (opps || []).map((o) => o === 'intern' ? 'Internship' : o === 'volunteer' ? 'Volunteer' : 'Get help').join(' · ');
-    }
-
-    function activityLabel(type) {
-      if (type === 'bookmark') return 'Saved';
-      if (type === 'unbookmark') return 'Removed from saved';
-      if (type === 'website') return 'Opened website';
-      if (type === 'print') return 'Printed listing';
-      return type || 'Updated';
-    }
-
-    async function renderSaved() {
-      const forms = document.getElementById('auth-forms');
-      const saved = document.getElementById('auth-saved');
-      if (!QCCAuth.user) {
-        forms.hidden = false;
-        saved.hidden = true;
-        return;
-      }
-      forms.hidden = true;
-      saved.hidden = false;
-      document.getElementById('saved-lead').textContent =
-        'Signed in as ' + QCCAuth.user.name + ' (' + QCCAuth.user.email + '). Hearts you tap in the Hub stay on this account.';
-      const list = document.getElementById('saved-list');
-      const activityEl = document.getElementById('saved-activity');
-      const ids = (QCCAuth.state && QCCAuth.state.bookmarks) || [];
-      let byId = {};
-      try {
-        const data = await fetch('data/resources.json').then((r) => r.json());
-        (data.resources || []).forEach((r) => { byId[r.id] = r; });
-      } catch {
-        byId = {};
-      }
-      if (!ids.length) {
-        list.innerHTML = '<p class="saved-empty">No saved resources yet. Open the Hub and tap the heart on a listing. It turns red and stays with your account.</p>';
-      } else {
-        list.innerHTML = ids.map((id) => {
-          const resource = byId[id];
-          if (!resource) {
-            return '<article class="saved-card"><h3>Saved resource #' + escapeHtml(id) + '</h3><p>This listing was updated. Open the Hub to save it again.</p></article>';
-          }
-          const phone = resource.phone && resource.phone !== 'See listing' ? resource.phone : '';
-          const website = resource.website && resource.website !== '#' ? resource.website : '';
-          const opps = oppLabel(resource.opportunities);
-          return (
-            '<article class="saved-card">' +
-              '<p class="saved-card-meta">' + escapeHtml(resource.category || '') + (opps ? ' · ' + escapeHtml(opps) : '') + '</p>' +
-              '<h3>' + escapeHtml(resource.name) + '</h3>' +
-              '<p>' + escapeHtml(resource.description || '') + '</p>' +
-              (resource.address ? '<p class="saved-card-contact">' + escapeHtml(resource.address) + '</p>' : '') +
-              (phone ? '<p class="saved-card-contact">' + escapeHtml(phone) + '</p>' : '') +
-              '<div class="saved-card-actions">' +
-                (website ? '<a class="btn-secondary" href="' + escapeHtml(website) + '" target="_blank" rel="noopener">Visit website</a>' : '') +
-                '<a class="btn-ghost" href="hub.html">Open in Hub</a>' +
-              '</div>' +
-            '</article>'
-          );
-        }).join('');
-      }
-      const activity = [...((QCCAuth.state && QCCAuth.state.activity) || [])].reverse().slice(0, 20);
-      if (!activity.length) {
-        activityEl.innerHTML = '<li class="saved-empty">Nothing recorded yet. Saving a heart, opening a website, or printing a card will show up here.</li>';
-      } else {
-        activityEl.innerHTML = activity.map((item) => {
-          const resource = item.resourceId != null ? byId[item.resourceId] : null;
-          const name = resource ? resource.name : (item.resourceId != null ? 'Resource #' + item.resourceId : 'Account');
-          const when = item.at ? new Date(item.at).toLocaleString() : '';
-          return '<li><strong>' + escapeHtml(activityLabel(item.type)) + '</strong> — ' + escapeHtml(name) +
-            (when ? '<time datetime="' + escapeHtml(item.at) + '">' + escapeHtml(when) + '</time>' : '') + '</li>';
-        }).join('');
-      }
+      showSuccess('');
     }
 
     document.querySelectorAll('.auth-tab').forEach((tab) => {
       tab.addEventListener('click', () => setMode(tab.dataset.mode));
     });
+
+    document.getElementById('forgot-toggle').addEventListener('click', () => setMode('forgot'));
+    document.getElementById('forgot-cancel').addEventListener('click', () => setMode('signin'));
 
     document.getElementById('signin-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -254,9 +209,21 @@
       }
     });
 
-    document.getElementById('saved-sign-out').addEventListener('click', async () => {
-      await QCCAuth.logout();
-      window.location.href = 'signin.html';
+    document.getElementById('forgot-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError('');
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      try {
+        const data = await QCCAuth.forgotPassword(document.getElementById('forgot-email').value);
+        showSuccess(data.message || 'If that email is on file, we sent a reset link.');
+      } catch (err) {
+        showError(err.message || 'Could not send a reset link.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send reset link';
+      }
     });
 
     function siteAuthPath(path) {
@@ -267,10 +234,14 @@
     }
 
     QCCAuth.ready.then(async () => {
+      if (QCCAuth.user) {
+        window.location.replace(nextPage() === 'signin.html' ? 'saved.html' : nextPage());
+        return;
+      }
       const params = new URLSearchParams(window.location.search);
       const err = params.get('error');
       if (err === 'google-setup') {
-        showError('Google Sign-In is not set up yet. Use email and password, or add Google keys to your .env file.');
+        showError('Google Sign-In is not enabled yet. Email and password still save your account on every device.');
       } else if (err === 'google') {
         showError('Google Sign-In did not complete. Try again, or use email and password.');
       }
@@ -278,17 +249,17 @@
       const googleHint = document.getElementById('google-hint');
       googleBtn.href = siteAuthPath('/api/auth/google') + '?next=' + encodeURIComponent('/' + nextPage());
       QCCAuth.initGoogleButton('google-signin-slot');
+      const googleBlock = document.querySelector('.auth-google-block');
+      const divider = document.querySelector('.auth-divider');
       if (QCCAuth.googleClientId) {
         googleBtn.hidden = true;
         googleHint.hidden = true;
       } else {
-        googleHint.hidden = false;
-        googleBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          showError('Google Sign-In needs a Google Cloud client ID. Email and password work now.');
-        });
+        googleBtn.hidden = true;
+        googleHint.hidden = true;
+        if (googleBlock) googleBlock.hidden = true;
+        if (divider) divider.hidden = true;
       }
-      await renderSaved();
     });
   </script>
 </body>

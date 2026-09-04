@@ -4,6 +4,7 @@
     state: null,
     googleEnabled: false,
     googleClientId: '',
+    googleRedirectEnabled: false,
     mode: 'server',
     ready: Promise.resolve()
   };
@@ -42,10 +43,11 @@
 
   function currentNext() {
     const page = window.location.pathname.split('/').pop() || 'index.html';
-    if (page === 'signin.html') {
+    if (page === 'signin.html' || page === 'reset.html') {
       const params = new URLSearchParams(window.location.search);
-      return params.get('next') || 'hub.html';
+      return params.get('next') || 'saved.html';
     }
+    if (page === 'saved.html') return 'saved.html';
     return page + window.location.search + window.location.hash;
   }
 
@@ -88,7 +90,7 @@
   function defaultState() {
     return {
       bookmarks: [],
-      hubPrefs: { categories: ['All'], search: '', hours: 'All', sort: 'best', view: 'list' },
+      hubPrefs: { categories: ['All'], search: '', hours: 'All', sort: 'best', view: 'list', opportunity: 'All' },
       recentlyViewed: [],
       submissions: [],
       newsletterEmail: null,
@@ -259,7 +261,7 @@
         '<span class="nav-account-name" title="' + escapeHtml(QCCAuth.user.email) + '">' +
         escapeHtml(firstName(QCCAuth.user.name)) +
         '</span>' +
-        '<a href="signin.html" class="nav-account-link">Saved</a>' +
+        '<a href="saved.html" class="nav-cta nav-saves">My Saves</a>' +
         '<button type="button" class="nav-sign-out" id="nav-sign-out">Sign out</button>';
       const btn = document.getElementById('nav-sign-out');
       if (btn) {
@@ -302,6 +304,7 @@
     QCCAuth.state = data.state || null;
     if (data.googleEnabled != null) QCCAuth.googleEnabled = Boolean(data.googleEnabled);
     if (data.googleClientId) QCCAuth.googleClientId = data.googleClientId;
+    if (data.googleRedirectEnabled != null) QCCAuth.googleRedirectEnabled = Boolean(data.googleRedirectEnabled);
     if (QCCAuth.user && QCCAuth.state && Array.isArray(QCCAuth.state.bookmarks)) {
       localStorage.setItem('clt-bookmarks', JSON.stringify(QCCAuth.state.bookmarks));
     }
@@ -314,6 +317,7 @@
       const data = await api('/api/auth/config');
       QCCAuth.googleEnabled = Boolean(data.googleEnabled || data.googleClientId);
       QCCAuth.googleClientId = data.googleClientId || '';
+      QCCAuth.googleRedirectEnabled = Boolean(data.googleRedirectEnabled);
       QCCAuth.mode = 'server';
       return data;
     } catch {
@@ -473,6 +477,38 @@
     return QCCAuth;
   };
 
+  QCCAuth.forgotPassword = async function (email) {
+    try {
+      return await api('/api/auth/forgot', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+      });
+    } catch (err) {
+      if (!canFallback(err)) throw err;
+      return {
+        ok: true,
+        message: 'Password reset needs the QueenCityConnect server (npm start). If this site is running, check that email and try again.'
+      };
+    }
+  };
+
+  QCCAuth.resetPassword = async function (token, password) {
+    sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
+    try {
+      const data = await api('/api/auth/reset', {
+        method: 'POST',
+        body: JSON.stringify({ token, password })
+      });
+      QCCAuth.mode = 'server';
+      QCCAuth.applySession(data);
+    } catch (err) {
+      if (!canFallback(err)) throw err;
+      throw new Error('Password reset needs the QueenCityConnect server (npm start).');
+    }
+    await QCCAuth.mergeGuestOnLogin();
+    return QCCAuth;
+  };
+
   QCCAuth.logout = async function () {
     await QCCAuth.flushSave();
     try {
@@ -539,7 +575,7 @@
           try {
             await QCCAuth.loginWithGoogle(response.credential);
             const params = new URLSearchParams(window.location.search);
-            const next = params.get('next') || 'hub.html';
+            const next = params.get('next') || 'saved.html';
             window.location.href = next.includes('://') ? 'hub.html' : next;
           } catch (err) {
             const el = document.getElementById('auth-error');

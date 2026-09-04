@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <meta name="description" content="Choose a new QueenCityConnect password." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reset Password | QueenCityConnect</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body class="dark">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Queen<span>City</span>Connect</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="hub.html">Resource Hub</a></li>
+        <li><a href="submit.html">Submit a Resource</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-right">
+        <div class="nav-account" id="nav-account"></div>
+        <a href="hub.html" class="nav-cta">Find Resources</a>
+        <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
+          aria-label="Menu">&#9776;</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="auth-page">
+    <div class="container">
+      <div class="auth-card">
+        <span class="section-eyebrow">Your Account</span>
+        <h1 class="section-title">Choose a new password</h1>
+        <p class="section-sub">This link expires after one hour. After you save it, you can sign in on any device.</p>
+        <p class="auth-error" id="auth-error" hidden></p>
+        <form id="reset-form" class="auth-form">
+          <label for="reset-password">New password</label>
+          <input type="password" id="reset-password" name="password" autocomplete="new-password" minlength="8" required />
+          <p class="auth-hint">Use at least 8 characters.</p>
+          <button type="submit" class="btn-primary auth-submit">Save new password</button>
+        </form>
+        <p class="auth-hint" style="margin-top:20px"><a href="signin.html">Back to sign in</a></p>
+      </div>
+    </div>
+  </section>
+
+  <script src="assets/js/contact.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    const token = new URLSearchParams(window.location.search).get('token') || '';
+    const errorEl = document.getElementById('auth-error');
+    if (!token) {
+      errorEl.hidden = false;
+      errorEl.textContent = 'This reset link is missing. Request a new one from the sign-in page.';
+      document.getElementById('reset-form').hidden = true;
+    }
+
+    document.getElementById('reset-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.hidden = true;
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      try {
+        await QCCAuth.resetPassword(token, document.getElementById('reset-password').value);
+        await QCCAuth.flushSave();
+        window.location.href = 'saved.html';
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Save new password';
+        errorEl.hidden = false;
+        errorEl.textContent = err.message || 'Could not reset password.';
+      }
+    });
+  </script>
+</body>
+
+</html>

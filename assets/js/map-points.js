@@ -28,7 +28,7 @@ window.QCCMap = {
       return false;
     }
     if (address === 'charlotte, nc' || address === 'charlotte nc') return false;
-    return lat >= 35.05 && lat <= 35.52 && lng >= -81.05 && lng <= -80.64;
+    return lat >= 35.00 && lat <= 35.52 && lng >= -81.05 && lng <= -80.64;
   },
 
   create(elementId) {
@@ -39,8 +39,8 @@ window.QCCMap = {
       scrollWheelZoom: true
     }).setView(this.charlotte, 11);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Esri, OpenStreetMap',
       maxZoom: 19
     }).addTo(map);
 
@@ -49,18 +49,21 @@ window.QCCMap = {
 
   popupHtml(resource) {
     const color = this.categoryColors[resource.category] || '#94a3b8';
-    const phone = resource.phone && resource.phone !== 'See listing' ? resource.phone : '';
-    const website = resource.website && resource.website !== '#' ? resource.website : '';
+    const contact = window.QCCContact;
+    const phone = contact ? contact.usablePhone(resource.phone) : (resource.phone && resource.phone !== 'See listing' ? resource.phone : '');
+    const tel = contact ? contact.telHref(resource.phone) : '';
+    const website = contact ? contact.usableWebsite(resource.website) : (resource.website && resource.website !== '#' ? resource.website : '');
     const address = resource.address && !String(resource.address).startsWith('Charlotte-Mecklenburg')
       ? resource.address : '';
+    const maps = contact ? contact.mapsHref(address) : '';
     const photo = window.QCCPhotos ? window.QCCPhotos.forResource(resource) : '';
     return `
       <div class="qcc-map-popup">
         ${photo ? `<div class="qcc-map-popup-photo" style="background-image:url('${photo}')"></div>` : ''}
         <strong>${resource.name || ''}</strong>
         <span class="qcc-map-popup-cat"><i style="background:${color}"></i>${resource.category || ''}${resource.verified ? ' · Verified' : ''}</span>
-        ${address ? `<span>${address}</span>` : ''}
-        ${phone ? `<span>${phone}</span>` : ''}
+        ${address ? (maps ? `<a href="${maps}" target="_blank" rel="noopener">${address}</a>` : `<span>${address}</span>`) : ''}
+        ${phone ? (tel ? `<a href="${tel}">${phone}</a>` : `<span>${phone}</span>`) : ''}
         ${website ? `<a href="${website}" target="_blank" rel="noopener">Visit website &rarr;</a>` : ''}
       </div>
     `;
