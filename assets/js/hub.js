@@ -2,6 +2,7 @@ let allResources = [];
 let activeCategories = new Set(['All']);
 let searchQuery = '';
 let hoursFilter = 'All';
+let opportunityFilter = 'All';
 let sortOrder = 'best';
 let currentView = 'list';
 let map = null;
@@ -73,12 +74,10 @@ function applySavedHubPrefs() {
   }
 
   const params = new URLSearchParams(window.location.search);
-  if (params.get('category')) return;
-
   const prefs = QCCAuth.state.hubPrefs;
   if (!prefs) return;
 
-  if (Array.isArray(prefs.categories) && prefs.categories.length) {
+  if (!params.get('category') && Array.isArray(prefs.categories) && prefs.categories.length) {
     activeCategories = new Set(prefs.categories);
     const sel = document.getElementById('category-select');
     if (sel) {
@@ -88,7 +87,7 @@ function applySavedHubPrefs() {
     }
   }
 
-  if (typeof prefs.search === 'string') {
+  if (typeof prefs.search === 'string' && !params.get('q')) {
     searchQuery = prefs.search.toLowerCase().trim();
     const input = document.getElementById('search-input');
     if (input) input.value = prefs.search;
@@ -98,6 +97,12 @@ function applySavedHubPrefs() {
     hoursFilter = prefs.hours;
     const hours = document.getElementById('hours-select');
     if (hours) hours.value = prefs.hours;
+  }
+
+  if (prefs.opportunity && !params.get('opportunity')) {
+    opportunityFilter = prefs.opportunity;
+    const opp = document.getElementById('opportunity-select');
+    if (opp) opp.value = prefs.opportunity;
   }
 
   if (prefs.sort) {
@@ -122,7 +127,8 @@ function persistHubState(immediate) {
       search: document.getElementById('search-input') ? document.getElementById('search-input').value : searchQuery,
       hours: hoursFilter,
       sort: sortOrder,
-      view: currentView
+      view: currentView,
+      opportunity: opportunityFilter
     }
   }, { immediate: !!immediate });
 }
@@ -132,12 +138,13 @@ async function loadResources() {
     await QCCAuth.ready;
   }
   try {
-    const response = await fetch('/data/resources.json');
+    const response = await fetch('data/resources.json');
     const data = await response.json();
     allResources = data.resources;
 
     const params = new URLSearchParams(window.location.search);
     const urlCategory = params.get('category');
+    const urlOpportunity = params.get('opportunity');
 
     hubHydrating = true;
     if (urlCategory) {
@@ -149,6 +156,11 @@ async function loadResources() {
           o.selected = o.value === urlCategory;
         });
       }
+    }
+    if (urlOpportunity === 'volunteer' || urlOpportunity === 'intern' || urlOpportunity === 'help') {
+      opportunityFilter = urlOpportunity;
+      const opp = document.getElementById('opportunity-select');
+      if (opp) opp.value = urlOpportunity;
     }
     applySavedHubPrefs();
     hubHydrating = false;
@@ -173,7 +185,11 @@ function getFiltered() {
       hoursFilter === 'All' ||
       (hoursFilter === '24/7' && r.hours === '24/7') ||
       (hoursFilter === 'Weekday' && r.hours !== '24/7');
-    return matchCategory && matchSearch && matchHours;
+    const opps = r.opportunities || [];
+    const matchOpportunity =
+      opportunityFilter === 'All' ||
+      opps.includes(opportunityFilter);
+    return matchCategory && matchSearch && matchHours && matchOpportunity;
   });
 
   if (sortOrder === 'az') results.sort((a, b) => a.name.localeCompare(b.name));
@@ -195,6 +211,8 @@ function categoryPhoto(category) {
     "Financial Aid": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80",
     "General Support": "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&q=80",
     "Veterans": "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=600&q=80",
+    "Volunteer": "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80",
+    "Internships": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80",
     "Employment": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80",
     "Education": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
   };
@@ -229,23 +247,28 @@ function renderResources() {
   page.forEach(resource => {
     const isBookmarked = bookmarks.map(Number).includes(Number(resource.id));
     const catClass = resource.category.replace(/ /g, '-');
-    const photo = resourcePhotos[resource.name] || categoryPhoto(resource.category);
+    const photo = (window.QCCPhotos && window.QCCPhotos.forResource(resource)) || categoryPhoto(resource.category);
     const card = document.createElement('div');
     card.classList.add('resource-card');
+    const opps = resource.opportunities || [];
+    const oppLabel = opps.map((o) => o === 'intern' ? 'Internship' : o === 'volunteer' ? 'Volunteer' : 'Get help').join(' · ');
+    const heart = isBookmarked ? '❤' : '♡';
     card.innerHTML = `
       <div class="resource-card-photo" style="background-image:url('${photo}')">
         <div class="resource-card-photo-overlay"></div>
         <div class="resource-card-photo-top">
           <span class="card-category ${catClass}">${resource.category}</span>
           ${resource.verified ? '<span class="badge-24">Verified</span>' : ''}
-          ${resource.hours === '24/7' ? '<span class="badge-24">24/7</span>' : ''}
-          <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
+          <button type="button" class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
             onclick="toggleBookmark(${resource.id}, this)"
-            title="${isBookmarked ? 'Remove bookmark' : 'Save resource'}">&#9825;</button>
+            aria-pressed="${isBookmarked ? 'true' : 'false'}"
+            aria-label="${isBookmarked ? 'Remove from saved' : 'Save resource'}"
+            title="${isBookmarked ? 'Saved — click to remove' : 'Save to your account'}">${heart}</button>
         </div>
       </div>
       <div class="resource-card-body">
         <h3>${resource.name}</h3>
+        ${oppLabel ? `<p class="card-opps">${oppLabel}</p>` : ''}
         <p>${resource.description}</p>
         <div class="card-details">
           <div class="detail-row">
@@ -321,10 +344,19 @@ function toggleBookmark(id, btn) {
   if (idx === -1) {
     bookmarks.push(id);
     btn.classList.add('bookmarked');
+    btn.innerHTML = '❤';
+    btn.setAttribute('aria-pressed', 'true');
+    btn.title = 'Saved — click to remove';
     if (window.QCCAuth) QCCAuth.recordActivity('bookmark', id);
+    if (!window.QCCAuth || !QCCAuth.user) {
+      btn.title = 'Saved on this device. Sign in to keep it on your account.';
+    }
   } else {
     bookmarks.splice(idx, 1);
     btn.classList.remove('bookmarked');
+    btn.innerHTML = '♡';
+    btn.setAttribute('aria-pressed', 'false');
+    btn.title = 'Save to your account';
     if (window.QCCAuth) QCCAuth.recordActivity('unbookmark', id);
   }
   persistHubState(true);

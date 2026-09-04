@@ -1,29 +1,15 @@
-// ─── RESOURCE & CATEGORY PHOTOS ───
-const categoryPhotos = {
-  "Food": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80",
-  "Housing": "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80",
-  "Health": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80",
-  "Mental Health": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&q=80",
-  "Youth": "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80",
-  "Safety": "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80",
-  "Legal Aid": "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=600&q=80",
-  "Financial Aid": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80",
-  "General Support": "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&q=80",
-  "Veterans": "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=600&q=80",
-  "Employment": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80",
-  "Education": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
-};
-
 // ─── SPOTLIGHT CARDS ───
 async function loadSpotlight() {
   const grid = document.getElementById('spotlight-grid');
   if (!grid) return;
   try {
-    const response = await fetch('/data/resources.json');
+    const response = await fetch('data/resources.json');
     const data = await response.json();
     const spotlights = data.resources.filter(r => r.spotlight === true);
     spotlights.forEach(resource => {
-      const photo = categoryPhotos[resource.category] || categoryPhotos['General Support'];
+      const photo = window.QCCPhotos
+        ? window.QCCPhotos.forResource(resource)
+        : '';
       const card = document.createElement('div');
       card.classList.add('spotlight-card');
       card.innerHTML = `
@@ -72,7 +58,7 @@ async function loadHomeMap() {
 function initTypewriter() {
   const el = document.getElementById('typewriter');
   if (!el) return;
-  const words = ['support.', 'community.', 'connection.', 'hope.'];
+  const words = ['a way in.', 'a first job.', 'volunteer hours.', 'real help.'];
   let wordIndex = 0;
   let charIndex = 0;
   let deleting = false;

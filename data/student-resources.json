@@ -1,0 +1,1522 @@
+{
+  "resources": [
+    {
+      "name": "HandsOn Charlotte",
+      "category": "Volunteer",
+      "description": "Charlotte's volunteer matching hub. High school students can find one-day service projects, ongoing volunteer roles, and group opportunities at food pantries, parks, and nonprofits.",
+      "address": "201 W 10th Street, Charlotte, NC 28202",
+      "phone": "(704) 333-1233",
+      "website": "https://handsoncharlotte.org",
+      "hours": "See website for project calendar",
+      "lat": 35.2296,
+      "lng": -80.8445,
+      "opportunities": [
+        "volunteer"
+      ],
+      "spotlight": true
+    },
+    {
+      "name": "YMCA of Greater Charlotte – Teen Programs",
+      "category": "Youth",
+      "description": "Teen clubs, leadership, lifeguard training, camp counselor-in-training, and volunteer roles at YMCA branches across Mecklenburg County. Many sites hire teens 15+.",
+      "address": "400 E Morehead Street, Charlotte, NC 28202",
+      "phone": "(704) 716-6200",
+      "website": "https://www.ymcacharlotte.org",
+      "hours": "Hours vary by branch",
+      "lat": 35.2198,
+      "lng": -80.8452,
+      "opportunities": [
+        "volunteer",
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "Boys & Girls Clubs of Greater Charlotte",
+      "category": "Youth",
+      "description": "After-school and summer clubs for students. Teens can join, tutor younger members, or volunteer as junior staff at clubhouses across Charlotte.",
+      "address": "1000 Beatties Ford Road, Charlotte, NC 28216",
+      "phone": "(704) 335-5437",
+      "website": "https://www.bgcgreatercharlotte.org",
+      "hours": "After school and summer hours",
+      "lat": 35.2524,
+      "lng": -80.8556,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Big Brothers Big Sisters of the Central Piedmont",
+      "category": "Youth",
+      "description": "Mentoring for youth. High school students 16+ can apply as mentors in some programs; younger students can be matched with an adult mentor for support.",
+      "address": "3801 E Independence Blvd, Charlotte, NC 28205",
+      "phone": "(704) 377-3963",
+      "website": "https://bbbscentralpiedmont.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2035,
+      "lng": -80.7801,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Junior Achievement of Central Carolinas",
+      "category": "Internships",
+      "description": "Work-readiness, financial literacy, and entrepreneurship programs in CMS schools. Teens can volunteer as JA student ambassadors and explore business internships.",
+      "address": "100 N Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 376-7449",
+      "website": "https://jacharlotte.org",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.2275,
+      "lng": -80.8431,
+      "opportunities": [
+        "intern",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Charlotte Works Youth Services",
+      "category": "Internships",
+      "description": "Workforce board serving Mecklenburg. Helps teens and young adults find jobs, internships, job-readiness workshops, and paid work experience.",
+      "address": "1401 W Morehead Street, Charlotte, NC 28208",
+      "phone": "(704) 206-1350",
+      "website": "https://charlotteworks.com",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.2294,
+      "lng": -80.8685,
+      "opportunities": [
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "City of Charlotte Mayor's Youth Employment Program",
+      "category": "Internships",
+      "description": "Paid summer jobs and internships for Charlotte high school students with city departments and partner employers. Apply through the City of Charlotte youth employment page.",
+      "address": "600 E 4th Street, Charlotte, NC 28202",
+      "phone": "(704) 336-2241",
+      "website": "https://www.charlottenc.gov",
+      "hours": "Application windows posted online",
+      "lat": 35.2225,
+      "lng": -80.8398,
+      "opportunities": [
+        "intern"
+      ]
+    },
+    {
+      "name": "Charlotte-Mecklenburg Schools CTE Internships",
+      "category": "Internships",
+      "description": "Career and Technical Education internships and work-based learning through CMS high schools. Ask your CTE teacher or counselor about internships in health, IT, trades, and business.",
+      "address": "4421 Stuart Andrew Blvd, Charlotte, NC 28217",
+      "phone": "(980) 343-3000",
+      "website": "https://www.cmsk12.org",
+      "hours": "School year",
+      "lat": 35.1889,
+      "lng": -80.8912,
+      "opportunities": [
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "Central Piedmont Career & College Promise",
+      "category": "Education",
+      "description": "Tuition-free college classes and career certificates for eligible CMS high school students. A real path to dual enrollment, internships, and job skills before graduation.",
+      "address": "1201 Elizabeth Avenue, Charlotte, NC 28204",
+      "phone": "(704) 330-2722",
+      "website": "https://www.cpcc.edu",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.2178,
+      "lng": -80.8305,
+      "opportunities": [
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "CFNC – College Foundation of North Carolina",
+      "category": "Education",
+      "description": "Free statewide help for FAFSA, scholarships, college applications, and career planning. Built for high school students and families in North Carolina.",
+      "address": "Statewide online, Charlotte students welcome",
+      "phone": "1-866-866-2362",
+      "website": "https://www.cfnc.org",
+      "hours": "Online 24/7",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "help"
+      ]
+    },
+    {
+      "name": "Foundation For The Carolinas Scholarships",
+      "category": "Financial Aid",
+      "description": "Local scholarship portal for Charlotte-Mecklenburg students. Search and apply for community scholarships in one place.",
+      "address": "220 N Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 973-4500",
+      "website": "https://www.fftc.org",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.2289,
+      "lng": -80.8422,
+      "opportunities": [
+        "help"
+      ]
+    },
+    {
+      "name": "Bank of America Student Leaders",
+      "category": "Internships",
+      "description": "Paid summer internship for rising high school seniors with a local nonprofit plus a leadership summit. Competitive, real work experience in Charlotte.",
+      "address": "100 N Tryon Street, Charlotte, NC 28255",
+      "phone": "See website",
+      "website": "https://about.bankofamerica.com/en/making-an-impact/student-leaders",
+      "hours": "Application window each winter/spring",
+      "lat": 35.2275,
+      "lng": -80.8431,
+      "opportunities": [
+        "intern"
+      ]
+    },
+    {
+      "name": "Urban League of Central Carolinas",
+      "category": "Employment",
+      "description": "Job training, youth leadership, and career programs for Charlotte students and young adults. Contact them about internships and summer work.",
+      "address": "740 W 5th Street, Charlotte, NC 28202",
+      "phone": "(704) 373-2256",
+      "website": "https://urbanleaguecc.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2321,
+      "lng": -80.8514,
+      "opportunities": [
+        "intern",
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "YWCA Central Carolinas",
+      "category": "Youth",
+      "description": "Youth development, racial justice programs, and volunteer opportunities. Teens can tutor, help at events, or join leadership programs.",
+      "address": "3420 Park Road, Charlotte, NC 28209",
+      "phone": "(704) 525-5770",
+      "website": "https://ywcacentralcarolinas.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.1739,
+      "lng": -80.8495,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Right Moves for Youth",
+      "category": "Youth",
+      "description": "In-school support, mentoring, and college/career coaching for CMS students. A trusted Charlotte program for teens who want extra support to graduate and plan next steps.",
+      "address": "Charlotte-Mecklenburg Schools partner sites",
+      "phone": "(704) 377-4425",
+      "website": "https://rightmovesforyouth.org",
+      "hours": "School hours",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Teen Health Connection",
+      "category": "Health",
+      "description": "Adolescent medical care, counseling, and health education for Charlotte teens. Confidential-friendly clinic connected to Atrium Health Levine Children's.",
+      "address": "3541 Randolph Road, Charlotte, NC 28211",
+      "phone": "(704) 381-8336",
+      "website": "https://teenhealthconnection.org",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.1728,
+      "lng": -80.8075,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Mental Health America of Central Carolinas",
+      "category": "Mental Health",
+      "description": "Local mental health education, screening, and referrals. Teens can find help and also volunteer for awareness events.",
+      "address": "3701 Latrobe Drive, Charlotte, NC 28211",
+      "phone": "(704) 365-3454",
+      "website": "https://mhaofcc.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.1524,
+      "lng": -80.8241,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "988 Suicide & Crisis Lifeline",
+      "category": "Mental Health",
+      "description": "Free, confidential 24/7 support if you or a friend are in crisis. Call or text 988. For Charlotte teens who need help right now.",
+      "address": "Available anywhere in Mecklenburg County",
+      "phone": "988",
+      "website": "https://988lifeline.org",
+      "hours": "24/7",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "help"
+      ]
+    },
+    {
+      "name": "Charlotte-Mecklenburg Library – Teen Volunteer",
+      "category": "Volunteer",
+      "description": "Volunteer at ImaginOn and branch libraries: homework help, summer reading, teen advisory boards, and event support. A strong resume volunteer role.",
+      "address": "310 N Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 416-4800",
+      "website": "https://www.cmlibrary.org/volunteer",
+      "hours": "Hours vary by location",
+      "lat": 35.2287,
+      "lng": -80.8419,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "ImaginOn: The Joe & Joan Martin Center",
+      "category": "Youth",
+      "description": "Library + children's theater downtown. Teens volunteer with performances, camps, and youth programs, or use the space to study and create.",
+      "address": "300 E 7th Street, Charlotte, NC 28202",
+      "phone": "(704) 416-4600",
+      "website": "https://www.imaginon.org",
+      "hours": "See website",
+      "lat": 35.226943,
+      "lng": -80.837669,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Discovery Place Science",
+      "category": "Volunteer",
+      "description": "Museum volunteer and teen intern-style roles (floor interpreter, camps, events). Great for students interested in STEM.",
+      "address": "301 N Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 372-6261",
+      "website": "https://discoveryplace.org",
+      "hours": "See website for volunteer application",
+      "lat": 35.2291,
+      "lng": -80.8415,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Mint Museum",
+      "category": "Volunteer",
+      "description": "Art museum volunteer and teen intern opportunities at Mint Museum Uptown and Randolph. Apply through the museum volunteer page.",
+      "address": "500 S Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 337-2000",
+      "website": "https://mintmuseum.org",
+      "hours": "See website",
+      "lat": 35.2241,
+      "lng": -80.8486,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Harvey B. Gantt Center",
+      "category": "Volunteer",
+      "description": "African American arts and culture museum. Student volunteers and internships in education, events, and guest services.",
+      "address": "551 S Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 547-3700",
+      "website": "https://www.ganttcenter.org",
+      "hours": "See website",
+      "lat": 35.2236,
+      "lng": -80.8489,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Levine Museum of the New South",
+      "category": "Volunteer",
+      "description": "Charlotte history museum. Teens can volunteer as gallery guides, help with education programs, or apply for museum internships.",
+      "address": "401 S Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 333-1887",
+      "website": "https://www.museumofthenewsouth.org",
+      "hours": "See website",
+      "lat": 35.2248,
+      "lng": -80.8459,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Carolina Raptor Center",
+      "category": "Volunteer",
+      "description": "Wildlife center in Huntersville. High school volunteers help with education programs and grounds. Strong fit for students interested in animals or environmental science.",
+      "address": "6000 Sample Road, Huntersville, NC 28078",
+      "phone": "(704) 875-6521",
+      "website": "https://carolinaraptorcenter.org",
+      "hours": "See volunteer calendar",
+      "lat": 35.4102,
+      "lng": -80.8489,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Humane Society of Charlotte",
+      "category": "Volunteer",
+      "description": "Animal shelter volunteer roles for teens (age minimums apply). Dog walking, cat care, events, and adoption support.",
+      "address": "2700 Toomey Avenue, Charlotte, NC 28203",
+      "phone": "(704) 377-0534",
+      "website": "https://humanesocietyofcharlotte.org",
+      "hours": "See website for teen volunteer ages",
+      "lat": 35.2089,
+      "lng": -80.8734,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "American Red Cross Greater Carolinas",
+      "category": "Volunteer",
+      "description": "Disaster response, blood drives, and youth Red Cross clubs. High school students can volunteer, take first aid/CPR, and join leadership programs.",
+      "address": "2425 Park Road, Charlotte, NC 28203",
+      "phone": "(704) 376-1661",
+      "website": "https://www.redcross.org/local/north-carolina/greater-carolinas.html",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.1884,
+      "lng": -80.8502,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Atrium Health Volunteer Services",
+      "category": "Volunteer",
+      "description": "Hospital volunteer program. Many sites accept teens 16+ (some 18+). Strong for students exploring nursing, pre-med, or patient care.",
+      "address": "1000 Blythe Blvd, Charlotte, NC 28203",
+      "phone": "(704) 355-2000",
+      "website": "https://atriumhealth.org",
+      "hours": "Application online",
+      "lat": 35.2033,
+      "lng": -80.8388,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Novant Health Volunteer Services",
+      "category": "Volunteer",
+      "description": "Hospital and clinic volunteer roles in the Charlotte region. Check age requirements and apply through Novant volunteer services.",
+      "address": "200 Hawthorne Lane, Charlotte, NC 28204",
+      "phone": "(704) 384-4000",
+      "website": "https://www.novanthealth.org",
+      "hours": "Application online",
+      "lat": 35.2118,
+      "lng": -80.8225,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Mecklenburg County Park and Recreation Volunteers",
+      "category": "Volunteer",
+      "description": "Trail days, rec centers, youth sports, and nature programs. Easy local volunteer hours for students.",
+      "address": "5841 Brookshire Blvd, Charlotte, NC 28216",
+      "phone": "(980) 314-1000",
+      "website": "https://www.mecknc.gov/ParkandRec",
+      "hours": "See volunteer listings",
+      "lat": 35.2654,
+      "lng": -80.8912,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "U.S. National Whitewater Center",
+      "category": "Volunteer",
+      "description": "Outdoor center west of Charlotte. Volunteer and seasonal youth employment in outdoor rec, events, and environmental programs.",
+      "address": "5000 Whitewater Center Parkway, Charlotte, NC 28214",
+      "phone": "(704) 391-3900",
+      "website": "https://usnwc.org",
+      "hours": "See website",
+      "lat": 35.2734,
+      "lng": -80.9945,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Blumenthal Performing Arts",
+      "category": "Volunteer",
+      "description": "Usher and event volunteer roles at Belk Theater and other downtown venues. Good for students interested in arts and hospitality.",
+      "address": "130 N Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 372-1000",
+      "website": "https://blumenthalarts.org",
+      "hours": "See volunteer page",
+      "lat": 35.2272,
+      "lng": -80.8418,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Charlotte Ballet",
+      "category": "Volunteer",
+      "description": "Education and performance volunteers. Teens interested in dance can help with camps, productions, and community programs.",
+      "address": "701 N Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 372-7000",
+      "website": "https://charlotteballet.org",
+      "hours": "See website",
+      "lat": 35.2328,
+      "lng": -80.8379,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Council for Children's Rights",
+      "category": "Legal Aid",
+      "description": "Advocates for children and teens in Mecklenburg County. Volunteer, internship, and help resources for youth involved with schools, courts, or foster care.",
+      "address": "601 E 5th Street, Charlotte, NC 28202",
+      "phone": "(704) 372-7961",
+      "website": "https://www.cfcrights.org",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.2236,
+      "lng": -80.8363,
+      "opportunities": [
+        "help",
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "A Child's Place",
+      "category": "Youth",
+      "description": "Supports children and teens experiencing homelessness in CMS. Volunteer tutoring, mentoring, and donation drives.",
+      "address": "P.O. Box 37332, Charlotte, NC 28237",
+      "phone": "(704) 343-3790",
+      "website": "https://achildsplace.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Pat's Place Child Advocacy Center",
+      "category": "Safety",
+      "description": "Support for children and teens who have experienced abuse. Volunteer and professional internships; crisis help for families.",
+      "address": "601 E 5th Street, Charlotte, NC 28202",
+      "phone": "(704) 335-2760",
+      "website": "https://patsplacecac.org",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.2236,
+      "lng": -80.8363,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Charlotte-Mecklenburg Police Explorers",
+      "category": "Youth",
+      "description": "Explorer post for teens interested in public safety. Learn skills, volunteer at events, and explore law enforcement careers.",
+      "address": "601 E Trade Street, Charlotte, NC 28202",
+      "phone": "(704) 336-7600",
+      "website": "https://www.charlottenc.gov/CMPD",
+      "hours": "See CMPD youth programs",
+      "lat": 35.2239,
+      "lng": -80.8435,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "NC 211",
+      "category": "General Support",
+      "description": "Call or text 211 anytime for free help finding food, housing, health care, and youth programs in Mecklenburg County.",
+      "address": "Available countywide",
+      "phone": "211",
+      "website": "https://nc211.org",
+      "hours": "24/7",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "help"
+      ]
+    },
+    {
+      "name": "Johnson C. Smith University Upward Bound",
+      "category": "Education",
+      "description": "College-prep program for eligible high school students: tutoring, campus visits, and summer academy on JCSU's campus.",
+      "address": "100 Beatties Ford Road, Charlotte, NC 28216",
+      "phone": "(704) 378-1000",
+      "website": "https://www.jcsu.edu",
+      "hours": "School year + summer",
+      "lat": 35.2435,
+      "lng": -80.8565,
+      "opportunities": [
+        "help"
+      ]
+    },
+    {
+      "name": "UNC Charlotte Youth & Pre-College Programs",
+      "category": "Education",
+      "description": "Summer camps, dual enrollment, and pre-college programs on UNC Charlotte's campus. Look for STEM, writing, and leadership tracks for high schoolers.",
+      "address": "9201 University City Blvd, Charlotte, NC 28223",
+      "phone": "(704) 687-8622",
+      "website": "https://www.charlotte.edu",
+      "hours": "See program calendars",
+      "lat": 35.3071,
+      "lng": -80.7352,
+      "opportunities": [
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "Communities In Schools of Charlotte-Mecklenburg",
+      "category": "Education",
+      "description": "Site coordinators inside CMS schools connect students to tutoring, food, clothes, mentoring, and college help. Ask your counselor how to get connected — or volunteer.",
+      "address": "601 E 5th Street, Charlotte, NC 28202",
+      "phone": "(704) 237-6007",
+      "website": "https://cischarlotte.org",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.2236,
+      "lng": -80.8363,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Goodwill Career Centers – Teen Job Help",
+      "category": "Employment",
+      "description": "Free resume help, interview practice, and job search. High school students can use career centers and also volunteer or apply for youth employment programs.",
+      "address": "5301 Wilkinson Blvd, Charlotte, NC 28208",
+      "phone": "(704) 372-3434",
+      "website": "https://goodwillsp.org",
+      "hours": "Mon–Sat 9am–5pm",
+      "lat": 35.2328,
+      "lng": -80.927,
+      "opportunities": [
+        "intern",
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Habitat for Humanity Charlotte Region – Youth Volunteer",
+      "category": "Volunteer",
+      "description": "Build days and ReStore volunteer shifts. High school groups and 16+ volunteers help with housing in Charlotte.",
+      "address": "3816 Latrobe Drive, Charlotte, NC 28211",
+      "phone": "(704) 716-7044",
+      "website": "https://habitatcharlotte.org",
+      "hours": "See volunteer calendar",
+      "lat": 35.1512,
+      "lng": -80.8214,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Second Harvest Food Bank of Metrolina – Volunteer",
+      "category": "Volunteer",
+      "description": "Sort food, pack boxes, and help distributions. One of the easiest high-impact volunteer sites for Charlotte teens and school groups.",
+      "address": "500 Spratt Street, Charlotte, NC 28206",
+      "phone": "(704) 376-1785",
+      "website": "https://secondharvestmetrolina.org",
+      "hours": "Volunteer shifts posted online",
+      "lat": 35.2395,
+      "lng": -80.8378,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Crisis Assistance Ministry – Volunteer",
+      "category": "Volunteer",
+      "description": "Help neighbors facing eviction or utility shutoff. Volunteer in the Choice Pantry, donations, or client support (age rules apply).",
+      "address": "500-B Spratt Street, Charlotte, NC 28206",
+      "phone": "(704) 371-3001",
+      "website": "https://crisisassistance.org",
+      "hours": "Mon–Fri 8am–4pm",
+      "lat": 35.2409,
+      "lng": -80.8379,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Friendship Trays – Volunteer",
+      "category": "Volunteer",
+      "description": "Deliver meals to homebound neighbors. Teens can volunteer with a parent or as a group — a classic Charlotte service hours option.",
+      "address": "2401 Distribution Street, Charlotte, NC 28203",
+      "phone": "(704) 332-2220",
+      "website": "https://friendshiptrays.org",
+      "hours": "Meal packing and delivery shifts",
+      "lat": 35.2085,
+      "lng": -80.873,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Nourish Up – Volunteer & Help",
+      "category": "Food",
+      "description": "Food pantry network, Meals on Wheels, and volunteer packing. Students can get groceries for their family and also volunteer.",
+      "address": "500-B Spratt Street, Charlotte, NC 28206",
+      "phone": "(704) 376-1785",
+      "website": "https://nourishup.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.24087,
+      "lng": -80.837891,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Latin American Coalition – Youth & Volunteer",
+      "category": "Youth",
+      "description": "Support for Latino students and families: education, immigration help, and youth leadership. Teens can get help or volunteer.",
+      "address": "4938 Central Avenue, Charlotte, NC 28205",
+      "phone": "(704) 531-0848",
+      "website": "https://latinamericancoalition.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2134,
+      "lng": -80.7735,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "International House Charlotte – Youth Programs",
+      "category": "Youth",
+      "description": "Language, culture, and newcomer support. Immigrant and refugee teens can find tutoring, conversation partners, and volunteer roles.",
+      "address": "1817 Central Avenue, Charlotte, NC 28205",
+      "phone": "(704) 333-8099",
+      "website": "https://ihcharlotte.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2203,
+      "lng": -80.8091,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Time Out Youth Center",
+      "category": "Youth",
+      "description": "Safe space, counseling, and support groups for LGBTQ+ youth in Charlotte. Volunteers and drop-in help for teens.",
+      "address": "3114 Eastway Drive, Charlotte, NC 28205",
+      "phone": "(704) 344-8335",
+      "website": "https://timeoutyouth.org",
+      "hours": "See website for drop-in hours",
+      "lat": 35.198495,
+      "lng": -80.795017,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "The Relatives Youth Crisis Center",
+      "category": "Youth",
+      "description": "24/7 crisis line, emergency shelter, and counseling for youth 7–24. If you need a safe place tonight, call. Volunteer and intern roles also listed online.",
+      "address": "1100 East Boulevard, Charlotte, NC 28203",
+      "phone": "(704) 377-0602",
+      "website": "https://therelatives.org",
+      "hours": "24/7",
+      "lat": 35.203884,
+      "lng": -80.847775,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Safe Alliance – Youth & Volunteer",
+      "category": "Safety",
+      "description": "24/7 crisis line for dating violence and sexual assault. Teens can get confidential help. Older students can train as volunteers.",
+      "address": "601 E 5th Street, Charlotte, NC 28202",
+      "phone": "(980) 771-4673",
+      "website": "https://safealliance.org",
+      "hours": "24/7 hotline",
+      "lat": 35.2236,
+      "lng": -80.8363,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Roof Above – Volunteer",
+      "category": "Volunteer",
+      "description": "Serve meals, help at the Resource Center, and support neighbors experiencing homelessness. Group and teen volunteer options.",
+      "address": "945 N College Street, Charlotte, NC 28206",
+      "phone": "(704) 347-0278",
+      "website": "https://roofabove.org",
+      "hours": "Volunteer shifts online",
+      "lat": 35.233501,
+      "lng": -80.832383,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Salvation Army of Greater Charlotte – Youth & Volunteer",
+      "category": "Volunteer",
+      "description": "After-school programs, emergency assistance, and volunteer roles. Students can get help or serve at the corps and social services site.",
+      "address": "534 Spratt Street, Charlotte, NC 28206",
+      "phone": "(704) 522-1811",
+      "website": "https://www.salvationarmycarolinas.org",
+      "hours": "Mon–Fri 8:30am–4:30pm",
+      "lat": 35.2399,
+      "lng": -80.837,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Classroom Central – Volunteer",
+      "category": "Volunteer",
+      "description": "Free school supplies for CMS students in need — and a high-volume volunteer warehouse. Perfect for service hours and teacher support.",
+      "address": "2116 Wilkinson Blvd, Charlotte, NC 28208",
+      "phone": "(704) 568-3668",
+      "website": "https://classroomcentral.org",
+      "hours": "Volunteer shifts online",
+      "lat": 35.2295,
+      "lng": -80.8775,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Ada Jenkins Center – Youth Programs",
+      "category": "Youth",
+      "description": "Davidson community center with youth programs, food help, and volunteer opportunities for northern Mecklenburg students.",
+      "address": "212 Gamble Street, Davidson, NC 28036",
+      "phone": "(704) 892-6066",
+      "website": "https://adajenkins.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.4995,
+      "lng": -80.8528,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "StepUp Ministry – Youth & Jobs",
+      "category": "Employment",
+      "description": "Job training and life-skills coaching. Older teens and young adults can get career help; others can volunteer.",
+      "address": "1351 E Morehead Street, Charlotte, NC 28204",
+      "phone": "(704) 358-8701",
+      "website": "https://www.stepupministry.org",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.2112,
+      "lng": -80.8245,
+      "opportunities": [
+        "intern",
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "GenerationNation",
+      "category": "Youth",
+      "description": "Charlotte civic education nonprofit. High school students can join youth councils, election programs, and internships that teach how local government actually works.",
+      "address": "301 S McDowell Street, Charlotte, NC 28204",
+      "phone": "(704) 335-0100",
+      "website": "https://generationnation.org",
+      "hours": "School year programs",
+      "lat": 35.2216,
+      "lng": -80.8392,
+      "opportunities": [
+        "intern",
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Heart Math Tutoring",
+      "category": "Volunteer",
+      "description": "Volunteer as a math tutor in CMS elementary schools. High school students (age rules apply) can earn service hours by helping younger kids one-on-one.",
+      "address": "Charlotte-Mecklenburg Schools partner sites",
+      "phone": "(704) 909-6903",
+      "website": "https://heartmathtutoring.org",
+      "hours": "School-day tutoring shifts",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Freedom School Partners",
+      "category": "Volunteer",
+      "description": "Summer literacy Freedom Schools in Charlotte. Teens can volunteer, intern as servant-leader interns (often paid/stipend), or attend as scholars.",
+      "address": "1030 Arosa Avenue, Charlotte, NC 28203",
+      "phone": "(704) 371-4922",
+      "website": "https://freedomschoolpartners.org",
+      "hours": "Summer program + school-year events",
+      "lat": 35.2089,
+      "lng": -80.8478,
+      "opportunities": [
+        "volunteer",
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "100 Black Men of Greater Charlotte",
+      "category": "Youth",
+      "description": "Mentoring, STEM, and college-readiness for young men in Charlotte. Students can be mentees or help at events as they get older.",
+      "address": "Charlotte, NC",
+      "phone": "See website",
+      "website": "https://www.100blackmencharlotte.org",
+      "hours": "Program calendar online",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Girl Scouts Hornets' Nest Council",
+      "category": "Youth",
+      "description": "Troop leadership, Gold Award service projects, and teen travel. High school Girl Scouts can also volunteer as program aides.",
+      "address": "7007 Idlewild Road, Charlotte, NC 28212",
+      "phone": "(704) 731-6500",
+      "website": "https://www.girlscoutshnc.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.1924,
+      "lng": -80.7456,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Scouting America Mecklenburg County Council",
+      "category": "Youth",
+      "description": "Scouts BSA, Venturing, and Explorers in Mecklenburg. High schoolers lead troops, earn Eagle/Summit, and volunteer at camporees and service days.",
+      "address": "1222 E Morehead Street, Charlotte, NC 28204",
+      "phone": "(704) 333-5471",
+      "website": "https://www.mccscouting.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2138,
+      "lng": -80.8334,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Children's Theatre of Charlotte",
+      "category": "Volunteer",
+      "description": "Usher, help with education programs, or apply for teen internships at one of the country's largest children's theatres (ImaginOn).",
+      "address": "300 E 7th Street, Charlotte, NC 28202",
+      "phone": "(704) 973-2821",
+      "website": "https://www.ctcharlotte.org",
+      "hours": "See volunteer page",
+      "lat": 35.2273,
+      "lng": -80.8391,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Bechtler Museum of Modern Art",
+      "category": "Volunteer",
+      "description": "Uptown modern art museum. Student volunteers and internships in visitor services, education, and events.",
+      "address": "420 S Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 353-9200",
+      "website": "https://bechtler.org",
+      "hours": "See website",
+      "lat": 35.2245,
+      "lng": -80.8482,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "NASCAR Hall of Fame",
+      "category": "Volunteer",
+      "description": "Museum volunteer and guest-services roles downtown. Strong fit for students interested in sports, hospitality, or history.",
+      "address": "400 E Martin Luther King Jr Blvd, Charlotte, NC 28202",
+      "phone": "(704) 654-4400",
+      "website": "https://www.nascarhall.com",
+      "hours": "See volunteer listings",
+      "lat": 35.2214,
+      "lng": -80.8435,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Ronald McDonald House Charities of Greater Charlotte",
+      "category": "Volunteer",
+      "description": "Help families with kids in the hospital: meal programs, house support, and events. Age minimums apply; many roles start at 16 with an adult.",
+      "address": "1613 E 8th Street, Charlotte, NC 28204",
+      "phone": "(704) 335-1191",
+      "website": "https://rmhcharlotte.org",
+      "hours": "Volunteer shifts online",
+      "lat": 35.2156,
+      "lng": -80.8221,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Charlotte Rescue Mission",
+      "category": "Volunteer",
+      "description": "Serve meals and support recovery programs. Group and teen volunteer options; people in crisis can also get help here.",
+      "address": "907 W 1st Street, Charlotte, NC 28202",
+      "phone": "(704) 333-4635",
+      "website": "https://charlotterescuemission.org",
+      "hours": "Volunteer and program hours online",
+      "lat": 35.224128,
+      "lng": -80.829774,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Loaves & Fishes",
+      "category": "Food",
+      "description": "Emergency groceries through neighborhood pantries across Charlotte. Students can volunteer at a pantry near home or get food for their family with no referral.",
+      "address": "648 Griffith Road, Charlotte, NC 28217",
+      "phone": "(704) 523-4335",
+      "website": "https://www.loavesandfishes.org",
+      "hours": "Pantry hours vary by site",
+      "lat": 35.240409,
+      "lng": -80.845815,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Charlotte Family Housing",
+      "category": "Housing",
+      "description": "Housing and coaching for families experiencing homelessness. Volunteer, intern, or get connected if your family needs stable housing.",
+      "address": "300 Hawthorne Lane, Charlotte, NC 28204",
+      "phone": "(704) 335-5488",
+      "website": "https://charlottefamilyhousing.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.233501,
+      "lng": -80.832383,
+      "opportunities": [
+        "help",
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Charlotte Center for Legal Advocacy",
+      "category": "Legal Aid",
+      "description": "Free civil legal help for low-income people in Charlotte: housing, benefits, immigration, and more. High school internships and volunteer roles are posted when open.",
+      "address": "1431 Elizabeth Avenue, Charlotte, NC 28204",
+      "phone": "(704) 376-1600",
+      "website": "https://charlottelegaladvocacy.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.215347,
+      "lng": -80.82849,
+      "opportunities": [
+        "help",
+        "intern",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Legal Aid of North Carolina – Charlotte",
+      "category": "Legal Aid",
+      "description": "Statewide legal aid with a Charlotte office. Call if your family needs help with housing, domestic violence, or public benefits.",
+      "address": "1431 Elizabeth Avenue, Charlotte, NC 28204",
+      "phone": "1-866-219-5262",
+      "website": "https://www.legalaidnc.org",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.2162,
+      "lng": -80.8289,
+      "opportunities": [
+        "help"
+      ]
+    },
+    {
+      "name": "Camino Community Center",
+      "category": "Health",
+      "description": "Bilingual clinic, food, and youth programs in west Charlotte. Teens can get care, join youth programs, or volunteer.",
+      "address": "4855 Central Avenue, Charlotte, NC 28205",
+      "phone": "(704) 531-3848",
+      "website": "https://caminohealthcenter.org",
+      "hours": "See clinic hours",
+      "lat": 35.2128,
+      "lng": -80.7764,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Charlotte Community Health Clinic",
+      "category": "Health",
+      "description": "Affordable primary care for people without insurance. High school students can go for care and older students can ask about volunteer or pre-health internships.",
+      "address": "8401 Medical Plaza Drive, Charlotte, NC 28262",
+      "phone": "(704) 316-6561",
+      "website": "https://charlottecommunityhealthclinic.org",
+      "hours": "Mon–Fri clinic hours",
+      "lat": 35.318947,
+      "lng": -80.776713,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Care Ring",
+      "category": "Health",
+      "description": "Low-cost medical and dental care in Charlotte. A real option if you need a checkup and don't have a regular doctor.",
+      "address": "901 East Blvd, Charlotte, NC 28203",
+      "phone": "(704) 375-0172",
+      "website": "https://careringnc.org",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.318947,
+      "lng": -80.776713,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Anuvia Prevention and Recovery Center",
+      "category": "Mental Health",
+      "description": "Substance-use prevention, counseling, and teen programs. Get help for yourself or a friend, or volunteer for prevention events.",
+      "address": "100 Billingsley Road, Charlotte, NC 28211",
+      "phone": "(704) 376-7447",
+      "website": "https://www.anuvia.org",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.190535,
+      "lng": -80.810728,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Alexander Youth Network",
+      "category": "Mental Health",
+      "description": "Mental health treatment for children and teens in Charlotte. Counseling, crisis support, and community programs. Older students can explore internships in behavioral health.",
+      "address": "6220 Thermal Road, Charlotte, NC 28211",
+      "phone": "(704) 366-8712",
+      "website": "https://alexanderyouthnetwork.org",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.2271,
+      "lng": -80.8101,
+      "opportunities": [
+        "help",
+        "intern"
+      ]
+    },
+    {
+      "name": "Thompson Child & Family Focus",
+      "category": "Youth",
+      "description": "Foster care, counseling, and education for kids and teens. Volunteer, intern in social work/education, or get family support.",
+      "address": "6800 Saint Peter's Lane, Matthews, NC 28105",
+      "phone": "(704) 536-0375",
+      "website": "https://thompsoncff.org",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.167951,
+      "lng": -80.729246,
+      "opportunities": [
+        "help",
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Sustain Charlotte",
+      "category": "Internships",
+      "description": "Local sustainability nonprofit. High school and college internships in transportation, climate, and community engagement. Real resume experience.",
+      "address": "Charlotte, NC",
+      "phone": "See website",
+      "website": "https://www.sustaincharlotte.org",
+      "hours": "Internship postings online",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "intern",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "TreesCharlotte",
+      "category": "Volunteer",
+      "description": "Tree planting and canopy programs across the city. Saturday plantings are one of the easiest group volunteer options for clubs and sports teams.",
+      "address": "4404-M Stuart Andrew Blvd, Charlotte, NC 28217",
+      "phone": "(704) 999-0671",
+      "website": "https://treescharlotte.org",
+      "hours": "Planting events posted online",
+      "lat": 35.1894,
+      "lng": -80.8908,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Catawba Lands Conservancy",
+      "category": "Volunteer",
+      "description": "Land and trail stewardship in the Charlotte region. Volunteer on trail days or apply for conservation internships.",
+      "address": "4530 Park Road, Charlotte, NC 28209",
+      "phone": "(704) 342-3330",
+      "website": "https://catawbalands.org",
+      "hours": "See volunteer calendar",
+      "lat": 35.1682,
+      "lng": -80.8504,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Special Olympics Mecklenburg County",
+      "category": "Volunteer",
+      "description": "Coach, cheer, and volunteer at competitions for athletes with intellectual disabilities. High school Unified Champion Schools and weekend events.",
+      "address": "Charlotte-Mecklenburg event sites",
+      "phone": "(919) 719-7662",
+      "website": "https://www.sonc.net",
+      "hours": "Seasonal sports calendar",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Best Buddies North Carolina",
+      "category": "Volunteer",
+      "description": "Friendship and inclusion programs with students who have intellectual and developmental disabilities. Start a chapter at your high school or volunteer at events.",
+      "address": "North Carolina programs, Charlotte chapters welcome",
+      "phone": "See website",
+      "website": "https://www.bestbuddies.org/northcarolina",
+      "hours": "School year",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "The Arc of Mecklenburg County",
+      "category": "Volunteer",
+      "description": "Advocacy and programs for people with intellectual and developmental disabilities. Volunteer, intern, or get family resources.",
+      "address": "3900 Park Road, Charlotte, NC 28209",
+      "phone": "(704) 332-4535",
+      "website": "https://www.arcmeck.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.1712,
+      "lng": -80.8508,
+      "opportunities": [
+        "volunteer",
+        "help",
+        "intern"
+      ]
+    },
+    {
+      "name": "Arts & Science Council",
+      "category": "Internships",
+      "description": "Charlotte's arts funder. Watch for student internships, Cultural On-Call volunteer ushers, and scholarships for young artists.",
+      "address": "227 W Trade Street, Charlotte, NC 28202",
+      "phone": "(704) 372-9667",
+      "website": "https://artsandscience.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2276,
+      "lng": -80.8456,
+      "opportunities": [
+        "intern",
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Mecklenburg County Public Health",
+      "category": "Health",
+      "description": "Immunizations, teen clinic services, WIC, and school health. Call for appointments. Pre-health students can ask about volunteer or intern pathways.",
+      "address": "249 Billingsley Road, Charlotte, NC 28211",
+      "phone": "(980) 314-9300",
+      "website": "https://www.mecknc.gov/HealthDepartment",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.1768,
+      "lng": -80.8114,
+      "opportunities": [
+        "help",
+        "intern"
+      ]
+    },
+    {
+      "name": "NCWorks Career Center – Charlotte",
+      "category": "Employment",
+      "description": "Free job search, resume help, and hiring events. High school students 16+ can get work-based learning info and summer job leads.",
+      "address": "1401 W Morehead Street, Charlotte, NC 28208",
+      "phone": "(704) 206-1350",
+      "website": "https://www.nccommerce.com/nc-works",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.2294,
+      "lng": -80.8685,
+      "opportunities": [
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "CMS Foundation",
+      "category": "Financial Aid",
+      "description": "Scholarships, classroom grants, and student support for Charlotte-Mecklenburg Schools. Search current scholarships for CMS high schoolers.",
+      "address": "4421 Stuart Andrew Blvd, Charlotte, NC 28217",
+      "phone": "(980) 343-6249",
+      "website": "https://www.cmsfoundation.net",
+      "hours": "Mon–Fri 8am–5pm",
+      "lat": 35.1889,
+      "lng": -80.8912,
+      "opportunities": [
+        "help"
+      ]
+    },
+    {
+      "name": "Levine Jewish Community Center",
+      "category": "Youth",
+      "description": "Teen programs, camp counselor-in-training, lifeguard jobs, and volunteer roles at the Shalom Park campus.",
+      "address": "5007 Providence Road, Charlotte, NC 28226",
+      "phone": "(704) 366-5007",
+      "website": "https://www.charlottejcc.org",
+      "hours": "Hours vary by program",
+      "lat": 35.1462,
+      "lng": -80.8068,
+      "opportunities": [
+        "volunteer",
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "Civil Air Patrol – Charlotte Composite Squadron",
+      "category": "Youth",
+      "description": "US Air Force auxiliary cadet program. Aerospace education, emergency services, and leadership for teens 12–18. Weekly meetings; real community service hours.",
+      "address": "Charlotte-area meeting location posted online",
+      "phone": "See website",
+      "website": "https://www.gocivilairpatrol.com",
+      "hours": "Weekly cadet meetings",
+      "lat": 35.2144,
+      "lng": -80.943,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Mecklenburg County Animal Care & Control Volunteer",
+      "category": "Volunteer",
+      "description": "County shelter volunteer program for dog walking, cat care, and events. Check the age minimum and orientation dates before you apply.",
+      "address": "8315 Byrum Drive, Charlotte, NC 28217",
+      "phone": "(704) 336-5100",
+      "website": "https://www.mecknc.gov/LUESA/AnimalControl",
+      "hours": "See volunteer orientation calendar",
+      "lat": 35.1624,
+      "lng": -80.8918,
+      "opportunities": [
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Carolina Refugee Resettlement Agency",
+      "category": "Volunteer",
+      "description": "Help newcomer families in Charlotte: tutoring, donation drives, and welcome teams. Strong volunteer hours and a real way to use a second language.",
+      "address": "5009 Monroe Road, Suite 100, Charlotte, NC 28205",
+      "phone": "(704) 535-8803",
+      "website": "https://carolinarefugee.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.191822,
+      "lng": -80.777387,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "Catholic Charities Diocese of Charlotte",
+      "category": "General Support",
+      "description": "Food, immigration legal help, counseling, and family support. Open to people of all faiths. Volunteer or get assistance.",
+      "address": "1123 S Church Street, Charlotte, NC 28203",
+      "phone": "(704) 370-3262",
+      "website": "https://www.ccdoc.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.2212,
+      "lng": -80.854194,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Matthews Help Center",
+      "category": "General Support",
+      "description": "Food pantry, financial help, and volunteer shifts for southeast Mecklenburg and Matthews students.",
+      "address": "119 N Ames Street, Matthews, NC 28105",
+      "phone": "(704) 847-8383",
+      "website": "https://matthewshelpcenter.org",
+      "hours": "See pantry hours",
+      "lat": 35.1169,
+      "lng": -80.7218,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    },
+    {
+      "name": "Charlotte Museum of History",
+      "category": "Volunteer",
+      "description": "Local history museum volunteer and intern roles in tours, archives, and education. Good for students who like history or teaching.",
+      "address": "3500 Shamrock Drive, Charlotte, NC 28215",
+      "phone": "(704) 568-1774",
+      "website": "https://charlottemuseum.org",
+      "hours": "See website",
+      "lat": 35.2418,
+      "lng": -80.7734,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Daniel Stowe Botanical Garden",
+      "category": "Volunteer",
+      "description": "Belmont garden (easy drive from west Charlotte). Teen volunteer and seasonal internships in horticulture and education.",
+      "address": "6500 S New Hope Road, Belmont, NC 28012",
+      "phone": "(704) 825-5120",
+      "website": "https://www.dsbg.org",
+      "hours": "See volunteer page",
+      "lat": 35.1854,
+      "lng": -81.0312,
+      "opportunities": [
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Year Up Charlotte",
+      "category": "Internships",
+      "description": "Job training plus a corporate internship for young adults. Most tracks start at 18; rising seniors should look now so they can apply after graduation.",
+      "address": "1412 E 4th Street, Charlotte, NC 28204",
+      "phone": "See website",
+      "website": "https://www.yearup.org/locations/charlotte-nc",
+      "hours": "Program cohorts posted online",
+      "lat": 35.21655,
+      "lng": -80.8259,
+      "opportunities": [
+        "intern",
+        "help"
+      ]
+    },
+    {
+      "name": "Dress for Success Charlotte",
+      "category": "Employment",
+      "description": "Interview clothes and career coaching. High school students can volunteer at the boutique; older students and families can get interview help.",
+      "address": "500 E Morehead Street, Charlotte, NC 28202",
+      "phone": "(704) 910-4155",
+      "website": "https://charlotte.dressforsuccess.org",
+      "hours": "By appointment",
+      "lat": 35.215347,
+      "lng": -80.82849,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ]
+    },
+    {
+      "name": "RAIN of North Carolina",
+      "category": "Health",
+      "description": "HIV/STI education, testing, and support in Charlotte. Confidential help for teens, plus volunteer and intern roles in public health.",
+      "address": "601 E 5th Street, Charlotte, NC 28202",
+      "phone": "(704) 372-7246",
+      "website": "https://carolinarain.org",
+      "hours": "Mon–Fri 9am–5pm",
+      "lat": 35.223615,
+      "lng": -80.836332,
+      "opportunities": [
+        "help",
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Crossnore Communities for Children",
+      "category": "Youth",
+      "description": "Foster care and residential support with a Charlotte presence. Volunteer, intern in social work, or get family resources.",
+      "address": "Charlotte services listed online",
+      "phone": "(828) 765-4256",
+      "website": "https://www.crossnore.org",
+      "hours": "Mon–Fri 8:30am–5pm",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "opportunities": [
+        "help",
+        "volunteer",
+        "intern"
+      ]
+    },
+    {
+      "name": "Mecklenburg County Park and Recreation Teen Employment",
+      "category": "Internships",
+      "description": "Seasonal rec-center, camp, and aquatics jobs for teens (lifeguard, camp counselor, scorekeeper). Apply through the county jobs portal.",
+      "address": "5841 Brookshire Blvd, Charlotte, NC 28216",
+      "phone": "(980) 314-1000",
+      "website": "https://www.mecknc.gov/ParkandRec",
+      "hours": "Hiring windows posted online",
+      "lat": 35.2654,
+      "lng": -80.8912,
+      "opportunities": [
+        "intern"
+      ]
+    },
+    {
+      "name": "Charlotte-Mecklenburg Library Homework Help",
+      "category": "Education",
+      "description": "Free tutoring, databases, and college/career help at every branch. Use it yourself, then volunteer as a teen tutor when you are ready.",
+      "address": "310 N Tryon Street, Charlotte, NC 28202",
+      "phone": "(704) 416-4800",
+      "website": "https://www.cmlibrary.org",
+      "hours": "Hours vary by branch",
+      "lat": 35.2287,
+      "lng": -80.8419,
+      "opportunities": [
+        "help",
+        "volunteer"
+      ]
+    }
+  ]
+}

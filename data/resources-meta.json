@@ -1,9 +1,12 @@
 {
-  "lastUpdated": "2026-09-03T03:07:57.364Z",
-  "lastAttempt": "2026-09-03T03:07:57.366Z",
+  "lastUpdated": "2026-09-04T03:15:58.805Z",
+  "lastAttempt": "2026-09-04T03:15:58.806Z",
   "nextUpdateDays": 14,
-  "count": 5272,
-  "curatedCount": 50,
-  "liveCount": 5222,
-  "source": "openstreetmap+curated"
+  "count": 176,
+  "curatedCount": 138,
+  "liveCount": 38,
+  "source": "openstreetmap+curated",
+  "ai": {
+    "used": false
+  }
 }

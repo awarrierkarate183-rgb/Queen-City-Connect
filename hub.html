@@ -5,9 +5,9 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <meta name="description"
-    content="Browse a live, auto-updating directory of community resources in Charlotte-Mecklenburg County. Filter by food, housing, health, mental health, and more." />
+    content="Find volunteer hours, internships, and real help near you in Charlotte-Mecklenburg — built for high school students." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resource Hub | QueenCityConnect</title>
+  <title>Opportunities | QueenCityConnect</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
@@ -34,8 +34,8 @@
 
   <header class="hub-masthead is-open" id="hub-masthead">
     <div class="hub-title-block" id="hub-title-block">
-      <span class="section-eyebrow">Charlotte-Mecklenburg County</span>
-      <h1 class="section-title">Community Resource Hub</h1>
+      <span class="section-eyebrow">Charlotte-Mecklenburg · High school</span>
+      <h1 class="section-title">Find your next opportunity</h1>
     </div>
     <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="true"
       aria-controls="hub-controls" onclick="toggleHubFilters()">
@@ -46,7 +46,7 @@
       <div class="container">
         <div class="search-bar">
           <span class="search-icon">&#x2315;</span>
-          <input type="text" id="search-input" placeholder="Search by name, category, or keyword..." />
+          <input type="text" id="search-input" placeholder="Search internships, volunteer sites, clinics..." />
         </div>
         <div class="hub-filter-row">
           <span class="sort-label">Filter by:</span>
@@ -57,6 +57,8 @@
             <option value="Health">Health</option>
             <option value="Mental Health">Mental Health</option>
             <option value="Youth">Youth</option>
+            <option value="Volunteer">Volunteer</option>
+            <option value="Internships">Internships</option>
             <option value="Safety">Safety</option>
             <option value="Legal Aid">Legal Aid</option>
             <option value="Financial Aid">Financial Aid</option>
@@ -64,6 +66,12 @@
             <option value="Employment">Employment</option>
             <option value="Education">Education</option>
             <option value="General Support">General Support</option>
+          </select>
+          <select class="hub-select" id="opportunity-select" onchange="onOpportunitySelect(this.value)">
+            <option value="All">I want to: All</option>
+            <option value="volunteer">I want to: Volunteer</option>
+            <option value="intern">I want to: Intern / work</option>
+            <option value="help">I want to: Get help</option>
           </select>
           <select class="hub-select" id="hours-select" onchange="onHoursSelect(this.value)">
             <option value="All">All Hours</option>
@@ -77,7 +85,7 @@
           </select>
           <button class="filter-btn clear-btn" onclick="clearAllFilters()">Clear All</button>
         </div>
-        <p class="hub-filter-hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories. The directory auto-refreshes every 2 weeks from live map data, with verified QueenCityConnect listings ranked first.</p>
+        <p class="hub-filter-hint">Every pin is a real Mecklenburg-area place. Filter by volunteer, internships, or help. Verified listings stay on top.</p>
         <p class="hub-filter-hint" id="directory-updated"></p>
         <div class="hub-toolbar">
           <div class="results-count" id="results-count"></div>
@@ -113,6 +121,8 @@
             <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Housing</div>
             <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>Mental Health</div>
             <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Youth</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Volunteer</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#0ea5e9"></span>Internships</div>
             <div class="legend-item"><span class="legend-dot" style="background:#ec4899"></span>Safety</div>
             <div class="legend-item"><span class="legend-dot" style="background:#6366f1"></span>Legal Aid</div>
             <div class="legend-item"><span class="legend-dot" style="background:#14b8a6"></span>Financial Aid</div>
@@ -191,6 +201,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="assets/js/map-points.js"></script>
+  <script src="assets/js/photos.js"></script>
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/auth.js"></script>
   <script src="assets/js/hub.js"></script>
@@ -204,6 +215,14 @@
       } else {
         selected.forEach(v => activeCategories.add(v));
       }
+      visibleCount = 24;
+      renderResources();
+      if (currentView === 'map') renderMap();
+      persistHubState();
+    }
+
+    function onOpportunitySelect(val) {
+      opportunityFilter = val;
       visibleCount = 24;
       renderResources();
       if (currentView === 'map') renderMap();
@@ -229,6 +248,7 @@
       activeCategories.clear();
       activeCategories.add('All');
       hoursFilter = 'All';
+      opportunityFilter = 'All';
       sortOrder = 'best';
       searchQuery = '';
       visibleCount = 24;
@@ -236,6 +256,8 @@
       const sel = document.getElementById('category-select');
       Array.from(sel.options).forEach(o => o.selected = o.value === 'All');
       document.getElementById('hours-select').value = 'All';
+      const opp = document.getElementById('opportunity-select');
+      if (opp) opp.value = 'All';
       document.getElementById('sort-select').value = 'best';
       renderResources();
       if (currentView === 'map') renderMap();

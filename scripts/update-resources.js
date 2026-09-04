@@ -2,9 +2,13 @@
 
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+
+const { enrichResources } = require('./ai-resources');
 
 const ROOT = path.join(__dirname, '..');
 const CURATED_PATH = path.join(ROOT, 'data', 'curated-resources.json');
+const STUDENT_PATH = path.join(ROOT, 'data', 'student-resources.json');
 const OUT_PATH = path.join(ROOT, 'data', 'resources.json');
 const META_PATH = path.join(ROOT, 'data', 'resources-meta.json');
 
@@ -16,62 +20,20 @@ const OVERPASS_ENDPOINTS = [
 
 const OVERPASS_QUERIES = [
   `
-[out:json][timeout:240];
+[out:json][timeout:180];
 (
   nwr["amenity"="social_facility"](${BBOX});
   nwr["amenity"="food_bank"](${BBOX});
   nwr["amenity"="soup_kitchen"](${BBOX});
   nwr["amenity"="shelter"](${BBOX});
-  nwr["amenity"="hospital"](${BBOX});
-  nwr["amenity"="clinic"](${BBOX});
-  nwr["amenity"="doctors"](${BBOX});
-  nwr["amenity"="pharmacy"](${BBOX});
-  nwr["amenity"="dentist"](${BBOX});
-  nwr["amenity"="school"](${BBOX});
-  nwr["amenity"="kindergarten"](${BBOX});
-  nwr["amenity"="college"](${BBOX});
-  nwr["amenity"="university"](${BBOX});
   nwr["amenity"="community_centre"](${BBOX});
   nwr["amenity"="library"](${BBOX});
-  nwr["amenity"="place_of_worship"](${BBOX});
-  nwr["amenity"="courthouse"](${BBOX});
-  nwr["amenity"="police"](${BBOX});
-  nwr["amenity"="fire_station"](${BBOX});
-  nwr["amenity"="childcare"](${BBOX});
-  nwr["amenity"="nursing_home"](${BBOX});
-  nwr["amenity"="townhall"](${BBOX});
-  nwr["healthcare"](${BBOX});
   nwr["office"="ngo"](${BBOX});
-  nwr["office"="government"](${BBOX});
   nwr["office"="charity"](${BBOX});
-  nwr["office"="association"](${BBOX});
-  nwr["office"="employment_agency"](${BBOX});
-  nwr["office"="lawyer"](${BBOX});
+  nwr["office"="foundation"](${BBOX});
   nwr["social_facility"](${BBOX});
   nwr["shop"="charity"](${BBOX});
-  nwr["amenity"="social_centre"](${BBOX});
   nwr["leisure"="community_centre"](${BBOX});
-  nwr["amenity"="post_office"](${BBOX});
-  nwr["amenity"="public_building"](${BBOX});
-  nwr["emergency"="ambulance_station"](${BBOX});
-  nwr["office"="foundation"](${BBOX});
-);
-out center tags;
-`.trim(),
-  `
-[out:json][timeout:240];
-(
-  nwr["leisure"="park"](${BBOX});
-  nwr["leisure"="playground"](${BBOX});
-  nwr["leisure"="sports_centre"](${BBOX});
-  nwr["leisure"="recreation_ground"](${BBOX});
-  nwr["amenity"="marketplace"](${BBOX});
-  nwr["shop"="supermarket"](${BBOX});
-  nwr["shop"="convenience"](${BBOX});
-  nwr["shop"="greengrocer"](${BBOX});
-  nwr["amenity"="bank"](${BBOX});
-  nwr["amenity"="credit_union"](${BBOX});
-  nwr["office"="financial"](${BBOX});
 );
 out center tags;
 `.trim()
@@ -81,8 +43,15 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function inMetro(lat, lng) {
-  return lat >= 34.8 && lat <= 35.7 && lng >= -81.4 && lng <= -80.3;
+function inCharlotteServiceArea(lat, lng, address) {
+  const a = String(address || '').toLowerCase();
+  if (/\b(sc|south carolina|rock hill|fort mill|york sc|indian land|cherryville|kings mountain|lincolnton|maiden|gastonia|bessemer city|dallas nc|kannapolis|concord nc|mooresville|china grove|rockwell|locust|midland nc|stanley nc|terrell|sherrills|monroe nc|waxhaw|wingate|indian trail)\b/.test(a)
+    && !/\b(charlotte|matthews|mint hill|pineville|huntersville|cornelius|davidson|belmont)\b/.test(a)) {
+    return false;
+  }
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+  if (lat >= 35.17 && lat <= 35.20 && lng >= -81.05 && lng <= -81.00) return true;
+  return lat >= 35.05 && lat <= 35.52 && lng >= -81.05 && lng <= -80.64;
 }
 
 function decimalPlaces(n) {
@@ -95,10 +64,26 @@ function isCoarseCoord(lat, lng) {
   return !Number.isFinite(lat) || !Number.isFinite(lng) || decimalPlaces(lat) <= 4 || decimalPlaces(lng) <= 4;
 }
 
+function isQualityStoredLive(resource) {
+  if (!resource || resource.source !== 'openstreetmap') return false;
+  const website = resource.website || '#';
+  const phone = resource.phone || 'See listing';
+  if (website === '#' && (phone === 'See listing' || !phone)) return false;
+  const blob = String(resource.name || '').toLowerCase();
+  if (/event venue|riverwalk event|^j\.n\. fries|founders hall library/.test(blob)) return false;
+  if (!inCharlotteServiceArea(resource.lat, resource.lng, resource.address)) return false;
+  return true;
+}
+
 function loadExistingLive() {
   try {
     const data = JSON.parse(fs.readFileSync(OUT_PATH, 'utf8'));
-    return (data.resources || []).filter((r) => r.source === 'openstreetmap');
+    return (data.resources || []).filter(isQualityStoredLive).map((resource) => {
+      const next = { ...resource };
+      delete next.opportunities;
+      next.opportunities = defaultOpportunities(next);
+      return next;
+    });
   } catch {
     return [];
   }
@@ -122,7 +107,7 @@ async function geocodeAddress(address) {
       if (data && data[0]) {
         const lat = Number(data[0].lat);
         const lng = Number(data[0].lon);
-        if (Number.isFinite(lat) && Number.isFinite(lng) && inMetro(lat, lng)) {
+        if (Number.isFinite(lat) && Number.isFinite(lng) && inCharlotteServiceArea(lat, lng, query)) {
           return [Number(lat.toFixed(6)), Number(lng.toFixed(6))];
         }
       }
@@ -163,15 +148,24 @@ async function refineCuratedCoords(curated, live, doGeocode) {
   return refined;
 }
 
+function persistCoordsFile(filePath, refined) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const byName = new Map(refined.map((r) => [keyName(r.name), r]));
+    raw.resources = (raw.resources || []).map((resource) => {
+      const hit = byName.get(keyName(resource.name));
+      if (!hit) return resource;
+      return { ...resource, lat: hit.lat, lng: hit.lng };
+    });
+    fs.writeFileSync(filePath, JSON.stringify(raw, null, 2) + '\n');
+  } catch {
+    // File may not exist yet.
+  }
+}
+
 function persistCuratedCoords(refined) {
-  const raw = JSON.parse(fs.readFileSync(CURATED_PATH, 'utf8'));
-  const byName = new Map(refined.map((r) => [keyName(r.name), r]));
-  raw.resources = (raw.resources || []).map((resource) => {
-    const hit = byName.get(keyName(resource.name));
-    if (!hit) return resource;
-    return { ...resource, lat: hit.lat, lng: hit.lng };
-  });
-  fs.writeFileSync(CURATED_PATH, JSON.stringify(raw, null, 2) + '\n');
+  persistCoordsFile(CURATED_PATH, refined);
+  persistCoordsFile(STUDENT_PATH, refined);
 }
 
 function categorize(tags) {
@@ -185,16 +179,16 @@ function categorize(tags) {
   const blob = `${amenity} ${healthcare} ${social} ${office} ${shop} ${leisure} ${name}`.toLowerCase();
 
   if (blob.includes('veteran') || blob.includes('va ')) return 'Veterans';
-  if (amenity === 'food_bank' || amenity === 'soup_kitchen' || amenity === 'marketplace' || shop === 'supermarket' || shop === 'convenience' || shop === 'greengrocer' || social === 'food_bank' || blob.includes('food bank') || blob.includes('pantry')) return 'Food';
-  if (amenity === 'shelter' || social === 'shelter' || social === 'homeless' || blob.includes('homeless') || blob.includes('housing')) return 'Housing';
+  if (amenity === 'food_bank' || amenity === 'soup_kitchen' || amenity === 'marketplace' || social === 'food_bank' || blob.includes('food bank') || blob.includes('pantry')) return 'Food';
+  if (amenity === 'shelter' || social === 'shelter' || social === 'homeless' || blob.includes('homeless')) return 'Housing';
   if (healthcare === 'mental_health' || social === 'mental_health' || blob.includes('mental') || blob.includes('psych')) return 'Mental Health';
-  if (amenity === 'school' || amenity === 'kindergarten' || amenity === 'college' || amenity === 'university' || amenity === 'library') return 'Education';
-  if (amenity === 'childcare' || leisure === 'playground' || social === 'child_care' || blob.includes('youth')) return 'Youth';
-  if (amenity === 'police' || amenity === 'fire_station' || blob.includes('crisis') || blob.includes('domestic')) return 'Safety';
+  if (amenity === 'library') return 'Education';
+  if (blob.includes('youth') || blob.includes('teen') || amenity === 'childcare') return 'Youth';
+  if (amenity === 'police' || blob.includes('crisis') || blob.includes('domestic')) return 'Safety';
   if (office === 'lawyer' || amenity === 'courthouse' || blob.includes('legal')) return 'Legal Aid';
-  if (office === 'employment_agency' || blob.includes('workforce') || blob.includes('job')) return 'Employment';
-  if (amenity === 'bank' || amenity === 'credit_union' || office === 'financial') return 'Financial Aid';
-  if (amenity === 'hospital' || amenity === 'clinic' || amenity === 'doctors' || amenity === 'pharmacy' || amenity === 'dentist' || amenity === 'nursing_home' || healthcare) return 'Health';
+  if (office === 'employment_agency' || blob.includes('workforce') || blob.includes('intern')) return 'Internships';
+  if (blob.includes('volunteer')) return 'Volunteer';
+  if (amenity === 'hospital' || amenity === 'clinic' || amenity === 'doctors' || healthcare) return 'Health';
   return 'General Support';
 }
 
@@ -287,6 +281,38 @@ async function fetchOverpass() {
   return all;
 }
 
+function defaultOpportunities(resource) {
+  if (Array.isArray(resource.opportunities) && resource.opportunities.length) {
+    return resource.opportunities;
+  }
+  const category = resource.category || '';
+  const blob = `${resource.name} ${category}`.toLowerCase();
+  const opps = new Set(['help']);
+  if (category === 'Volunteer' || blob.includes('volunteer')) opps.add('volunteer');
+  if (category === 'Internships' || blob.includes('intern') || blob.includes('workforce') || blob.includes('employment')) {
+    opps.add('intern');
+  }
+  if (['Youth', 'Food', 'Housing', 'Volunteer'].includes(category)) {
+    opps.add('volunteer');
+  }
+  if (category === 'Employment') opps.add('intern');
+  return [...opps];
+}
+
+function isQualityLive(tags, name, website, phone) {
+  const amenity = String(tags.amenity || '');
+  const office = String(tags.office || '');
+  const allowedAmenity = new Set(['social_facility', 'food_bank', 'soup_kitchen', 'shelter', 'community_centre', 'library']);
+  const allowedOffice = new Set(['ngo', 'charity', 'foundation']);
+  if (!allowedAmenity.has(amenity) && !allowedOffice.has(office) && !tags.social_facility && tags.shop !== 'charity') {
+    return false;
+  }
+  if (website === '#' && (phone === 'See listing' || !phone)) return false;
+  const blob = String(name || '').toLowerCase();
+  if (/cvs|walgreens|rite aid|circle k|7-eleven|atm|bank of america|wells fargo|chase bank/.test(blob)) return false;
+  return true;
+}
+
 function fromOsm(elements) {
   const seen = new Set();
   const out = [];
@@ -296,21 +322,24 @@ function fromOsm(elements) {
     if (!name) continue;
     const xy = coordsOf(el);
     if (!xy) continue;
+    const website = tags.website || tags['contact:website'] || '#';
+    const phone = tags.phone || tags['contact:phone'] || 'See listing';
+    if (!isQualityLive(tags, name, website, phone)) continue;
     const lat = Number(xy[0].toFixed(6));
     const lng = Number(xy[1].toFixed(6));
     const dedupe = keyName(name) + '|' + lat.toFixed(4) + '|' + lng.toFixed(4);
     if (seen.has(dedupe)) continue;
     seen.add(dedupe);
+    const address = addressOf(tags);
+    if (!inCharlotteServiceArea(lat, lng, address)) continue;
     const category = categorize(tags);
-    const website = tags.website || tags['contact:website'] || '#';
-    const phone = tags.phone || tags['contact:phone'] || 'See listing';
     const hours = tags.opening_hours === '24/7' ? '24/7' : (tags.opening_hours || 'See listing');
     const resource = {
       id: 10000 + out.length + 1,
       name,
       category,
       description: tags.description || tags.note ||
-        `${name} is a mapped ${category.toLowerCase()} location in the Charlotte metro area.`,
+        `${name} is a Charlotte-area ${category.toLowerCase()} organization. Check the website for hours, programs, and how to get involved.`,
       address: addressOf(tags),
       phone,
       website,
@@ -322,25 +351,41 @@ function fromOsm(elements) {
       lng,
       osmTimestamp: el.timestamp || null
     };
+    resource.opportunities = defaultOpportunities(resource);
     resource.score = scoreResource(resource);
     out.push(resource);
   }
   return out;
 }
 
+function loadJsonResources(filePath) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return raw.resources || [];
+  } catch {
+    return [];
+  }
+}
+
 function loadCurated() {
-  const raw = JSON.parse(fs.readFileSync(CURATED_PATH, 'utf8'));
-  return (raw.resources || []).map((resource, index) => {
+  const combined = [...loadJsonResources(CURATED_PATH), ...loadJsonResources(STUDENT_PATH)];
+  const seen = new Set();
+  return combined.map((resource, index) => {
+    const key = keyName(resource.name);
+    if (key === 'city year charlotte') return null;
+    if (seen.has(key)) return null;
+    seen.add(key);
     const next = {
       ...resource,
       verified: true,
       source: 'curated',
       spotlight: resource.spotlight === true
     };
-    next.score = scoreResource(next);
+    next.opportunities = defaultOpportunities(next);
+    next.score = scoreResource(next) + 20;
     if (!next.id) next.id = index + 1;
     return next;
-  });
+  }).filter(Boolean);
 }
 
 function merge(curated, live) {
@@ -375,7 +420,18 @@ async function updateResources(options = {}) {
   curated = await refineCuratedCoords(curated, live, doGeocode);
   persistCuratedCoords(curated);
 
-  const resources = merge(curated, live);
+  let resources = merge(curated, live);
+  let aiMeta = { used: false };
+  if (options.ai !== false) {
+    const enriched = await enrichResources(resources, { skipCache: options.skipAiCache === true });
+    resources = enriched.resources.map((resource) => ({
+      ...resource,
+      score: scoreResource(resource)
+    }));
+    resources.sort((a, b) => (b.score - a.score) || a.name.localeCompare(b.name));
+    resources = resources.map((r, i) => ({ ...r, id: i + 1 }));
+    aiMeta = enriched.ai;
+  }
   const payload = { resources };
   fs.writeFileSync(OUT_PATH, JSON.stringify(payload, null, 2));
   const meta = {
@@ -385,7 +441,8 @@ async function updateResources(options = {}) {
     count: resources.length,
     curatedCount: curated.length,
     liveCount: resources.length - curated.length,
-    source: sourceNote
+    source: sourceNote,
+    ai: aiMeta
   };
   fs.writeFileSync(META_PATH, JSON.stringify(meta, null, 2));
   return meta;
@@ -394,7 +451,9 @@ async function updateResources(options = {}) {
 if (require.main === module) {
   updateResources({
     reuseLive: process.argv.includes('--reuse-live'),
-    geocode: !process.argv.includes('--no-geocode')
+    geocode: !process.argv.includes('--no-geocode'),
+    ai: !process.argv.includes('--no-ai'),
+    skipAiCache: process.argv.includes('--refresh-ai')
   })
     .then((meta) => {
       console.log('Resource directory updated:', meta);

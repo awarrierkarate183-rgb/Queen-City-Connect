@@ -72,7 +72,9 @@
         <span class="section-eyebrow">Signed in</span>
         <h1 class="section-title">Your saved resources</h1>
         <p class="section-sub" id="saved-lead"></p>
-        <ul class="saved-list" id="saved-list"></ul>
+        <div class="saved-grid" id="saved-list"></div>
+        <h2 class="saved-heading">What you’ve done</h2>
+        <ul class="saved-activity" id="saved-activity"></ul>
         <div class="cta-band-actions" style="justify-content:flex-start;margin-top:24px">
           <a href="hub.html" class="btn-primary">Open Resource Hub</a>
           <button type="button" class="btn-ghost" id="saved-sign-out">Sign out</button>
@@ -125,6 +127,26 @@
       showError('');
     }
 
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function oppLabel(opps) {
+      return (opps || []).map((o) => o === 'intern' ? 'Internship' : o === 'volunteer' ? 'Volunteer' : 'Get help').join(' · ');
+    }
+
+    function activityLabel(type) {
+      if (type === 'bookmark') return 'Saved';
+      if (type === 'unbookmark') return 'Removed from saved';
+      if (type === 'website') return 'Opened website';
+      if (type === 'print') return 'Printed listing';
+      return type || 'Updated';
+    }
+
     async function renderSaved() {
       const forms = document.getElementById('auth-forms');
       const saved = document.getElementById('auth-saved');
@@ -136,24 +158,54 @@
       forms.hidden = true;
       saved.hidden = false;
       document.getElementById('saved-lead').textContent =
-        'Signed in as ' + QCCAuth.user.name + ' (' + QCCAuth.user.email + '). Bookmarks and hub choices stay with this account.';
+        'Signed in as ' + QCCAuth.user.name + ' (' + QCCAuth.user.email + '). Hearts you tap in the Hub stay on this account.';
       const list = document.getElementById('saved-list');
+      const activityEl = document.getElementById('saved-activity');
       const ids = (QCCAuth.state && QCCAuth.state.bookmarks) || [];
-      if (!ids.length) {
-        list.innerHTML = '<li class="saved-empty">No saved resources yet. Open the Hub and tap the heart on a listing.</li>';
-        return;
-      }
+      let byId = {};
       try {
-        const data = await fetch('/data/resources.json').then((r) => r.json());
-        const byId = {};
+        const data = await fetch('data/resources.json').then((r) => r.json());
         (data.resources || []).forEach((r) => { byId[r.id] = r; });
+      } catch {
+        byId = {};
+      }
+      if (!ids.length) {
+        list.innerHTML = '<p class="saved-empty">No saved resources yet. Open the Hub and tap the heart on a listing. It turns red and stays with your account.</p>';
+      } else {
         list.innerHTML = ids.map((id) => {
           const resource = byId[id];
-          if (!resource) return '<li>Saved resource #' + id + '</li>';
-          return '<li><a href="hub.html">' + resource.name + '</a><span>' + resource.category + '</span></li>';
+          if (!resource) {
+            return '<article class="saved-card"><h3>Saved resource #' + escapeHtml(id) + '</h3><p>This listing was updated. Open the Hub to save it again.</p></article>';
+          }
+          const phone = resource.phone && resource.phone !== 'See listing' ? resource.phone : '';
+          const website = resource.website && resource.website !== '#' ? resource.website : '';
+          const opps = oppLabel(resource.opportunities);
+          return (
+            '<article class="saved-card">' +
+              '<p class="saved-card-meta">' + escapeHtml(resource.category || '') + (opps ? ' · ' + escapeHtml(opps) : '') + '</p>' +
+              '<h3>' + escapeHtml(resource.name) + '</h3>' +
+              '<p>' + escapeHtml(resource.description || '') + '</p>' +
+              (resource.address ? '<p class="saved-card-contact">' + escapeHtml(resource.address) + '</p>' : '') +
+              (phone ? '<p class="saved-card-contact">' + escapeHtml(phone) + '</p>' : '') +
+              '<div class="saved-card-actions">' +
+                (website ? '<a class="btn-secondary" href="' + escapeHtml(website) + '" target="_blank" rel="noopener">Visit website</a>' : '') +
+                '<a class="btn-ghost" href="hub.html">Open in Hub</a>' +
+              '</div>' +
+            '</article>'
+          );
         }).join('');
-      } catch {
-        list.innerHTML = '<li>' + ids.length + ' saved resource' + (ids.length === 1 ? '' : 's') + '</li>';
+      }
+      const activity = [...((QCCAuth.state && QCCAuth.state.activity) || [])].reverse().slice(0, 20);
+      if (!activity.length) {
+        activityEl.innerHTML = '<li class="saved-empty">Nothing recorded yet. Saving a heart, opening a website, or printing a card will show up here.</li>';
+      } else {
+        activityEl.innerHTML = activity.map((item) => {
+          const resource = item.resourceId != null ? byId[item.resourceId] : null;
+          const name = resource ? resource.name : (item.resourceId != null ? 'Resource #' + item.resourceId : 'Account');
+          const when = item.at ? new Date(item.at).toLocaleString() : '';
+          return '<li><strong>' + escapeHtml(activityLabel(item.type)) + '</strong> — ' + escapeHtml(name) +
+            (when ? '<time datetime="' + escapeHtml(item.at) + '">' + escapeHtml(when) + '</time>' : '') + '</li>';
+        }).join('');
       }
     }
 

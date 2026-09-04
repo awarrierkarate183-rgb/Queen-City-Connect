@@ -4,7 +4,8 @@
   "description": "QueenCityConnect local server with accounts and saved user activity",
   "scripts": {
     "start": "node server.js",
-    "update-resources": "node scripts/update-resources.js"
+    "update-resources": "node scripts/update-resources.js",
+    "update-resources:ai": "node scripts/update-resources.js --reuse-live --no-geocode --refresh-ai"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
