@@ -106,11 +106,21 @@
   }
 
   .nav-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--font-serif);
     font-size: 20px;
     color: var(--ink);
     letter-spacing: -0.3px;
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .nav-logo-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     flex-shrink: 0;
   }
 
@@ -3654,10 +3664,20 @@
   }
 
   .footer-brand-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--font-sans);
     font-size: 20px;
     color: white;
     margin-bottom: 10px;
+  }
+
+  .footer-brand-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    flex-shrink: 0;
   }
 
   .footer-brand-tagline {
@@ -3924,15 +3944,16 @@
     flex-shrink: 0;
   }
 
-  .auth-google-icon::before {
-    content: 'G';
+  .auth-google-icon svg {
+    display: block;
   }
 
   .auth-google-slot {
     display: flex;
     justify-content: center;
-    min-height: 0;
-    margin-bottom: 12px;
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 0;
   }
 
   .auth-google-slot[hidden] {
@@ -4132,6 +4153,16 @@
   .submit-info-card a {
     color: var(--accent);
     font-weight: 600;
+  }
+
+  .saved-card .card-details {
+    margin: 4px 0 12px;
+  }
+
+  .saved-card-stale {
+    font-size: 13px;
+    color: #d4b483;
+    margin-bottom: 10px;
   }
 
   .saved-card-actions {

@@ -128,8 +128,13 @@ function persistHubState(immediate) {
   bookmarks = bookmarks.map(Number).filter((n) => n > 0);
   localStorage.setItem('clt-bookmarks', JSON.stringify(bookmarks));
   if (hubHydrating || !window.QCCAuth || !QCCAuth.user) return;
+  const previous = (QCCAuth.state && QCCAuth.state.bookmarkSnapshots) || {};
+  const bookmarkSnapshots = window.QCCSaves
+    ? QCCSaves.snapshotsFor(bookmarks, allResources, previous)
+    : previous;
   QCCAuth.saveState({
     bookmarks,
+    bookmarkSnapshots,
     hubPrefs: {
       categories: [...activeCategories],
       search: document.getElementById('search-input') ? document.getElementById('search-input').value : searchQuery,

@@ -3,7 +3,16 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" href="favicon.ico?v=2" sizes="any" />
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png?v=2" />
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png?v=2" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg?v=2" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta property="og:image" content="https://queencityconnect.org/og-image.png" />
+  <meta property="og:image:alt" content="QueenCityConnect logo: a crowned Q with the Charlotte skyline" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="https://queencityconnect.org/og-image.png" />
   <meta name="description" content="Your saved Charlotte schools, neighborhood sites, and community resources on QueenCityConnect." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Saves | QueenCityConnect</title>
@@ -13,7 +22,7 @@
 <body class="dark">
   <nav class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo">Queen<span>City</span>Connect</a>
+      <a href="index.html" class="nav-logo"><img src="assets/images/logo.png?v=2" alt="" class="nav-logo-mark" width="32" height="32" />Queen<span>City</span>Connect</a>
       <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="hub.html">Resource Hub</a></li>
@@ -61,6 +70,7 @@
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/contact.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/saves.js"></script>
   <script>
     function escapeHtml(value) {
       return String(value == null ? '' : value)
@@ -83,13 +93,23 @@
       return type || 'Updated';
     }
 
+    function detailRow(label, value, href, extra) {
+      if (!value) return '';
+      const inner = href
+        ? '<a href="' + escapeHtml(href) + '"' + (extra || '') + '>' + escapeHtml(value) + '</a>'
+        : '<span>' + escapeHtml(value) + '</span>';
+      return '<div class="detail-row"><span class="detail-label">' + escapeHtml(label) + '</span>' + inner + '</div>';
+    }
+
     async function removeSave(id) {
       if (!QCCAuth.user) return;
       const next = ((QCCAuth.state && QCCAuth.state.bookmarks) || [])
         .map(Number)
         .filter((item) => item !== Number(id));
+      const snaps = Object.assign({}, (QCCAuth.state && QCCAuth.state.bookmarkSnapshots) || {});
+      delete snaps[String(id)];
       QCCAuth.recordActivity('unbookmark', id);
-      await QCCAuth.saveState({ bookmarks: next }, { immediate: true });
+      await QCCAuth.saveState({ bookmarks: next, bookmarkSnapshots: snaps }, { immediate: true });
       await renderSaved();
     }
 
@@ -103,23 +123,47 @@
         activityEl.innerHTML = '';
         return;
       }
-      lead.textContent = 'Signed in as ' + QCCAuth.user.name + ' · ' + QCCAuth.user.email + '. Hearts you tap in the Hub stay here on any device.';
+      lead.textContent = 'Signed in as ' + QCCAuth.user.name + '. Hearts stay on this account with phone, website, hours, and how to use each place. The directory refreshes every 2 weeks.';
       const ids = (QCCAuth.state && QCCAuth.state.bookmarks) || [];
-      let byId = {};
+      const snapshots = (QCCAuth.state && QCCAuth.state.bookmarkSnapshots) || {};
+      let live = [];
       try {
         const data = await fetch('data/resources.json').then((r) => r.json());
-        (data.resources || []).forEach((r) => { byId[r.id] = r; });
+        live = data.resources || [];
       } catch {
-        byId = {};
+        live = [];
       }
-      if (!ids.length) {
+      const byId = {};
+      const byKey = {};
+      live.forEach((resource) => {
+        byId[Number(resource.id)] = resource;
+        if (window.QCCSaves) byKey[QCCSaves.keyName(resource.name)] = resource;
+      });
+      const resolved = ids.map((id) => {
+        return window.QCCSaves
+          ? QCCSaves.resolve(id, byId, byKey, snapshots)
+          : (byId[id] ? { resource: byId[id], fromSnapshot: false, id: Number(id) } : null);
+      });
+      const nextIds = [];
+      const nextSnaps = {};
+      resolved.forEach((item, index) => {
+        const fallbackId = Number(ids[index]);
+        if (!item) return;
+        nextIds.push(item.id);
+        nextSnaps[String(item.id)] = window.QCCSaves
+          ? QCCSaves.snapshot(item.resource, snapshots[String(fallbackId)] || snapshots[String(item.id)])
+          : item.resource;
+      });
+      const idsChanged = JSON.stringify(nextIds) !== JSON.stringify(ids.map(Number));
+      const snapsChanged = JSON.stringify(nextSnaps) !== JSON.stringify(snapshots);
+      if ((idsChanged || snapsChanged) && nextIds.length) {
+        await QCCAuth.saveState({ bookmarks: nextIds, bookmarkSnapshots: nextSnaps }, { immediate: true });
+      }
+      if (!nextIds.length) {
         list.innerHTML = '<div class="saved-empty-card"><p>Nothing saved yet. Open the Hub and tap the heart on a school, neighborhood, or community listing. It turns red and stays with this account.</p><a class="btn-primary" href="hub.html">Browse the directory</a></div>';
       } else {
-        list.innerHTML = ids.map((id) => {
-          const resource = byId[id];
-          if (!resource) {
-            return '<article class="saved-card"><div class="saved-card-body"><h3>Saved resource #' + escapeHtml(id) + '</h3><p>This listing was updated. Open the Hub to save it again.</p></div></article>';
-          }
+        list.innerHTML = resolved.filter(Boolean).map((item) => {
+          const resource = item.resource;
           const phone = window.QCCContact ? window.QCCContact.usablePhone(resource.phone) : (resource.phone && resource.phone !== 'See listing' ? resource.phone : '');
           const tel = window.QCCContact ? window.QCCContact.telHref(resource.phone) : '';
           const website = window.QCCContact ? window.QCCContact.usableWebsite(resource.website) : (resource.website && resource.website !== '#' ? resource.website : '');
@@ -131,16 +175,22 @@
             '<article class="saved-card">' +
               (photo ? '<div class="saved-card-photo" style="background-image:url(\'' + escapeHtml(photo) + '\')"><span class="card-category ' + escapeHtml(catClass) + '">' + escapeHtml(resource.category || '') + '</span></div>' : '') +
               '<div class="saved-card-body">' +
-                '<p class="saved-card-meta">' + (opps ? escapeHtml(opps) : 'Saved listing') + '</p>' +
+                '<p class="saved-card-meta">' + escapeHtml(resource.category || 'Saved listing') + (opps ? ' · ' + escapeHtml(opps) : '') + '</p>' +
                 '<h3>' + escapeHtml(resource.name) + '</h3>' +
+                (item.fromSnapshot ? '<p class="saved-card-stale">Showing the last saved details. This listing is not in the current directory.</p>' : '') +
                 '<p>' + escapeHtml(resource.description || '') + '</p>' +
-                (resource.address ? '<p class="saved-card-contact">' + (maps ? '<a href="' + escapeHtml(maps) + '" target="_blank" rel="noopener">' + escapeHtml(resource.address) + '</a>' : escapeHtml(resource.address)) + '</p>' : '') +
-                (phone ? '<p class="saved-card-contact">' + (tel ? '<a href="' + escapeHtml(tel) + '">' + escapeHtml(phone) + '</a>' : escapeHtml(phone)) + '</p>' : '') +
+                '<div class="card-details">' +
+                  detailRow('How to use', opps) +
+                  detailRow('Address', resource.address, maps, ' target="_blank" rel="noopener"') +
+                  detailRow('Phone', phone, tel) +
+                  detailRow('Website', website, website, ' target="_blank" rel="noopener"') +
+                  detailRow('Hours', resource.hours) +
+                '</div>' +
                 '<div class="saved-card-actions">' +
                   (tel ? '<a class="btn-primary" href="' + escapeHtml(tel) + '">Call</a>' : '') +
                   (website ? '<a class="btn-secondary" href="' + escapeHtml(website) + '" target="_blank" rel="noopener">Visit website</a>' : '') +
                   '<a class="btn-ghost" href="hub.html">Open in Hub</a>' +
-                  '<button type="button" class="btn-ghost saved-unsave" data-id="' + escapeHtml(id) + '">Remove</button>' +
+                  '<button type="button" class="btn-ghost saved-unsave" data-id="' + escapeHtml(item.id) + '">Remove</button>' +
                 '</div>' +
               '</div>' +
             '</article>'
@@ -155,8 +205,10 @@
         activityEl.innerHTML = '<li class="saved-empty">Nothing recorded yet. Saving a heart, opening a website, or printing a card will show up here.</li>';
       } else {
         activityEl.innerHTML = activity.map((item) => {
-          const resource = item.resourceId != null ? byId[item.resourceId] : null;
-          const name = resource ? resource.name : (item.resourceId != null ? 'Resource #' + item.resourceId : 'Account');
+          const found = item.resourceId != null
+            ? (window.QCCSaves ? QCCSaves.resolve(item.resourceId, byId, byKey, nextSnaps) : (byId[item.resourceId] ? { resource: byId[item.resourceId] } : null))
+            : null;
+          const name = found && found.resource ? found.resource.name : (item.resourceId != null ? 'Resource #' + item.resourceId : 'Account');
           const when = item.at ? new Date(item.at).toLocaleString() : '';
           return '<li><strong>' + escapeHtml(activityLabel(item.type)) + '</strong> — ' + escapeHtml(name) +
             (when ? '<time datetime="' + escapeHtml(item.at) + '">' + escapeHtml(when) + '</time>' : '') + '</li>';
@@ -168,6 +220,11 @@
       if (!QCCAuth.user) {
         window.location.replace('signin.html?next=saved.html');
         return;
+      }
+      try {
+        await QCCAuth.mergeGuestOnLogin();
+      } catch {
+        /* keep account saves */
       }
       await renderSaved();
     });

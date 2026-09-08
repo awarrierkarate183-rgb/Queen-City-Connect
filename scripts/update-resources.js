@@ -390,12 +390,61 @@ function loadCurated() {
   }).filter(Boolean);
 }
 
+function loadPreviousIdMap() {
+  try {
+    const data = JSON.parse(fs.readFileSync(OUT_PATH, 'utf8'));
+    const map = new Map();
+    (data.resources || []).forEach((resource) => {
+      const key = keyName(resource.name);
+      const id = Number(resource.id);
+      if (key && Number.isFinite(id) && id > 0 && !map.has(key)) {
+        map.set(key, id);
+      }
+    });
+    return map;
+  } catch {
+    return new Map();
+  }
+}
+
+function assignStableIds(list) {
+  const previous = loadPreviousIdMap();
+  const used = new Set();
+  let maxId = 0;
+  previous.forEach((id) => {
+    if (id > maxId) maxId = id;
+  });
+  list.forEach((resource) => {
+    const id = Number(resource.id);
+    if (Number.isFinite(id) && id > maxId) maxId = id;
+  });
+
+  const assigned = list.map((resource) => {
+    const keep = previous.get(keyName(resource.name));
+    if (keep && !used.has(keep)) {
+      used.add(keep);
+      return { ...resource, id: keep };
+    }
+    return { ...resource, id: 0 };
+  });
+
+  let next = maxId + 1;
+  return assigned.map((resource) => {
+    if (resource.id) return resource;
+    while (used.has(next)) next += 1;
+    const id = next;
+    used.add(id);
+    next += 1;
+    return { ...resource, id };
+  });
+}
+
 function merge(curated, live) {
   const used = new Set(curated.map((r) => keyName(r.name)));
   const extra = live.filter((r) => !used.has(keyName(r.name)));
-  const all = [...curated, ...extra].map((r, i) => ({ ...r, id: i + 1 }));
+  const all = assignStableIds([...curated, ...extra]);
   all.sort((a, b) => (b.score - a.score) || a.name.localeCompare(b.name));
-  return all.map((r, i) => ({ ...r, id: i + 1 }));
+  return all;
 }
 
 async function updateResources(options = {}) {
@@ -431,7 +480,6 @@ async function updateResources(options = {}) {
       score: scoreResource(resource)
     }));
     resources.sort((a, b) => (b.score - a.score) || a.name.localeCompare(b.name));
-    resources = resources.map((r, i) => ({ ...r, id: i + 1 }));
     aiMeta = enriched.ai;
   }
   const payload = { resources };

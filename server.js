@@ -75,6 +75,7 @@ const statements = {
   findById: db.prepare('SELECT * FROM users WHERE id = ?'),
   findByGoogle: db.prepare('SELECT * FROM users WHERE google_id = ?'),
   linkGoogle: db.prepare('UPDATE users SET google_id = ?, name = COALESCE(NULLIF(name, \'\'), ?) WHERE id = ?'),
+  updateName: db.prepare('UPDATE users SET name = ? WHERE id = ?'),
   getState: db.prepare('SELECT state_json FROM user_state WHERE user_id = ?'),
   upsertState: db.prepare(`
     INSERT INTO user_state (user_id, state_json, updated_at)
@@ -177,8 +178,104 @@ function defaultState() {
     recentlyViewed: [],
     submissions: [],
     newsletterEmail: null,
-    activity: []
+    activity: [],
+    bookmarkSnapshots: {}
   };
+}
+
+function keyName(name) {
+  return String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function snapshotFromResource(resource, previous) {
+  const now = new Date().toISOString();
+  return {
+    id: Number(resource.id),
+    key: keyName(resource.name),
+    name: String(resource.name || '').slice(0, 160),
+    category: String(resource.category || '').slice(0, 60),
+    description: String(resource.description || '').slice(0, 800),
+    address: String(resource.address || '').slice(0, 200),
+    phone: String(resource.phone || '').slice(0, 80),
+    website: String(resource.website || '').slice(0, 300),
+    hours: String(resource.hours || '').slice(0, 160),
+    opportunities: Array.isArray(resource.opportunities) ? resource.opportunities.map(String).slice(0, 8) : [],
+    verified: resource.verified === true,
+    savedAt: (previous && previous.savedAt) || now,
+    updatedAt: now
+  };
+}
+
+function sanitizeSnapshots(incoming, bookmarks) {
+  const allowed = new Set((bookmarks || []).map(Number));
+  const out = {};
+  if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) return out;
+  Object.keys(incoming).slice(0, 400).forEach((key) => {
+    const id = Number(key);
+    if (!allowed.has(id)) return;
+    const snap = incoming[key];
+    if (!snap || typeof snap !== 'object') return;
+    out[String(id)] = {
+      id,
+      key: String(snap.key || keyName(snap.name)).slice(0, 160),
+      name: String(snap.name || '').slice(0, 160),
+      category: String(snap.category || '').slice(0, 60),
+      description: String(snap.description || '').slice(0, 800),
+      address: String(snap.address || '').slice(0, 200),
+      phone: String(snap.phone || '').slice(0, 80),
+      website: String(snap.website || '').slice(0, 300),
+      hours: String(snap.hours || '').slice(0, 160),
+      opportunities: Array.isArray(snap.opportunities) ? snap.opportunities.map(String).slice(0, 8) : [],
+      verified: snap.verified === true,
+      savedAt: String(snap.savedAt || new Date().toISOString()),
+      updatedAt: String(snap.updatedAt || new Date().toISOString())
+    };
+  });
+  return out;
+}
+
+function loadDirectoryResources() {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'resources.json'), 'utf8'));
+    return Array.isArray(data.resources) ? data.resources : [];
+  } catch {
+    return [];
+  }
+}
+
+function remapAccountSaves() {
+  const resources = loadDirectoryResources();
+  const byId = new Map(resources.map((resource) => [Number(resource.id), resource]));
+  const byKey = new Map(resources.map((resource) => [keyName(resource.name), resource]));
+  const rows = db.prepare('SELECT user_id, state_json FROM user_state').all();
+  rows.forEach((row) => {
+    let state;
+    try {
+      state = { ...defaultState(), ...JSON.parse(row.state_json) };
+    } catch {
+      return;
+    }
+    const snaps = state.bookmarkSnapshots || {};
+    const nextIds = [];
+    const nextSnaps = {};
+    (state.bookmarks || []).forEach((rawId) => {
+      const id = Number(rawId);
+      const snap = snaps[String(id)] || {};
+      const live = byId.get(id) || byKey.get(snap.key || keyName(snap.name));
+      if (live) {
+        nextIds.push(Number(live.id));
+        nextSnaps[String(live.id)] = snapshotFromResource(live, snap);
+      } else if (snap.name) {
+        nextIds.push(id);
+        nextSnaps[String(id)] = snap;
+      }
+    });
+    writeState(row.user_id, {
+      ...state,
+      bookmarks: [...new Set(nextIds)],
+      bookmarkSnapshots: nextSnaps
+    });
+  });
 }
 
 function readState(userId) {
@@ -284,6 +381,12 @@ function sanitizeStatePatch(incoming, current) {
     }));
   }
 
+  if (incoming.bookmarkSnapshots && typeof incoming.bookmarkSnapshots === 'object') {
+    next.bookmarkSnapshots = sanitizeSnapshots(incoming.bookmarkSnapshots, next.bookmarks);
+  } else if (Array.isArray(incoming.bookmarks)) {
+    next.bookmarkSnapshots = sanitizeSnapshots(current.bookmarkSnapshots, next.bookmarks);
+  }
+
   return next;
 }
 
@@ -342,6 +445,9 @@ function queueNewAccountEmail(user, method) {
 
 const app = express();
 app.disable('x-powered-by');
+if (BASE_URL.startsWith('https://')) {
+  app.set('trust proxy', 1);
+}
 app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
@@ -455,11 +561,21 @@ app.post('/api/auth/register', (req, res) => {
     if (!isValidEmail(email)) return res.status(400).json({ error: 'Enter a valid email address.' });
     if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
 
-    if (statements.findByEmail.get(email)) {
+    const existing = statements.findByEmail.get(email);
+    const passwordHash = bcrypt.hashSync(password, 10);
+    if (existing) {
+      if (!existing.password_hash) {
+        statements.updatePassword.run(passwordHash, existing.id);
+        if (name && name !== existing.name) {
+          statements.updateName.run(name, existing.id);
+        }
+        const user = statements.findById.get(existing.id);
+        startUserSession(req, res, user, 'password');
+        return;
+      }
       return res.status(409).json({ error: 'An account with that email already exists. Sign in instead.' });
     }
 
-    const passwordHash = bcrypt.hashSync(password, 10);
     const user = createUser({ name, email, passwordHash });
     queueNewAccountEmail(user, 'password');
     startUserSession(req, res, user, 'register');
@@ -471,7 +587,7 @@ app.post('/api/auth/register', (req, res) => {
 
 app.post('/api/auth/login', (req, res) => {
   try {
-    const email = normalizeEmail(req.body && req.body.email);
+    const email = normalizeEmail((req.body && (req.body.email || req.body.username)) || '');
     const password = String((req.body && req.body.password) || '');
     const user = statements.findByEmail.get(email);
 
@@ -701,7 +817,13 @@ async function refreshDirectoryIfStale(force) {
   if (directoryRefreshing) return meta;
   directoryRefreshing = true;
   try {
-    return await updateResources({ geocode: false });
+    const meta = await updateResources({ geocode: false });
+    try {
+      remapAccountSaves();
+    } catch (err) {
+      console.error('Could not refresh saved listings:', err.message || err);
+    }
+    return meta;
   } catch (err) {
     console.error('Directory refresh failed:', err.message || err);
     return meta;

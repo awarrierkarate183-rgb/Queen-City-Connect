@@ -3,7 +3,16 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" href="favicon.ico?v=2" sizes="any" />
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png?v=2" />
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png?v=2" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg?v=2" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta property="og:image" content="https://queencityconnect.org/og-image.png" />
+  <meta property="og:image:alt" content="QueenCityConnect logo: a crowned Q with the Charlotte skyline" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="https://queencityconnect.org/og-image.png" />
   <meta name="description" content="Sign in or create a QueenCityConnect account to save bookmarks, filters, and resources on any device." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In | QueenCityConnect</title>
@@ -13,7 +22,7 @@
 <body class="dark">
   <nav class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo">Queen<span>City</span>Connect</a>
+      <a href="index.html" class="nav-logo"><img src="assets/images/logo.png?v=2" alt="" class="nav-logo-mark" width="32" height="32" />Queen<span>City</span>Connect</a>
       <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="hub.html">Resource Hub</a></li>
@@ -41,11 +50,6 @@
 
         <div class="auth-google-block">
           <div id="google-signin-slot" class="auth-google-slot"></div>
-          <a class="auth-google-btn" id="google-btn" href="/api/auth/google">
-            <span class="auth-google-icon" aria-hidden="true"></span>
-            Continue with Google
-          </a>
-          <p class="auth-hint" id="google-hint" hidden>Google Sign-In is not enabled on this copy of the site yet. Email and password still save your account on every device.</p>
         </div>
 
         <div class="auth-divider"><span>or email</span></div>
@@ -226,13 +230,6 @@
       }
     });
 
-    function siteAuthPath(path) {
-      const clean = path.startsWith('/') ? path : '/' + path;
-      const pathname = window.location.pathname.replace(/\/[^/]*\.[A-Za-z0-9]+$/, '/');
-      if (pathname && pathname !== '/') return pathname.replace(/\/$/, '') + clean;
-      return clean;
-    }
-
     QCCAuth.ready.then(async () => {
       if (QCCAuth.user) {
         window.location.replace(nextPage() === 'signin.html' ? 'saved.html' : nextPage());
@@ -240,23 +237,22 @@
       }
       const params = new URLSearchParams(window.location.search);
       const err = params.get('error');
-      if (err === 'google-setup') {
-        showError('Google Sign-In is not enabled yet. Email and password still save your account on every device.');
-      } else if (err === 'google') {
+      if (err === 'google') {
         showError('Google Sign-In did not complete. Try again, or use email and password.');
       }
-      const googleBtn = document.getElementById('google-btn');
-      const googleHint = document.getElementById('google-hint');
-      googleBtn.href = siteAuthPath('/api/auth/google') + '?next=' + encodeURIComponent('/' + nextPage());
-      QCCAuth.initGoogleButton('google-signin-slot');
+      if (params.has('error')) {
+        params.delete('error');
+        const query = params.toString();
+        const page = window.location.pathname.split('/').pop() || 'signin.html';
+        history.replaceState({}, '', page + (query ? '?' + query : '') + window.location.hash);
+      }
       const googleBlock = document.querySelector('.auth-google-block');
       const divider = document.querySelector('.auth-divider');
       if (QCCAuth.googleClientId) {
-        googleBtn.hidden = true;
-        googleHint.hidden = true;
+        if (googleBlock) googleBlock.hidden = false;
+        if (divider) divider.hidden = false;
+        QCCAuth.initGoogleButton('google-signin-slot');
       } else {
-        googleBtn.hidden = true;
-        googleHint.hidden = true;
         if (googleBlock) googleBlock.hidden = true;
         if (divider) divider.hidden = true;
       }
