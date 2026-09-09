@@ -130,23 +130,41 @@
     return data;
   };
 
+  async function loadGoogleClientId() {
+    try {
+      const data = await api('/api/auth/config');
+      QCCAuth.googleEnabled = Boolean(data.googleEnabled || data.googleClientId);
+      QCCAuth.googleClientId = data.googleClientId || '';
+      QCCAuth.googleRedirectEnabled = Boolean(data.googleRedirectEnabled);
+      if (QCCAuth.googleClientId) return;
+    } catch {
+      /* static hosts have no /api — fall through to the public config file */
+    }
+    try {
+      const data = await fetch(sitePath('/data/auth-config.json')).then((response) => {
+        if (!response.ok) throw new Error('missing auth config');
+        return response.json();
+      });
+      QCCAuth.googleClientId = (data && data.googleClientId) || QCCAuth.googleClientId || '';
+      QCCAuth.googleEnabled = Boolean(QCCAuth.googleClientId);
+    } catch {
+      if (!QCCAuth.googleClientId) {
+        QCCAuth.googleEnabled = false;
+        QCCAuth.googleRedirectEnabled = false;
+      }
+    }
+  }
+
   QCCAuth.refresh = async function () {
     try {
       const data = await api('/api/me');
-      return QCCAuth.applySession(data);
+      QCCAuth.applySession(data);
+      if (!QCCAuth.googleClientId) await loadGoogleClientId();
+      return data;
     } catch {
       QCCAuth.user = null;
       QCCAuth.state = null;
-      try {
-        const data = await api('/api/auth/config');
-        QCCAuth.googleEnabled = Boolean(data.googleEnabled || data.googleClientId);
-        QCCAuth.googleClientId = data.googleClientId || '';
-        QCCAuth.googleRedirectEnabled = Boolean(data.googleRedirectEnabled);
-      } catch {
-        QCCAuth.googleEnabled = false;
-        QCCAuth.googleClientId = '';
-        QCCAuth.googleRedirectEnabled = false;
-      }
+      await loadGoogleClientId();
       renderNav();
       return null;
     }
