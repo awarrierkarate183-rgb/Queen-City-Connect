@@ -128,7 +128,7 @@
       const snapshots = (QCCAuth.state && QCCAuth.state.bookmarkSnapshots) || {};
       let live = [];
       try {
-        const data = await fetch('data/resources.json?v=desc50').then((r) => r.json());
+        const data = await fetch('data/resources.json?v=desc60').then((r) => r.json());
         live = data.resources || [];
       } catch {
         live = [];
@@ -178,7 +178,7 @@
                 '<p class="saved-card-meta">' + escapeHtml(resource.category || 'Saved listing') + (opps ? ' · ' + escapeHtml(opps) : '') + '</p>' +
                 '<h3>' + escapeHtml(resource.name) + '</h3>' +
                 (item.fromSnapshot ? '<p class="saved-card-stale">Showing the last saved details. This listing is not in the current directory.</p>' : '') +
-                '<p>' + escapeHtml(resource.description || '') + '</p>' +
+                '<p class="card-description">' + escapeHtml(resource.description || '') + '</p>' +
                 '<div class="card-details">' +
                   detailRow('How to use', opps) +
                   detailRow('Address', resource.address, maps, ' target="_blank" rel="noopener"') +

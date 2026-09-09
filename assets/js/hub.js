@@ -151,7 +151,7 @@ async function loadResources() {
     await QCCAuth.ready;
   }
   try {
-    const response = await fetch('data/resources.json?v=desc50');
+    const response = await fetch('data/resources.json?v=desc60');
     const data = await response.json();
     allResources = data.resources;
 
@@ -289,7 +289,7 @@ function renderResources() {
       <div class="resource-card-body">
         <h3>${escapeHtml(resource.name)}</h3>
         ${oppLabel ? `<p class="card-opps">${escapeHtml(oppLabel)}</p>` : ''}
-        <p>${escapeHtml(resource.description)}</p>
+        <p class="card-description">${escapeHtml(resource.description)}</p>
         <div class="card-details">
           ${resource.address ? `<div class="detail-row">
             <span class="detail-label">Address</span>
