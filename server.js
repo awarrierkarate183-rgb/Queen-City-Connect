@@ -194,7 +194,7 @@ function snapshotFromResource(resource, previous) {
     key: keyName(resource.name),
     name: String(resource.name || '').slice(0, 160),
     category: String(resource.category || '').slice(0, 60),
-    description: String(resource.description || '').slice(0, 800),
+      description: String(resource.description || '').slice(0, 2000),
     address: String(resource.address || '').slice(0, 200),
     phone: String(resource.phone || '').slice(0, 80),
     website: String(resource.website || '').slice(0, 300),

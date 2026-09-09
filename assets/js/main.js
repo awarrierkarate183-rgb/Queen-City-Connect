@@ -3,7 +3,7 @@ async function loadSpotlight() {
   const grid = document.getElementById('spotlight-grid');
   if (!grid) return;
   try {
-    const response = await fetch('data/resources.json');
+    const response = await fetch('data/resources.json?v=desc50');
     const data = await response.json();
     const spotlights = data.resources.filter(r => r.spotlight === true);
     spotlights.forEach(resource => {
@@ -45,7 +45,7 @@ async function loadHomeMap() {
   const map = window.QCCMap.create('home-map');
   const layer = L.layerGroup().addTo(map);
   try {
-    const response = await fetch('data/resources.json');
+    const response = await fetch('data/resources.json?v=desc50');
     const data = await response.json();
     window.QCCMap.draw(layer, data.resources || []);
     setTimeout(() => map.invalidateSize(), 80);

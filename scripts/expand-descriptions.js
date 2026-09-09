@@ -28,8 +28,32 @@ function usableWebsite(url) {
   return website;
 }
 
-function isPhoneOnlyCrisis(resource) {
-  const blob = `${resource.name} ${resource.description} ${resource.phone}`.toLowerCase();
+function originalBlurb(text) {
+  let core = String(text || '').replace(/\s+/g, ' ').trim();
+  const markers = [
+    ' Service is described as ',
+    ' is listed at ',
+    ' is available any time, including nights',
+    ' Posted hours are ',
+    ' The schedule is listed as',
+    ' People can use this listing',
+    ' QueenCityConnect tags',
+    ' Current programs, applications, and updates are on ',
+    ' Call ',
+    ' The official website on file is ',
+    ' The phone number on file is ',
+    ' The number to use is ',
+    ' Chat and extra guidance are on '
+  ];
+  markers.forEach((marker) => {
+    const index = core.indexOf(marker);
+    if (index > 40) core = core.slice(0, index).trim();
+  });
+  return core.replace(/\s+/g, ' ').trim();
+}
+
+function isPhoneOnlyCrisis(resource, blurb) {
+  const blob = `${resource.name} ${blurb} ${resource.phone}`.toLowerCase();
   return /\b(988|211|crisis|hotline|lifeline)\b/.test(blob) && /24\/7/.test(String(resource.hours || ''));
 }
 
@@ -38,7 +62,7 @@ function vagueAddress(address) {
 }
 
 function expandDescription(resource) {
-  const original = String(resource.description || '').replace(/\s+/g, ' ').trim();
+  const blurb = originalBlurb(resource.description) || `${String(resource.name || 'This organization')} is a Charlotte-Mecklenburg resource.`;
   const name = String(resource.name || 'This organization').trim();
   const category = String(resource.category || 'community support').trim().toLowerCase();
   const address = String(resource.address || '').trim();
@@ -46,62 +70,59 @@ function expandDescription(resource) {
   const phone = usablePhone(resource.phone);
   const website = usableWebsite(resource.website);
   const opps = new Set(Array.isArray(resource.opportunities) ? resource.opportunities.map(String) : []);
-  const crisis = isPhoneOnlyCrisis(resource);
-  const parts = [];
+  const sentences = [blurb];
 
-  parts.push(original || `${name} is a ${category} resource for people in Charlotte-Mecklenburg.`);
-
-  if (crisis) {
-    parts.push(`${name} is available any time, including nights and weekends, for people in Mecklenburg County who need immediate support.`);
-    if (phone) parts.push(`The number to use is ${phone}.`);
-    if (website) parts.push(`Chat and extra guidance are on ${website}.`);
-    parts.push('This is a support line, not a building you have to visit, and it is not a volunteer signup.');
+  if (isPhoneOnlyCrisis(resource, blurb)) {
+    sentences.push(`${name} can be reached any time, including nights and weekends, from anywhere in Mecklenburg County.`);
+    if (phone) sentences.push(`Use ${phone} for voice or text support.`);
+    if (website) sentences.push(`If calling is hard, chat and extra guidance are published at ${website}.`);
+    sentences.push('This is a confidential support line, not a walk-in office and not a volunteer signup.');
+    sentences.push('Save the number now so you do not have to search during an emergency.');
   } else {
+    sentences.push(`${name} is listed as a ${category} option for neighbors, schools, and students who need a clear next step in Charlotte-Mecklenburg.`);
+
     if (address && !vagueAddress(address)) {
-      parts.push(`${name} is listed at ${address}.`);
+      sentences.push(`The published location is ${address}, which you can use to plan a visit once you confirm they are open.`);
     } else if (address) {
-      parts.push(`Service is described as ${address}, so ask whether you need to live nearby or can use it from anywhere in the county.`);
+      sentences.push(`Coverage is described as ${address}, so ask whether you must live nearby or can use the service from anywhere in the county.`);
     }
 
     if (hours) {
-      if (/^(see |hours |program |varies|check )/i.test(hours) || /online|website|calendar/i.test(hours)) {
-        parts.push(`The schedule is listed as “${hours},” so confirm the current times before you go.`);
+      if (/online|website|calendar|see |varies|application/i.test(hours)) {
+        sentences.push(`There is no single walk-in clock time in this record; the schedule is “${hours},” so check the same day you go.`);
       } else {
-        parts.push(`Posted hours are ${hours}; always confirm before you go because schedules change.`);
+        sentences.push(`Hours on file are ${hours}. Confirm before you travel, because holidays and staffing can change the door time.`);
       }
     }
 
     if (phone) {
-      parts.push(`Call ${phone} to ask about intake, eligibility, or the next available visit.`);
+      sentences.push(`The phone number on file is ${phone}. Call to ask about eligibility, intake, or whether you need an appointment.`);
+    } else {
+      sentences.push('This directory record does not include a public phone, so do not guess a number.');
     }
 
     if (website) {
-      parts.push(`Current programs, applications, and updates are on ${website}.`);
+      sentences.push(`Applications, current programs, and volunteer or student forms should be taken from ${website} only.`);
     }
 
     const uses = [];
-    if (opps.has('help')) uses.push('get help');
-    if (opps.has('volunteer')) uses.push('volunteer');
-    if (opps.has('intern')) uses.push('ask about student or internship paths that are actually posted');
+    if (opps.has('help')) uses.push('getting help');
+    if (opps.has('volunteer')) uses.push('volunteering');
+    if (opps.has('intern')) uses.push('checking any internship or student-work posting that is actually open');
     if (uses.length === 1) {
-      parts.push(`People can use this listing to ${uses[0]}, using only the contact details already on file.`);
+      sentences.push(`People use this listing for ${uses[0]}, then confirm details through the official contact above.`);
     } else if (uses.length === 2) {
-      parts.push(`People can use this listing to ${uses[0]} and ${uses[1]}, using only the contact details already on file.`);
+      sentences.push(`People use this listing for ${uses[0]} and ${uses[1]}, then confirm details through the official contact above.`);
     } else if (uses.length > 2) {
-      parts.push(`People can use this listing to ${uses.slice(0, -1).join(', ')}, and ${uses[uses.length - 1]}, using only the contact details already on file.`);
-    } else {
-      parts.push(`This ${category} listing is here so schools, neighborhoods, and families have a clear next step in Charlotte-Mecklenburg.`);
+      sentences.push(`People use this listing for ${uses.slice(0, -1).join(', ')}, and ${uses[uses.length - 1]}. Confirm every opening through the official contact above.`);
     }
   }
 
-  let text = parts.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  let text = sentences.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
   if (wordCount(text) < 50) {
-    text += ` Read the details above, then use the posted phone or website when one is listed so you get the latest hours and how to connect.`;
+    text += ` Use only the address, hours, phone, and website already shown on this card so you do not follow outdated rumors about ${name}.`;
   }
-  if (wordCount(text) < 50) {
-    text += ` ${name} is included in the directory so people searching for ${category} support can find a concrete starting point.`;
-  }
-  return text.replace(/\s+/g, ' ').trim();
+  return text;
 }
 
 function expandFile(filePath) {
@@ -112,13 +133,15 @@ function expandFile(filePath) {
   });
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n');
   const counts = list.map((resource) => wordCount(resource.description));
+  const short = list.filter((resource) => wordCount(resource.description) < 50).map((resource) => resource.name);
   return {
     file: path.basename(filePath),
     count: list.length,
-    under50: counts.filter((n) => n < 50).length,
+    under50: short.length,
     min: Math.min(...counts),
-    max: Math.max(...counts)
+    max: Math.max(...counts),
+    short
   };
 }
 
-console.log(FILES.map(expandFile));
+console.log(JSON.stringify(FILES.map(expandFile), null, 2));

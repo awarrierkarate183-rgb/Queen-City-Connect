@@ -151,7 +151,7 @@ async function loadResources() {
     await QCCAuth.ready;
   }
   try {
-    const response = await fetch('data/resources.json');
+    const response = await fetch('data/resources.json?v=desc50');
     const data = await response.json();
     allResources = data.resources;
 

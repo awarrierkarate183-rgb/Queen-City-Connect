@@ -128,7 +128,7 @@
       const snapshots = (QCCAuth.state && QCCAuth.state.bookmarkSnapshots) || {};
       let live = [];
       try {
-        const data = await fetch('data/resources.json').then((r) => r.json());
+        const data = await fetch('data/resources.json?v=desc50').then((r) => r.json());
         live = data.resources || [];
       } catch {
         live = [];
