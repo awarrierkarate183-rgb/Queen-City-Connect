@@ -122,7 +122,8 @@
     display: flex;
     align-items: center;
     width: 100%;
-    gap: 20px;
+    gap: 16px;
+    flex-wrap: nowrap;
   }
 
   .nav-logo {
@@ -144,27 +145,43 @@
     flex-shrink: 0;
   }
 
+  .nav-logo-word {
+    display: inline;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo-word span,
   .nav-logo span {
     color: var(--accent);
     font-weight: 700;
+    margin: 0;
+    padding: 0;
   }
 
   .nav-links {
     list-style: none;
     display: flex;
-    gap: 8px;
+    gap: 4px;
     flex: 1;
     justify-content: center;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  .nav-links li {
+    flex-shrink: 0;
   }
 
   .nav-links a {
     font-size: 14px;
     font-weight: 500;
     color: var(--ink-3);
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: var(--radius-sm);
     transition: color 0.15s, background 0.15s;
     display: block;
+    white-space: nowrap;
   }
 
   .nav-links a:hover {
@@ -178,10 +195,15 @@
   }
 
   .nav-right {
-    margin-left: 20px;
+    margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  body.signed-in .nav-right > a.nav-cta:not(.nav-saves) {
+    display: none;
   }
 
   .nav-cta {
@@ -2534,6 +2556,12 @@
     border-color: #2e2924;
   }
 
+  @media (max-width: 1100px) {
+    .nav-account-name {
+      display: none;
+    }
+  }
+
   /* --- RESPONSIVE --- */
   @media (max-width: 1000px) {
     .hero-inner {
@@ -3887,7 +3915,8 @@
   .nav-account {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    flex-shrink: 0;
   }
 
   .nav-account-name {
@@ -3908,7 +3937,7 @@
     color: var(--ink-2);
     border: 1.5px solid var(--rule-dark);
     background: transparent;
-    padding: 8px 14px;
+    padding: 7px 12px;
     border-radius: var(--radius-sm);
     font-family: inherit;
     cursor: pointer;
@@ -4377,6 +4406,11 @@
 
     .nav-account-name {
       display: none;
+    }
+
+    .nav-cta,
+    .nav-saves {
+      padding: 7px 12px;
     }
 
     .saved-grid {

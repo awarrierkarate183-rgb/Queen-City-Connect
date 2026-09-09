@@ -261,6 +261,7 @@
   }
 
   function renderNav() {
+    document.body.classList.toggle('signed-in', Boolean(QCCAuth.user));
     const host = document.getElementById('nav-account');
     if (!host) return;
     if (QCCAuth.user) {
