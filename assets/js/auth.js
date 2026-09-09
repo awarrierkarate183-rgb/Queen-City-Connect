@@ -9,6 +9,9 @@
     ready: Promise.resolve()
   };
 
+  const ACCOUNTS_KEY = 'qcc-local-accounts';
+  const SESSION_KEY = 'qcc-local-session';
+
   let saveTimer = null;
   let pendingPatch = {};
   let flushPromise = null;
@@ -68,6 +71,195 @@
     return new Error('Could not reach the QueenCityConnect account server. Open the live site or run npm start so this login saves to the shared database.');
   }
 
+  function isServerDown(err) {
+    return !err || !err.status || err.message === serverUnavailableError().message;
+  }
+
+  function normalizeEmail(email) {
+    return String(email || '').trim().toLowerCase();
+  }
+
+  function emptyState() {
+    return {
+      bookmarks: [],
+      hubPrefs: {
+        categories: ['All'],
+        search: '',
+        hours: 'All',
+        sort: 'best',
+        view: 'list',
+        opportunity: 'All'
+      },
+      recentlyViewed: [],
+      submissions: [],
+      newsletterEmail: null,
+      activity: [],
+      bookmarkSnapshots: {}
+    };
+  }
+
+  function readAccounts() {
+    try {
+      const data = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}');
+      return data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function writeAccounts(accounts) {
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  }
+
+  function publicFromAccount(account) {
+    return {
+      id: account.id,
+      name: account.name,
+      email: account.email,
+      hasGoogle: Boolean(account.googleSub),
+      hasPassword: Boolean(account.passwordHash)
+    };
+  }
+
+  async function sha256Hex(text) {
+    const bytes = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function hashPassword(password, salt) {
+    return sha256Hex(salt + '\n' + password);
+  }
+
+  function parseGoogleCredential(credential) {
+    const parts = String(credential || '').split('.');
+    if (parts.length < 2) throw new Error('Google Sign-In did not complete.');
+    const padded = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const binary = atob(padded);
+    let payload;
+    try {
+      payload = JSON.parse(decodeURIComponent(Array.from(binary, (ch) => (
+        '%' + ch.charCodeAt(0).toString(16).padStart(2, '0')
+      )).join('')));
+    } catch {
+      payload = JSON.parse(binary);
+    }
+    if (!payload.email) throw new Error('Google Sign-In did not complete.');
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      throw new Error('Google Sign-In expired. Try again.');
+    }
+    return {
+      email: normalizeEmail(payload.email),
+      name: String(payload.name || payload.given_name || payload.email).trim().slice(0, 80),
+      sub: String(payload.sub || '')
+    };
+  }
+
+  function applyLocalAccount(account) {
+    QCCAuth.mode = 'local';
+    QCCAuth.user = publicFromAccount(account);
+    QCCAuth.state = { ...emptyState(), ...(account.state || {}) };
+    localStorage.setItem(SESSION_KEY, account.email);
+    if (Array.isArray(QCCAuth.state.bookmarks)) {
+      localStorage.setItem('clt-bookmarks', JSON.stringify(QCCAuth.state.bookmarks));
+    }
+    renderNav();
+    return { user: QCCAuth.user, state: QCCAuth.state };
+  }
+
+  function persistLocalAccount(patch) {
+    if (!QCCAuth.user) return;
+    const accounts = readAccounts();
+    const email = QCCAuth.user.email;
+    if (!accounts[email]) return;
+    accounts[email] = { ...accounts[email], ...patch, state: { ...emptyState(), ...(QCCAuth.state || {}) } };
+    writeAccounts(accounts);
+  }
+
+  async function localRegister(name, email, password) {
+    const cleanName = String(name || '').trim().slice(0, 80);
+    const cleanEmail = normalizeEmail(email);
+    if (!cleanName) throw new Error('Name is required.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) throw new Error('Enter a valid email address.');
+    if (String(password || '').length < 8) throw new Error('Password must be at least 8 characters.');
+    const accounts = readAccounts();
+    const existing = accounts[cleanEmail];
+    const salt = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+    const passwordHash = await hashPassword(password, salt);
+    if (existing) {
+      if (existing.passwordHash) {
+        throw new Error('An account with that email already exists. Sign in instead.');
+      }
+      existing.name = cleanName || existing.name;
+      existing.passwordHash = passwordHash;
+      existing.salt = salt;
+      writeAccounts(accounts);
+      return applyLocalAccount(existing);
+    }
+    const account = {
+      id: 'local-' + Date.now(),
+      name: cleanName,
+      email: cleanEmail,
+      passwordHash,
+      salt,
+      googleSub: '',
+      state: emptyState(),
+      createdAt: new Date().toISOString()
+    };
+    accounts[cleanEmail] = account;
+    writeAccounts(accounts);
+    return applyLocalAccount(account);
+  }
+
+  async function localLogin(email, password) {
+    const cleanEmail = normalizeEmail(email);
+    const accounts = readAccounts();
+    const account = accounts[cleanEmail];
+    if (!account) throw new Error('Email or password is incorrect.');
+    if (!account.passwordHash) throw new Error('This account uses Google. Continue with Google instead.');
+    const guess = await hashPassword(password, account.salt || '');
+    if (guess !== account.passwordHash) throw new Error('Email or password is incorrect.');
+    return applyLocalAccount(account);
+  }
+
+  function localGoogle(credential) {
+    const profile = parseGoogleCredential(credential);
+    const accounts = readAccounts();
+    let account = accounts[profile.email] || Object.values(accounts).find((item) => item.googleSub && item.googleSub === profile.sub);
+    if (!account) {
+      account = {
+        id: 'local-' + Date.now(),
+        name: profile.name,
+        email: profile.email,
+        passwordHash: '',
+        salt: '',
+        googleSub: profile.sub,
+        state: emptyState(),
+        createdAt: new Date().toISOString()
+      };
+      accounts[profile.email] = account;
+    } else {
+      account.googleSub = profile.sub || account.googleSub;
+      if (profile.name && !account.name) account.name = profile.name;
+      accounts[account.email] = account;
+    }
+    writeAccounts(accounts);
+    return applyLocalAccount(account);
+  }
+
+  function restoreLocalSession() {
+    const email = localStorage.getItem(SESSION_KEY) || '';
+    const account = email && readAccounts()[email];
+    if (!account) {
+      QCCAuth.mode = 'local';
+      QCCAuth.user = null;
+      QCCAuth.state = null;
+      renderNav();
+      return null;
+    }
+    return applyLocalAccount(account);
+  }
+
   function renderNav() {
     const host = document.getElementById('nav-account');
     if (!host) return;
@@ -119,7 +311,7 @@
   QCCAuth.applySession = function (data) {
     QCCAuth.user = data.user || null;
     QCCAuth.state = data.state || null;
-    QCCAuth.mode = 'server';
+    QCCAuth.mode = data.mode || 'server';
     if (data.googleEnabled != null) QCCAuth.googleEnabled = Boolean(data.googleEnabled);
     if (data.googleClientId) QCCAuth.googleClientId = data.googleClientId;
     if (data.googleRedirectEnabled != null) QCCAuth.googleRedirectEnabled = Boolean(data.googleRedirectEnabled);
@@ -162,11 +354,9 @@
       if (!QCCAuth.googleClientId) await loadGoogleClientId();
       return data;
     } catch {
-      QCCAuth.user = null;
-      QCCAuth.state = null;
+      restoreLocalSession();
       await loadGoogleClientId();
-      renderNav();
-      return null;
+      return QCCAuth.user ? { user: QCCAuth.user, state: QCCAuth.state } : null;
     }
   };
 
@@ -174,6 +364,11 @@
     clearTimeout(saveTimer);
     saveTimer = null;
     if (!QCCAuth.user || !Object.keys(pendingPatch).length) {
+      return QCCAuth.state;
+    }
+    if (QCCAuth.mode === 'local') {
+      persistLocalAccount({});
+      pendingPatch = {};
       return QCCAuth.state;
     }
     if (flushPromise) return flushPromise;
@@ -187,6 +382,12 @@
       return data;
     }).catch((err) => {
       pendingPatch = { ...toSend, ...pendingPatch };
+      if (isServerDown(err)) {
+        QCCAuth.mode = 'local';
+        persistLocalAccount({});
+        pendingPatch = {};
+        return QCCAuth.state;
+      }
       console.error('Could not save account data', err);
       return null;
     }).finally(() => {
@@ -198,9 +399,14 @@
   QCCAuth.saveState = function (patch, options) {
     if (!QCCAuth.user) return Promise.resolve(null);
     pendingPatch = { ...pendingPatch, ...patch };
-    QCCAuth.state = { ...(QCCAuth.state || {}), ...pendingPatch };
+    QCCAuth.state = { ...(QCCAuth.state || emptyState()), ...pendingPatch };
     if (Array.isArray(pendingPatch.bookmarks)) {
       localStorage.setItem('clt-bookmarks', JSON.stringify(pendingPatch.bookmarks));
+    }
+    if (QCCAuth.mode === 'local') {
+      persistLocalAccount({});
+      pendingPatch = {};
+      return Promise.resolve(QCCAuth.state);
     }
     if (options && options.immediate) {
       return QCCAuth.flushSave();
@@ -222,6 +428,18 @@
       patch.submissions = [...(QCCAuth.state && QCCAuth.state.submissions ? QCCAuth.state.submissions : []), ...submissions];
     }
     if (!patch.bookmarks && !patch.submissions) return;
+    if (QCCAuth.mode === 'local') {
+      const current = QCCAuth.state || emptyState();
+      const merged = [...new Set([...(current.bookmarks || []), ...(patch.bookmarks || [])].map(Number))];
+      QCCAuth.state = {
+        ...current,
+        bookmarks: merged,
+        submissions: patch.submissions || current.submissions
+      };
+      persistLocalAccount({});
+      localStorage.setItem('clt-bookmarks', JSON.stringify(merged));
+      return;
+    }
     const data = await api('/api/me/state', {
       method: 'PUT',
       body: JSON.stringify(patch)
@@ -231,42 +449,83 @@
 
   QCCAuth.login = async function (email, password) {
     sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
-    const data = await api('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password })
-    });
-    QCCAuth.applySession(data);
+    if (QCCAuth.mode !== 'local') {
+      try {
+        const data = await api('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+        QCCAuth.applySession(data);
+        await QCCAuth.mergeGuestOnLogin();
+        return QCCAuth;
+      } catch (err) {
+        if (!isServerDown(err)) throw err;
+        QCCAuth.mode = 'local';
+      }
+    }
+    await localLogin(email, password);
     await QCCAuth.mergeGuestOnLogin();
     return QCCAuth;
   };
 
   QCCAuth.register = async function (name, email, password) {
     sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
-    const data = await api('/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password })
-    });
-    QCCAuth.applySession(data);
+    if (QCCAuth.mode !== 'local') {
+      try {
+        const data = await api('/api/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ name, email, password })
+        });
+        QCCAuth.applySession(data);
+        await QCCAuth.mergeGuestOnLogin();
+        return QCCAuth;
+      } catch (err) {
+        if (!isServerDown(err)) throw err;
+        QCCAuth.mode = 'local';
+      }
+    }
+    await localRegister(name, email, password);
     await QCCAuth.mergeGuestOnLogin();
     return QCCAuth;
   };
 
   QCCAuth.loginWithGoogle = async function (credential) {
     sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
-    const data = await api('/api/auth/google/id-token', {
-      method: 'POST',
-      body: JSON.stringify({ credential })
-    });
-    QCCAuth.applySession(data);
+    if (QCCAuth.mode !== 'local') {
+      try {
+        const data = await api('/api/auth/google/id-token', {
+          method: 'POST',
+          body: JSON.stringify({ credential })
+        });
+        QCCAuth.applySession(data);
+        await QCCAuth.mergeGuestOnLogin();
+        return QCCAuth;
+      } catch (err) {
+        if (!isServerDown(err)) throw err;
+        QCCAuth.mode = 'local';
+      }
+    }
+    localGoogle(credential);
     await QCCAuth.mergeGuestOnLogin();
     return QCCAuth;
   };
 
   QCCAuth.forgotPassword = async function (email) {
-    return api('/api/auth/forgot', {
-      method: 'POST',
-      body: JSON.stringify({ email })
-    });
+    if (QCCAuth.mode !== 'local') {
+      try {
+        return await api('/api/auth/forgot', {
+          method: 'POST',
+          body: JSON.stringify({ email })
+        });
+      } catch (err) {
+        if (!isServerDown(err)) throw err;
+        QCCAuth.mode = 'local';
+      }
+    }
+    return {
+      ok: true,
+      message: 'This site is saving accounts in this browser. Sign in with Google, or create the account again if you need a new password.'
+    };
   };
 
   QCCAuth.resetPassword = async function (token, password) {
@@ -282,11 +541,14 @@
 
   QCCAuth.logout = async function () {
     await QCCAuth.flushSave();
-    try {
-      await api('/api/auth/logout', { method: 'POST', body: '{}' });
-    } catch {
-      /* still clear client session */
+    if (QCCAuth.mode !== 'local') {
+      try {
+        await api('/api/auth/logout', { method: 'POST', body: '{}' });
+      } catch {
+        /* still clear client session */
+      }
     }
+    localStorage.removeItem(SESSION_KEY);
     QCCAuth.user = null;
     QCCAuth.state = null;
     pendingPatch = {};
@@ -390,6 +652,11 @@
 
   function flushOnLeave() {
     if (!QCCAuth.user || !Object.keys(pendingPatch).length) return;
+    if (QCCAuth.mode === 'local') {
+      persistLocalAccount({});
+      pendingPatch = {};
+      return;
+    }
     const toSend = pendingPatch;
     pendingPatch = {};
     const body = JSON.stringify(toSend);

@@ -44,7 +44,10 @@ window.QCCMap = {
       preferCanvas: true,
       renderer: L.canvas({ padding: 0.4, tolerance: 8 }),
       zoomControl: true,
-      scrollWheelZoom: true
+      scrollWheelZoom: true,
+      tap: false,
+      tapTolerance: 25,
+      bounceAtZoomLimits: false
     }).setView(this.charlotte, 11);
 
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
@@ -70,9 +73,9 @@ window.QCCMap = {
         ${photo ? `<div class="qcc-map-popup-photo" style="background-image:url('${escapeMapHtml(photo)}')"></div>` : ''}
         <strong>${escapeMapHtml(resource.name)}</strong>
         <span class="qcc-map-popup-cat"><i style="background:${escapeMapHtml(color)}"></i>${escapeMapHtml(resource.category)}${resource.verified ? ' · Verified' : ''}</span>
-        ${address ? (maps ? `<a href="${escapeMapHtml(maps)}" target="_blank" rel="noopener">${escapeMapHtml(address)}</a>` : `<span>${escapeMapHtml(address)}</span>`) : ''}
+        ${address ? (maps ? `<a href="${escapeMapHtml(maps)}" target="_blank" rel="noopener noreferrer">${escapeMapHtml(address)}</a>` : `<span>${escapeMapHtml(address)}</span>`) : ''}
         ${phone ? (tel ? `<a href="${escapeMapHtml(tel)}">${escapeMapHtml(phone)}</a>` : `<span>${escapeMapHtml(phone)}</span>`) : ''}
-        ${website ? `<a href="${escapeMapHtml(website)}" target="_blank" rel="noopener">Visit website &rarr;</a>` : ''}
+        ${website ? `<a href="${escapeMapHtml(website)}" target="_blank" rel="noopener noreferrer">Visit website &rarr;</a>` : ''}
       </div>
     `;
   },

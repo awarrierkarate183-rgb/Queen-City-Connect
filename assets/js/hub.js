@@ -289,11 +289,11 @@ function renderResources() {
       <div class="resource-card-body">
         <h3>${escapeHtml(resource.name)}</h3>
         ${oppLabel ? `<p class="card-opps">${escapeHtml(oppLabel)}</p>` : ''}
-        <p class="card-description">${escapeHtml(resource.description)}</p>
+        <p class="card-description">${window.QCCContact ? window.QCCContact.linkify(resource.description) : escapeHtml(resource.description)}</p>
         <div class="card-details">
           ${resource.address ? `<div class="detail-row">
             <span class="detail-label">Address</span>
-            ${maps ? `<a href="${escapeHtml(maps)}" target="_blank" rel="noopener">${escapeHtml(resource.address)}</a>` : `<span>${escapeHtml(resource.address)}</span>`}
+            ${maps ? `<a href="${escapeHtml(maps)}" target="_blank" rel="noopener noreferrer">${escapeHtml(resource.address)}</a>` : `<span>${escapeHtml(resource.address)}</span>`}
           </div>` : ''}
           ${phone ? `<div class="detail-row">
             <span class="detail-label">Phone</span>
@@ -306,7 +306,7 @@ function renderResources() {
         </div>
         <div class="card-actions">
           ${tel ? `<a href="${escapeHtml(tel)}" class="btn-primary" onclick="trackResourceUse(${Number(resource.id)}, 'call')">Call</a>` : ''}
-          ${website ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener" class="btn-secondary" onclick="trackResourceUse(${Number(resource.id)}, 'website')">Website</a>` : ''}
+          ${website ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" class="btn-secondary" onclick="trackResourceUse(${Number(resource.id)}, 'website')">Website</a>` : ''}
           <button class="btn-print" onclick="printCard(${Number(resource.id)})">Print</button>
         </div>
       </div>

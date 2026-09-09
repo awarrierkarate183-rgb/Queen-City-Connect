@@ -19,13 +19,13 @@ async function loadSpotlight() {
         </div>
         <div class="spotlight-card-body">
           <h3>${resource.name}</h3>
-          <p class="card-description">${resource.description}</p>
+          <p class="card-description">${window.QCCContact ? window.QCCContact.linkify(resource.description) : resource.description}</p>
           <div class="spotlight-card-meta">
             <span>${resource.address}</span>
             <span>${resource.phone}</span>
             <span>${resource.hours}</span>
           </div>
-          <a href="${resource.website}" target="_blank" class="spotlight-card-link">
+          <a href="${window.QCCContact ? window.QCCContact.usableWebsite(resource.website) : resource.website}" target="_blank" rel="noopener noreferrer" class="spotlight-card-link">
             Visit website &rarr;
           </a>
         </div>
@@ -157,10 +157,23 @@ function initScrollAnimations() {
 function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
-      const target = document.querySelector(this.getAttribute('href'));
+      const href = this.getAttribute('href') || '';
+      if (href.length < 2) return;
+      let target;
+      try {
+        target = document.querySelector(href);
+      } catch {
+        return;
+      }
       if (!target) return;
       e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const scroller = document.querySelector('.hub-scroll');
+      if (scroller) {
+        const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 12;
+        scroller.scrollTo({ top, behavior: 'smooth' });
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 }
@@ -182,6 +195,7 @@ function initNavbar() {
 
 // ─── CARD TILT EFFECT ───
 function initCardTilt() {
+  if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
   document.querySelectorAll('.photo-cat-card, .need-help-card').forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();

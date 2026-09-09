@@ -15,7 +15,7 @@
   <meta name="twitter:image" content="https://queencityconnect.org/og-image.png" />
   <meta name="description"
     content="Suggest a Charlotte nonprofit or program for the QueenCityConnect directory so neighbors can find local food, housing, health, and other help." />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Submit a Charlotte Resource | QueenCityConnect</title>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
@@ -34,8 +34,8 @@
       <div class="nav-right">
         <div class="nav-account" id="nav-account"></div>
         <a href="hub.html" class="nav-cta">Find Resources</a>
-        <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
-          aria-label="Menu">&#9776;</button>
+        <button type="button" class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
+          aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">&#9776;</button>
       </div>
     </div>
   </nav>
@@ -235,7 +235,7 @@
   </footer>
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/contact.js"></script>
-  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/auth.js?v=local1"></script>
   <script src="assets/js/submit.js"></script>
   <script src="assets/js/main.js"></script>
 </body>

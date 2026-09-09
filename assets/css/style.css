@@ -66,6 +66,8 @@
   /* --- BASE --- */
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
@@ -75,6 +77,24 @@
     line-height: 1.6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  .nav-hamburger,
+  .bookmark-btn,
+  .view-btn,
+  .filter-btn {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(26, 92, 56, 0.18);
+  }
+
+  body.nav-open {
+    overflow: hidden;
   }
 
   .container {
@@ -932,6 +952,15 @@
     color: #1a5c38;
     font-weight: 600;
     text-decoration: none;
+    display: block;
+    padding: 10px 0;
+    min-height: 44px;
+    pointer-events: auto;
+  }
+
+  .leaflet-popup-content a,
+  .leaflet-popup-pane a {
+    pointer-events: auto !important;
   }
 
   .leaflet-container {
@@ -1098,22 +1127,33 @@
   }
 
   /* --- HUB PAGE --- */
+  html:has(body.hub-page) {
+    height: 100%;
+  }
+
   body.hub-page {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
     overflow: hidden;
   }
 
   body.hub-page .navbar {
     position: relative;
+    z-index: 200;
     flex-shrink: 0;
+    overflow: visible;
   }
 
   .hub-scroll {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .hub-masthead {
@@ -1602,7 +1642,9 @@
     padding: 8px 14px;
   }
 
-  .detail-row a {
+  .detail-row a,
+  .card-description a,
+  .text-link {
     color: var(--accent);
     font-weight: 600;
   }
@@ -2578,23 +2620,36 @@
       --gutter: 20px;
     }
 
+    .navbar {
+      overflow: visible;
+      z-index: 200;
+      padding-top: env(safe-area-inset-top);
+      height: calc(64px + env(safe-area-inset-top));
+    }
+
     .nav-hamburger {
       display: flex;
+      width: 44px;
+      height: 44px;
+      z-index: 201;
     }
 
     .nav-links {
       display: none;
       position: absolute;
-      top: 64px;
+      top: 100%;
       left: 0;
       right: 0;
       background: var(--white);
       flex-direction: column;
-      padding: 12px 20px 20px;
+      padding: 8px 16px calc(16px + env(safe-area-inset-bottom));
       border-bottom: 1px solid var(--rule);
-      box-shadow: var(--shadow);
-      z-index: 99;
+      box-shadow: var(--shadow-lg);
+      z-index: 201;
       gap: 2px;
+      max-height: calc(100dvh - 64px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .nav-links.open {
@@ -2602,12 +2657,81 @@
     }
 
     .nav-links a {
-      padding: 10px 12px;
+      padding: 14px 16px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
       border-radius: var(--radius-sm);
     }
 
-    .nav-right > a.nav-cta {
+    .nav-sign-in,
+    .nav-sign-out,
+    .nav-account-link,
+    .nav-cta.nav-saves {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-right > a.nav-cta:not(.nav-saves) {
       display: none;
+    }
+
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+
+    .card-actions,
+    .saved-card-actions,
+    .hero-actions,
+    .cta-band-actions {
+      width: 100%;
+    }
+
+    .card-actions,
+    .saved-card-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .card-actions .btn-primary,
+    .card-actions .btn-secondary,
+    .card-actions .btn-print,
+    .saved-card-actions a,
+    .saved-card-actions button,
+    .hero-actions .btn-primary,
+    .hero-actions .btn-ghost {
+      width: 100%;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+    }
+
+    .card-description a,
+    .text-link,
+    .detail-row a,
+    .spotlight-card-link,
+    .neighborhood-link {
+      display: inline;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .hub-filter-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .hub-select,
+    .hub-filter-row .clear-btn,
+    .search-bar {
+      width: 100%;
     }
 
     .hero h1 {

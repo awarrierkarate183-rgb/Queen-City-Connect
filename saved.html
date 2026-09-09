@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:image" content="https://queencityconnect.org/og-image.png" />
   <meta name="description" content="Open the Charlotte-Mecklenburg schools, neighborhood sites, and community listings you saved on QueenCityConnect." />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Charlotte Saved Listings | QueenCityConnect</title>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
@@ -32,8 +32,8 @@
       <div class="nav-right">
         <div class="nav-account" id="nav-account"></div>
         <a href="hub.html" class="nav-cta">Find Resources</a>
-        <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
-          aria-label="Menu">&#9776;</button>
+        <button type="button" class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
+          aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">&#9776;</button>
       </div>
     </div>
   </nav>
@@ -69,7 +69,7 @@
   <script src="assets/js/photos.js"></script>
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/contact.js"></script>
-  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/auth.js?v=local1"></script>
   <script src="assets/js/saves.js"></script>
   <script>
     function escapeHtml(value) {
@@ -178,17 +178,17 @@
                 '<p class="saved-card-meta">' + escapeHtml(resource.category || 'Saved listing') + (opps ? ' · ' + escapeHtml(opps) : '') + '</p>' +
                 '<h3>' + escapeHtml(resource.name) + '</h3>' +
                 (item.fromSnapshot ? '<p class="saved-card-stale">Showing the last saved details. This listing is not in the current directory.</p>' : '') +
-                '<p class="card-description">' + escapeHtml(resource.description || '') + '</p>' +
+                '<p class="card-description">' + (window.QCCContact ? window.QCCContact.linkify(resource.description || '') : escapeHtml(resource.description || '')) + '</p>' +
                 '<div class="card-details">' +
                   detailRow('How to use', opps) +
-                  detailRow('Address', resource.address, maps, ' target="_blank" rel="noopener"') +
+                  detailRow('Address', resource.address, maps, ' target="_blank" rel="noopener noreferrer"') +
                   detailRow('Phone', phone, tel) +
-                  detailRow('Website', website, website, ' target="_blank" rel="noopener"') +
+                  detailRow('Website', website, website, ' target="_blank" rel="noopener noreferrer"') +
                   detailRow('Hours', resource.hours) +
                 '</div>' +
                 '<div class="saved-card-actions">' +
                   (tel ? '<a class="btn-primary" href="' + escapeHtml(tel) + '">Call</a>' : '') +
-                  (website ? '<a class="btn-secondary" href="' + escapeHtml(website) + '" target="_blank" rel="noopener">Visit website</a>' : '') +
+                  (website ? '<a class="btn-secondary" href="' + escapeHtml(website) + '" target="_blank" rel="noopener noreferrer">Visit website</a>' : '') +
                   '<a class="btn-ghost" href="hub.html">Open in Hub</a>' +
                   '<button type="button" class="btn-ghost saved-unsave" data-id="' + escapeHtml(item.id) + '">Remove</button>' +
                 '</div>' +

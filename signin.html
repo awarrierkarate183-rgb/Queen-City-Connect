@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:image" content="https://queencityconnect.org/og-image.png" />
   <meta name="description" content="Sign in to QueenCityConnect to save Charlotte-Mecklenburg listings, filters, and bookmarks on any device." />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Charlotte Account Sign In | QueenCityConnect</title>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
@@ -32,8 +32,8 @@
       <div class="nav-right">
         <div class="nav-account" id="nav-account"></div>
         <a href="hub.html" class="nav-cta">Find Resources</a>
-        <button class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
-          aria-label="Menu">&#9776;</button>
+        <button type="button" class="nav-hamburger" onclick="document.getElementById('nav-links').classList.toggle('open')"
+          aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">&#9776;</button>
       </div>
     </div>
   </nav>
@@ -105,7 +105,7 @@
 
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/contact.js"></script>
-  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/auth.js?v=local1"></script>
   <script>
     function nextPage() {
       const params = new URLSearchParams(window.location.search);
@@ -157,9 +157,14 @@
         }
       } else {
         document.getElementById('auth-title').textContent = signin ? 'Sign in' : 'Create an account';
+        const local = window.QCCAuth && QCCAuth.mode === 'local';
         document.getElementById('auth-lead').textContent = signin
-          ? 'Welcome back. Your saves and hub choices are waiting on this account.'
-          : 'Create an account to keep bookmarks, filters, and submissions saved on every device.';
+          ? (local
+            ? 'Welcome back. Your saves stay with this browser until a shared account server is connected.'
+            : 'Welcome back. Your saves and hub choices are waiting on this account.')
+          : (local
+            ? 'Create an account to keep bookmarks and filters saved in this browser.'
+            : 'Create an account to keep bookmarks, filters, and submissions saved on every device.');
       }
       showError('');
       showSuccess('');
