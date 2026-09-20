@@ -8,3 +8,5 @@ node_modules/
 data/ai-cache.json
 data/users.db
 data/users.db-*
+data/*.db
+data/*.db-*

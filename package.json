@@ -2,12 +2,16 @@
   "name": "queencityconnect",
   "private": true,
   "description": "QueenCityConnect local server with accounts and saved user activity",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node server.js",
     "update-resources": "node scripts/update-resources.js",
     "update-resources:ai": "node scripts/update-resources.js --reuse-live --no-geocode --refresh-ai"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

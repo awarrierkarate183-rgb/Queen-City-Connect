@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 
 const GMAIL_USER = (process.env.GMAIL_USER || process.env.SMTP_USER || '').trim();
 const GMAIL_PASS = (process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS || '').trim();
-const NOTIFY_EMAIL = (process.env.NOTIFY_EMAIL || 'queencityconnect674@gmail.com').trim();
+const NOTIFY_EMAIL = (process.env.NOTIFY_EMAIL || '').trim();
 
 function mailConfigured() {
   return Boolean(GMAIL_USER && GMAIL_PASS);

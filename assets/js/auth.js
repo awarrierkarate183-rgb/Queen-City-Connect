@@ -11,6 +11,8 @@
 
   const ACCOUNTS_KEY = 'qcc-local-accounts';
   const SESSION_KEY = 'qcc-local-session';
+  const MIGRATED_KEY = 'qcc-local-migrated-at';
+  let migratePromise = null;
 
   let saveTimer = null;
   let pendingPatch = {};
@@ -109,6 +111,95 @@
 
   function writeAccounts(accounts) {
     localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  }
+
+  function localAccountsPayload() {
+    return Object.values(readAccounts()).map((account) => ({
+      name: account.name,
+      email: account.email,
+      googleSub: account.googleSub || '',
+      passwordHash: account.passwordHash || '',
+      salt: account.salt || '',
+      state: account.state || emptyState(),
+      createdAt: account.createdAt || ''
+    })).filter((item) => item.email);
+  }
+
+  function showMigrateNote(message) {
+    console.info('[QueenCityConnect]', message);
+    let note = document.getElementById('qcc-migrate-note');
+    if (!note) {
+      note = document.createElement('div');
+      note.id = 'qcc-migrate-note';
+      note.className = 'qcc-migrate-note';
+      note.setAttribute('role', 'status');
+      document.body.appendChild(note);
+    }
+    note.textContent = message;
+    note.hidden = false;
+    window.setTimeout(() => {
+      note.hidden = true;
+    }, 14000);
+  }
+
+  async function migrateLocalAccountsIfNeeded() {
+    const accounts = localAccountsPayload();
+    if (!accounts.length) return { ok: true, created: 0, merged: 0, skipped: 0, results: [] };
+    if (migratePromise) return migratePromise;
+    migratePromise = (async () => {
+      const data = await api('/api/auth/migrate-local', {
+        method: 'POST',
+        body: JSON.stringify({ accounts })
+      });
+      console.info('[QueenCityConnect] Local account migration', data);
+      const saved = (data.results || []).filter((row) => row.status === 'created' || row.status === 'merged');
+      const failed = (data.results || []).filter((row) => row.status === 'skipped' && row.reason === 'error');
+      if (saved.length) {
+        const created = Number(data.created) || 0;
+        const merged = Number(data.merged) || 0;
+        showMigrateNote(
+          saved.length === 1
+            ? (created
+              ? 'Your browser account was saved to QueenCityConnect. Sign in to use it on any device.'
+              : 'Your browser account was already on QueenCityConnect. Sign in to continue.')
+            : created + ' new account(s) and ' + merged + ' existing account(s) were synced from this browser. Sign in to continue.'
+        );
+      } else {
+        console.info('[QueenCityConnect] No local accounts needed creating; server already has them or they were skipped.', data);
+      }
+      if (failed.length && failed.length === accounts.length) {
+        console.warn('[QueenCityConnect] Local accounts were not saved; keeping the browser copy.', failed);
+        return data;
+      }
+      const current = readAccounts();
+      const keep = {};
+      (data.results || []).forEach((row) => {
+        if (row.status === 'skipped' && row.reason && row.reason !== 'invalid-email') {
+          const key = normalizeEmail(row.email);
+          if (current[key]) keep[key] = current[key];
+        }
+      });
+      if (Object.keys(keep).length) {
+        writeAccounts(keep);
+      } else {
+        localStorage.removeItem(ACCOUNTS_KEY);
+      }
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.setItem(MIGRATED_KEY, new Date().toISOString());
+      if (QCCAuth.mode === 'local') {
+        QCCAuth.user = null;
+        QCCAuth.state = null;
+        QCCAuth.mode = 'server';
+        renderNav();
+      }
+      return data;
+    })().catch((err) => {
+      console.warn('[QueenCityConnect] Could not migrate browser accounts; keeping the local copy.', err);
+      return null;
+    }).finally(() => {
+      migratePromise = null;
+    });
+    return migratePromise;
   }
 
   function publicFromAccount(account) {
@@ -353,7 +444,11 @@
       const data = await api('/api/me');
       QCCAuth.applySession(data);
       if (!QCCAuth.googleClientId) await loadGoogleClientId();
-      return data;
+      const migrated = await migrateLocalAccountsIfNeeded();
+      if (!QCCAuth.user && migrated === null && localStorage.getItem(SESSION_KEY)) {
+        restoreLocalSession();
+      }
+      return QCCAuth.user ? { user: QCCAuth.user, state: QCCAuth.state } : data;
     } catch {
       restoreLocalSession();
       await loadGoogleClientId();

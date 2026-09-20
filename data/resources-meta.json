@@ -1,12 +1,16 @@
 {
-  "lastUpdated": "2026-09-04T03:30:38.424Z",
-  "lastAttempt": "2026-09-04T03:30:38.425Z",
+  "lastUpdated": "2026-09-18T19:27:11.983Z",
+  "lastAttempt": "2026-09-18T19:27:11.984Z",
   "nextUpdateDays": 14,
-  "count": 336,
+  "count": 344,
   "curatedCount": 298,
-  "liveCount": 38,
+  "liveCount": 46,
   "source": "openstreetmap+curated",
   "ai": {
-    "used": false
+    "used": true,
+    "model": "openai/gpt-oss-120b",
+    "newlyEnriched": 192,
+    "cached": 152,
+    "dropped": 12
   }
 }
