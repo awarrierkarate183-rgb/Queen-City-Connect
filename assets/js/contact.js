@@ -96,7 +96,7 @@ window.toggleNavMenu = function (force) {
       return;
     }
 
-    const navLink = e.target.closest('.nav-links a');
+    const navLink = e.target.closest('.nav-links a, .nav-account a, .nav-auth-item a');
     if (navLink) {
       const href = navLink.getAttribute('href') || '';
       if (href && !href.startsWith('#') && navLink.target !== '_blank') {

@@ -25,7 +25,7 @@
   <meta name="description" content="Sign in to QueenCityConnect to save Charlotte-Mecklenburg listings, filters, and bookmarks on any device." />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Charlotte Account Sign In | QueenCityConnect</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/style.css?v=phone1" />
 </head>
 
 <body class="dark">
@@ -70,7 +70,7 @@
 
         <form id="signin-form" class="auth-form">
           <label for="signin-email">Email</label>
-          <input type="email" id="signin-email" name="email" autocomplete="email" required />
+          <input type="email" id="signin-email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" required />
           <label for="signin-password">Password</label>
           <input type="password" id="signin-password" name="password" autocomplete="current-password" required />
           <p class="auth-forgot-row">
@@ -83,7 +83,7 @@
           <label for="register-name">Name</label>
           <input type="text" id="register-name" name="name" autocomplete="name" required />
           <label for="register-email">Email</label>
-          <input type="email" id="register-email" name="email" autocomplete="email" required />
+          <input type="email" id="register-email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" required />
           <label for="register-password">Password</label>
           <input type="password" id="register-password" name="password" autocomplete="new-password" minlength="8" required />
           <p class="auth-hint">Use at least 8 characters. We hash your password and save bookmarks to this account on any device.</p>
@@ -92,7 +92,7 @@
 
         <form id="forgot-form" class="auth-form" hidden>
           <label for="forgot-email">Email</label>
-          <input type="email" id="forgot-email" name="email" autocomplete="email" required />
+          <input type="email" id="forgot-email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" required />
           <p class="auth-hint">We’ll email a reset link if this address has an account.</p>
           <button type="submit" class="btn-primary auth-submit">Send reset link</button>
           <button type="button" class="btn-ghost auth-submit" id="forgot-cancel">Back to sign in</button>
@@ -114,7 +114,7 @@
 
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/contact.js"></script>
-  <script src="assets/js/auth.js?v=migrate1"></script>
+  <script src="assets/js/auth.js?v=phone1"></script>
   <script>
     function nextPage() {
       const params = new URLSearchParams(window.location.search);

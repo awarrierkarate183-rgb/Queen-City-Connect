@@ -2701,6 +2701,23 @@
       align-items: center;
     }
 
+    .nav-account .nav-saves,
+    .nav-account .nav-sign-out,
+    .nav-account .nav-account-name {
+      display: none;
+    }
+
+    .nav-auth-item .nav-sign-out {
+      width: 100%;
+      justify-content: flex-start;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      padding: 14px 16px;
+      min-height: 48px;
+    }
+
     .nav-right > a.nav-cta:not(.nav-saves) {
       display: none;
     }
@@ -4399,9 +4416,33 @@
     color: #1f1f1f;
   }
 
+  @media (min-width: 721px) {
+    .nav-auth-item {
+      display: none;
+    }
+  }
+
   @media (max-width: 720px) {
     .auth-card {
-      padding: 28px 20px;
+      padding: 28px 16px;
+    }
+
+    .auth-page {
+      padding: 32px 0 72px;
+    }
+
+    .auth-submit,
+    .auth-google-btn {
+      min-height: 48px;
+      width: 100%;
+      touch-action: manipulation;
+    }
+
+    .auth-google-slot,
+    .auth-google-slot iframe,
+    .auth-google-slot div {
+      width: 100% !important;
+      max-width: 100%;
     }
 
     .nav-account-name {

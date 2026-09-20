@@ -351,27 +351,49 @@
     return applyLocalAccount(account);
   }
 
+  function bindSignOut(id) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      await QCCAuth.logout();
+      window.location.href = 'index.html';
+    });
+  }
+
   function renderNav() {
     document.body.classList.toggle('signed-in', Boolean(QCCAuth.user));
     const host = document.getElementById('nav-account');
-    if (!host) return;
-    if (QCCAuth.user) {
-      host.innerHTML =
-        '<span class="nav-account-name" title="' + escapeHtml(QCCAuth.user.email) + '">' +
-        escapeHtml(firstName(QCCAuth.user.name)) +
-        '</span>' +
-        '<a href="saved.html" class="nav-cta nav-saves">My Saves</a>' +
-        '<button type="button" class="nav-sign-out" id="nav-sign-out">Sign out</button>';
-      const btn = document.getElementById('nav-sign-out');
-      if (btn) {
-        btn.addEventListener('click', async () => {
-          await QCCAuth.logout();
-          window.location.href = 'index.html';
-        });
+    if (host) {
+      if (QCCAuth.user) {
+        host.innerHTML =
+          '<span class="nav-account-name" title="' + escapeHtml(QCCAuth.user.email) + '">' +
+          escapeHtml(firstName(QCCAuth.user.name)) +
+          '</span>' +
+          '<a href="saved.html" class="nav-cta nav-saves">My Saves</a>' +
+          '<button type="button" class="nav-sign-out" id="nav-sign-out">Sign out</button>';
+        bindSignOut('nav-sign-out');
+      } else {
+        host.innerHTML = '<a href="' + signInHref() + '" class="nav-sign-in">Sign In</a>';
       }
-      return;
     }
-    host.innerHTML = '<a href="' + signInHref() + '" class="nav-sign-in">Sign In</a>';
+
+    const menu = document.getElementById('nav-links');
+    if (menu) {
+      menu.querySelectorAll('.nav-auth-item').forEach((item) => item.remove());
+      if (QCCAuth.user) {
+        menu.insertAdjacentHTML(
+          'beforeend',
+          '<li class="nav-auth-item"><a href="saved.html">My Saves</a></li>' +
+          '<li class="nav-auth-item"><button type="button" class="nav-sign-out" id="nav-sign-out-menu">Sign out</button></li>'
+        );
+        bindSignOut('nav-sign-out-menu');
+      } else {
+        menu.insertAdjacentHTML(
+          'beforeend',
+          '<li class="nav-auth-item"><a href="' + signInHref() + '">Sign In</a></li>'
+        );
+      }
+    }
   }
 
   async function api(url, options) {
@@ -685,11 +707,33 @@
     return QCCAuth.saveState({ submissions }, { immediate: true });
   };
 
+  function isPhoneAuth() {
+    return window.matchMedia('(max-width: 720px)').matches ||
+      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent || '');
+  }
+
+  function googleNextPage() {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get('next') || currentNext() || 'saved.html';
+    return String(next).includes('://') ? 'saved.html' : next;
+  }
+
   QCCAuth.googleStartUrl = function (next) {
-    const dest = next || currentNext();
+    const dest = next || googleNextPage();
     const safe = String(dest).includes('://') ? 'saved.html' : dest;
     return sitePath('/api/auth/google') + '?next=' + encodeURIComponent('/' + String(safe).replace(/^\//, ''));
   };
+
+  function googleFallbackButton(host) {
+    const href = QCCAuth.googleRedirectEnabled
+      ? QCCAuth.googleStartUrl(googleNextPage())
+      : '';
+    if (!href) return false;
+    host.innerHTML =
+      '<a class="auth-google-btn" href="' + href + '">' +
+      '<span class="auth-google-icon">G</span>Continue with Google</a>';
+    return true;
+  }
 
   QCCAuth.initGoogleButton = function (elementId) {
     const host = document.getElementById(elementId);
@@ -700,16 +744,22 @@
       return;
     }
     host.hidden = false;
+    if (isPhoneAuth() && QCCAuth.googleRedirectEnabled) {
+      googleFallbackButton(host);
+      return;
+    }
     const start = () => {
       if (!window.google || !window.google.accounts || !window.google.accounts.id) return false;
-      window.google.accounts.id.initialize({
+      const next = googleNextPage();
+      const loginUri = window.location.origin + sitePath('/api/auth/google/id-token') +
+        '?redirect=1&next=' + encodeURIComponent(next);
+      const settings = {
         client_id: QCCAuth.googleClientId,
+        ux_mode: isPhoneAuth() ? 'redirect' : 'popup',
         callback: async (response) => {
           try {
             await QCCAuth.loginWithGoogle(response.credential);
-            const params = new URLSearchParams(window.location.search);
-            const next = params.get('next') || 'saved.html';
-            window.location.href = next.includes('://') ? 'saved.html' : next;
+            window.location.href = next;
           } catch (err) {
             const el = document.getElementById('auth-error');
             if (el) {
@@ -718,9 +768,11 @@
             }
           }
         }
-      });
+      };
+      if (isPhoneAuth()) settings.login_uri = loginUri;
+      window.google.accounts.id.initialize(settings);
       host.innerHTML = '';
-      const width = Math.min(360, Math.max(240, host.clientWidth || 320));
+      const width = Math.min(360, Math.max(280, Math.floor(host.clientWidth || host.parentElement.clientWidth || 320)));
       window.google.accounts.id.renderButton(host, {
         type: 'standard',
         theme: 'outline',
@@ -735,6 +787,12 @@
     const existing = document.querySelector('script[data-qcc-gis]');
     if (existing) {
       existing.addEventListener('load', start);
+      existing.addEventListener('error', () => googleFallbackButton(host));
+      window.setTimeout(() => {
+        if (!host.querySelector('iframe, a.auth-google-btn, div[role="button"]')) {
+          googleFallbackButton(host);
+        }
+      }, 2500);
       return;
     }
     const script = document.createElement('script');
@@ -743,6 +801,12 @@
     script.defer = true;
     script.dataset.qccGis = 'true';
     script.addEventListener('load', start);
+    script.addEventListener('error', () => googleFallbackButton(host));
+    window.setTimeout(() => {
+      if (!host.querySelector('iframe, a.auth-google-btn, div[role="button"]')) {
+        googleFallbackButton(host);
+      }
+    }, 2500);
     document.head.appendChild(script);
   };
 

@@ -438,8 +438,50 @@ function attachSession(req, user, callback) {
   });
 }
 
-async function startUserSession(req, res, user, method) {
+function readCookie(req, name) {
+  const header = String(req.headers.cookie || '');
+  const parts = header.split(';');
+  for (const part of parts) {
+    const index = part.indexOf('=');
+    if (index < 0) continue;
+    if (part.slice(0, index).trim() !== name) continue;
+    try {
+      return decodeURIComponent(part.slice(index + 1).trim());
+    } catch {
+      return part.slice(index + 1).trim();
+    }
+  }
+  return '';
+}
+
+function safeNextPath(value) {
+  let raw = String(value || '/saved.html').trim();
+  try {
+    raw = decodeURIComponent(raw);
+  } catch {
+    /* keep raw */
+  }
+  if (!raw || raw.includes('://') || raw.includes('\\') || raw.startsWith('//')) {
+    return '/saved.html';
+  }
+  if (!raw.startsWith('/')) raw = '/' + raw.replace(/^\//, '');
+  return raw;
+}
+
+function wantsHtmlRedirect(req) {
+  const type = String(req.headers['content-type'] || '');
+  return type.includes('application/x-www-form-urlencoded') || String(req.query.redirect || '') === '1';
+}
+
+async function startUserSession(req, res, user, method, redirectTo) {
   await logLoginEvent(req, user, method);
+  if (redirectTo) {
+    attachSession(req, user, (err) => {
+      if (err) return res.redirect('/signin.html?error=google');
+      res.redirect(redirectTo);
+    });
+    return;
+  }
   const payload = { user: publicUser(user), state: await readState(user.id), ...googlePublicConfig() };
   attachSession(req, user, (err) => {
     if (err) return res.status(500).json({ error: 'Could not start a session. Try again.' });
@@ -455,7 +497,8 @@ function queueNewAccountEmail(user, method) {
 
 const app = express();
 app.disable('x-powered-by');
-if (isProd || BASE_URL.startsWith('https://')) {
+const behindHttps = isProd || BASE_URL.startsWith('https://');
+if (behindHttps) {
   app.set('trust proxy', 1);
 }
 app.use((req, res, next) => {
@@ -478,12 +521,13 @@ app.use(session({
   resave: false,
   rolling: true,
   saveUninitialized: false,
+  proxy: behindHttps,
   store: new TursoSessionStore(),
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
-    secure: BASE_URL.startsWith('https://'),
+    secure: behindHttps,
     maxAge: 1000 * 60 * 60 * 24 * 30
   }
 }));
@@ -680,16 +724,27 @@ app.post('/api/admin/users', async (req, res) => {
 });
 
 app.post('/api/auth/google/id-token', async (req, res) => {
+  const redirectTo = wantsHtmlRedirect(req) ? safeNextPath(req.query.next || req.body.next) : '';
   const credential = String((req.body && req.body.credential) || '');
+  const csrfBody = String((req.body && req.body.g_csrf_token) || '');
+  const csrfCookie = readCookie(req, 'g_csrf_token');
+  if (csrfBody || csrfCookie) {
+    if (!csrfBody || !csrfCookie || csrfBody !== csrfCookie) {
+      if (redirectTo) return res.redirect('/signin.html?error=google');
+      return res.status(401).json({ error: 'Google Sign-In did not complete.' });
+    }
+  }
   if (!credential) {
+    if (redirectTo) return res.redirect('/signin.html?error=google');
     return res.status(400).json({ error: 'Google sign-in token is missing.' });
   }
   try {
     const profile = await verifyGoogleIdToken(credential);
     const { user, created } = await findOrCreateGoogleUser(profile);
     if (created) queueNewAccountEmail(user, 'google');
-    await startUserSession(req, res, user, 'google');
+    await startUserSession(req, res, user, 'google', redirectTo);
   } catch (err) {
+    if (redirectTo) return res.redirect('/signin.html?error=google');
     res.status(401).json({ error: err.message || 'Google Sign-In did not complete.' });
   }
 });
