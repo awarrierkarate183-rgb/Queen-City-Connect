@@ -724,16 +724,46 @@
     return sitePath('/api/auth/google') + '?next=' + encodeURIComponent('/' + String(safe).replace(/^\//, ''));
   };
 
-  function googleFallbackButton(host) {
+  function googleImplicitUrl() {
+    const next = googleNextPage();
+    sessionStorage.setItem('qcc-google-next', next);
+    const nonce = (crypto.randomUUID && crypto.randomUUID()) || String(Date.now());
+    sessionStorage.setItem('qcc-google-nonce', nonce);
+    const redirect = window.location.origin + sitePath('/signin.html');
+    const params = new URLSearchParams({
+      client_id: QCCAuth.googleClientId,
+      redirect_uri: redirect,
+      response_type: 'id_token',
+      scope: 'openid email profile',
+      nonce: nonce,
+      prompt: 'select_account'
+    });
+    return 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+  }
+
+  function googleNativeButton(host) {
+    if (!QCCAuth.googleClientId) return false;
     const href = QCCAuth.googleRedirectEnabled
       ? QCCAuth.googleStartUrl(googleNextPage())
-      : '';
-    if (!href) return false;
+      : googleImplicitUrl();
     host.innerHTML =
       '<a class="auth-google-btn" href="' + href + '">' +
       '<span class="auth-google-icon">G</span>Continue with Google</a>';
     return true;
   }
+
+  QCCAuth.consumeGoogleRedirect = async function () {
+    const raw = String(window.location.hash || '').replace(/^#/, '');
+    if (!raw) return null;
+    const params = new URLSearchParams(raw);
+    const token = params.get('id_token');
+    const error = params.get('error');
+    history.replaceState({}, '', window.location.pathname + window.location.search);
+    if (error) throw new Error('Google Sign-In did not complete.');
+    if (!token) return null;
+    await QCCAuth.loginWithGoogle(token);
+    return QCCAuth;
+  };
 
   QCCAuth.initGoogleButton = function (elementId) {
     const host = document.getElementById(elementId);
@@ -744,18 +774,16 @@
       return;
     }
     host.hidden = false;
-    if (isPhoneAuth() && QCCAuth.googleRedirectEnabled) {
-      googleFallbackButton(host);
+    if (isPhoneAuth()) {
+      googleNativeButton(host);
       return;
     }
     const start = () => {
       if (!window.google || !window.google.accounts || !window.google.accounts.id) return false;
       const next = googleNextPage();
-      const loginUri = window.location.origin + sitePath('/api/auth/google/id-token') +
-        '?redirect=1&next=' + encodeURIComponent(next);
-      const settings = {
+      window.google.accounts.id.initialize({
         client_id: QCCAuth.googleClientId,
-        ux_mode: isPhoneAuth() ? 'redirect' : 'popup',
+        ux_mode: 'popup',
         callback: async (response) => {
           try {
             await QCCAuth.loginWithGoogle(response.credential);
@@ -768,11 +796,9 @@
             }
           }
         }
-      };
-      if (isPhoneAuth()) settings.login_uri = loginUri;
-      window.google.accounts.id.initialize(settings);
+      });
       host.innerHTML = '';
-      const width = Math.min(360, Math.max(280, Math.floor(host.clientWidth || host.parentElement.clientWidth || 320)));
+      const width = Math.min(360, Math.max(280, Math.floor(host.clientWidth || (host.parentElement && host.parentElement.clientWidth) || 320)));
       window.google.accounts.id.renderButton(host, {
         type: 'standard',
         theme: 'outline',
@@ -787,11 +813,9 @@
     const existing = document.querySelector('script[data-qcc-gis]');
     if (existing) {
       existing.addEventListener('load', start);
-      existing.addEventListener('error', () => googleFallbackButton(host));
+      existing.addEventListener('error', () => googleNativeButton(host));
       window.setTimeout(() => {
-        if (!host.querySelector('iframe, a.auth-google-btn, div[role="button"]')) {
-          googleFallbackButton(host);
-        }
+        if (!host.querySelector('iframe, a.auth-google-btn, div[role="button"]')) googleNativeButton(host);
       }, 2500);
       return;
     }
@@ -801,11 +825,9 @@
     script.defer = true;
     script.dataset.qccGis = 'true';
     script.addEventListener('load', start);
-    script.addEventListener('error', () => googleFallbackButton(host));
+    script.addEventListener('error', () => googleNativeButton(host));
     window.setTimeout(() => {
-      if (!host.querySelector('iframe, a.auth-google-btn, div[role="button"]')) {
-        googleFallbackButton(host);
-      }
+      if (!host.querySelector('iframe, a.auth-google-btn, div[role="button"]')) googleNativeButton(host);
     }, 2500);
     document.head.appendChild(script);
   };
