@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Account admin | QueenCityConnect</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=phone3" />
+  <link rel="stylesheet" href="assets/css/style.css?v=phone5" />
 </head>
 
 <body class="dark">
@@ -41,7 +41,7 @@
       <div class="auth-card admin-card">
         <span class="section-eyebrow">Private</span>
         <h1 class="section-title">Registered users</h1>
-        <p class="section-sub">This list is stored on the server in the users database. Enter the admin password to view it.</p>
+        <p class="section-sub">Every Google and email account is saved to the shared users database when someone signs in or creates an account. Enter the admin password to view the full list.</p>
 
         <p class="auth-error" id="admin-error" hidden></p>
 
@@ -52,7 +52,10 @@
         </form>
 
         <div id="admin-results" hidden>
-          <p class="admin-total" id="admin-total"></p>
+          <div class="admin-toolbar">
+            <p class="admin-total" id="admin-total"></p>
+            <button type="button" class="btn-ghost admin-refresh" id="admin-refresh">Refresh</button>
+          </div>
           <div class="admin-table-wrap">
             <table class="admin-table">
               <thead>
@@ -60,6 +63,8 @@
                   <th>Name</th>
                   <th>Email</th>
                   <th>Sign-up method</th>
+                  <th>Last sign-in</th>
+                  <th>Sign-ins</th>
                   <th>Created</th>
                 </tr>
               </thead>
@@ -93,29 +98,63 @@
         return date.toLocaleString();
       }
 
+      let adminPassword = '';
+
+      function lastSignIn(user) {
+        if (!user.last_login_at) return 'Not yet';
+        const method = user.last_method === 'google'
+          ? 'Google'
+          : user.last_method === 'register'
+            ? 'Email sign-up'
+            : user.last_method === 'password'
+              ? 'Email'
+              : user.last_method || '';
+        return formatDate(user.last_login_at) + (method ? ' · ' + method : '');
+      }
+
+      async function loadUsers(password) {
+        errorEl.hidden = true;
+        const response = await fetch('/api/admin/users', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const type = response.headers.get('content-type') || '';
+        const data = type.includes('application/json') ? await response.json().catch(() => ({})) : {};
+        if (!response.ok) {
+          throw new Error(data.error || 'Could not load users.');
+        }
+        const users = data.users || [];
+        totalEl.textContent = (data.total || users.length) + ' registered user' + ((data.total || users.length) === 1 ? '' : 's');
+        rowsEl.innerHTML = users.map((user) => {
+          return '<tr><td>' + escapeHtml(user.name) + '</td><td>' + escapeHtml(user.email) +
+            '</td><td>' + escapeHtml(user.method) + '</td><td>' + escapeHtml(lastSignIn(user)) +
+            '</td><td>' + escapeHtml(String(user.login_count || 0)) +
+            '</td><td>' + escapeHtml(formatDate(user.created_at)) + '</td></tr>';
+        }).join('') || '<tr><td colspan="6">No accounts in the database yet.</td></tr>';
+        results.hidden = false;
+      }
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         errorEl.hidden = true;
         results.hidden = true;
+        const password = document.getElementById('admin-password').value;
         try {
-          const response = await fetch('/api/admin/users', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: document.getElementById('admin-password').value })
-          });
-          const type = response.headers.get('content-type') || '';
-          const data = type.includes('application/json') ? await response.json().catch(() => ({})) : {};
-          if (!response.ok) {
-            throw new Error(data.error || 'Could not load users.');
-          }
-          totalEl.textContent = (data.total || 0) + ' registered user' + (data.total === 1 ? '' : 's');
-          rowsEl.innerHTML = (data.users || []).map((user) => {
-            return '<tr><td>' + escapeHtml(user.name) + '</td><td>' + escapeHtml(user.email) +
-              '</td><td>' + escapeHtml(user.method) + '</td><td>' + escapeHtml(formatDate(user.created_at)) +
-              '</td></tr>';
-          }).join('') || '<tr><td colspan="4">No accounts in the database yet.</td></tr>';
-          results.hidden = false;
+          await loadUsers(password);
+          adminPassword = password;
+        } catch (err) {
+          adminPassword = '';
+          errorEl.textContent = err.message || 'Could not load users.';
+          errorEl.hidden = false;
+        }
+      });
+
+      document.getElementById('admin-refresh').addEventListener('click', async () => {
+        if (!adminPassword) return;
+        try {
+          await loadUsers(adminPassword);
         } catch (err) {
           errorEl.textContent = err.message || 'Could not load users.';
           errorEl.hidden = false;

@@ -397,20 +397,83 @@ function mergeAccountState(current, incoming) {
   }, current);
 }
 
-async function createUser({ name, email, passwordHash, googleId, createdAt }) {
+function isUniqueError(err) {
+  const msg = String((err && err.message) || err || '');
+  return /UNIQUE|constraint failed|already exists/i.test(msg);
+}
+
+async function loadUserByIdentity({ email, googleId }) {
+  if (googleId) {
+    const byGoogle = await db.findUserByGoogle(googleId);
+    if (byGoogle) return byGoogle;
+  }
+  if (email) return db.findUserByEmail(email);
+  return null;
+}
+
+async function attachUserCredentials(user, { name, passwordHash, googleId }) {
+  if (!user) return null;
+  const cleanName = String(name || '').trim().slice(0, 80);
+  if (googleId && !user.google_id) {
+    await db.linkGoogle(googleId, cleanName || user.name, user.id);
+  }
+  if (passwordHash && !user.password_hash) {
+    await db.updatePassword(passwordHash, user.id);
+  }
+  if (cleanName && cleanName !== 'Neighbor' && (!user.name || user.name === 'Neighbor')) {
+    await db.updateName(cleanName, user.id);
+  }
+  return db.findUserById(user.id);
+}
+
+async function createUser({ name, email, passwordHash, googleId, createdAt, allowExisting = true }) {
+  const cleanEmail = normalizeEmail(email);
+  const cleanName = String(name || 'Neighbor').trim().slice(0, 80) || 'Neighbor';
   const when = createdAt && !Number.isNaN(Date.parse(createdAt))
     ? new Date(createdAt).toISOString()
     : new Date().toISOString();
-  const info = await db.insertUser(
-    String(name || 'Neighbor').trim().slice(0, 80) || 'Neighbor',
-    email,
-    passwordHash || null,
-    googleId || null,
-    when
-  );
-  const user = await db.findUserById(Number(info.lastInsertRowid));
-  await writeState(user.id, defaultState());
-  return user;
+
+  const existing = await loadUserByIdentity({ email: cleanEmail, googleId });
+  if (existing) {
+    if (!allowExisting) {
+      const err = new Error('An account with that email already exists. Sign in instead.');
+      err.code = 'EXISTS';
+      throw err;
+    }
+    const user = await attachUserCredentials(existing, { name: cleanName, passwordHash, googleId });
+    const state = await db.getState(user.id);
+    if (!state) await writeState(user.id, defaultState());
+    return user;
+  }
+
+  try {
+    let user = await db.insertUser(cleanName, cleanEmail, passwordHash || null, googleId || null, when);
+    if (!user || !user.id) {
+      user = await loadUserByIdentity({ email: cleanEmail, googleId });
+    }
+    if (!user || !user.id) {
+      throw new Error('Could not create account.');
+    }
+    const state = await db.getState(user.id);
+    if (!state) await writeState(user.id, defaultState());
+    return user;
+  } catch (err) {
+    if (isUniqueError(err) || err.code === 'EXISTS') {
+      const user = await loadUserByIdentity({ email: cleanEmail, googleId });
+      if (!allowExisting) {
+        const exists = new Error('An account with that email already exists. Sign in instead.');
+        exists.code = 'EXISTS';
+        throw exists;
+      }
+      if (user) {
+        const next = await attachUserCredentials(user, { name: cleanName, passwordHash, googleId });
+        const state = await db.getState(next.id);
+        if (!state) await writeState(next.id, defaultState());
+        return next;
+      }
+    }
+    throw err;
+  }
 }
 
 function hashToken(token) {
@@ -542,14 +605,28 @@ function googlePublicConfig() {
 }
 
 async function findOrCreateGoogleUser({ googleId, email, name }) {
-  let user = await db.findUserByGoogle(googleId);
+  const cleanEmail = normalizeEmail(email);
+  const cleanId = String(googleId || '').trim();
+  if (!cleanId || !isValidEmail(cleanEmail)) {
+    throw new Error('Google Sign-In did not complete.');
+  }
+  let user = await db.findUserByGoogle(cleanId);
   if (user) return { user, created: false };
-  user = await db.findUserByEmail(email);
+  user = await db.findUserByEmail(cleanEmail);
   if (user) {
-    await db.linkGoogle(googleId, name, user.id);
+    await db.linkGoogle(cleanId, name, user.id);
     return { user: await db.findUserById(user.id), created: false };
   }
-  return { user: await createUser({ name, email, googleId }), created: true };
+  try {
+    return { user: await createUser({ name, email: cleanEmail, googleId: cleanId }), created: true };
+  } catch (err) {
+    user = await loadUserByIdentity({ email: cleanEmail, googleId: cleanId });
+    if (user) {
+      const next = await attachUserCredentials(user, { name, googleId: cleanId });
+      return { user: next, created: false };
+    }
+    throw err;
+  }
 }
 
 async function verifyGoogleIdToken(credential) {
@@ -584,10 +661,11 @@ if (googleRedirectEnabled) {
     callbackURL: `${BASE_URL}/api/auth/google/callback`
   }, (accessToken, refreshToken, profile, done) => {
     const googleId = profile.id;
-    const email = normalizeEmail(
-      (profile.emails && profile.emails[0] && profile.emails[0].value) || `${googleId}@google.local`
-    );
+    const email = normalizeEmail((profile.emails && profile.emails[0] && profile.emails[0].value) || '');
     const name = (profile.displayName || 'Neighbor').slice(0, 80);
+    if (!email) {
+      return done(new Error('Google did not provide an email address.'));
+    }
     findOrCreateGoogleUser({ googleId, email, name })
       .then(({ user, created }) => {
         if (created) queueNewAccountEmail(user, 'google');
@@ -709,13 +787,20 @@ app.post('/api/admin/users', async (req, res) => {
     return res.status(401).json({ error: 'Incorrect admin password.' });
   }
   try {
-    const users = (await db.listUsers()).map((row) => ({
-      id: row.id,
-      name: row.name,
-      email: row.email,
-      method: row.google_id && row.password_hash ? 'Google + email' : row.google_id ? 'Google' : 'email',
-      created_at: row.created_at
-    }));
+    const users = (await db.listUsers()).map((row) => {
+      const hasGoogle = Boolean(row.google_id);
+      const hasPassword = Boolean(row.password_hash);
+      return {
+        id: row.id,
+        name: row.name,
+        email: row.email,
+        method: hasGoogle && hasPassword ? 'Google + email' : hasGoogle ? 'Google' : 'Email & password',
+        last_method: row.last_method || '',
+        last_login_at: row.last_login_at || '',
+        login_count: Number(row.login_count || 0),
+        created_at: row.created_at
+      };
+    });
     res.json({ total: users.length, users });
   } catch (err) {
     console.error('Admin user list failed:', err);
@@ -774,10 +859,13 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(409).json({ error: 'An account with that email already exists. Sign in instead.' });
     }
 
-    const user = await createUser({ name, email, passwordHash });
+    const user = await createUser({ name, email, passwordHash, allowExisting: false });
     queueNewAccountEmail(user, 'password');
     await startUserSession(req, res, user, 'register');
   } catch (err) {
+    if (err && err.code === 'EXISTS') {
+      return res.status(409).json({ error: 'An account with that email already exists. Sign in instead.' });
+    }
     console.error('Register failed:', err);
     res.status(500).json({ error: 'Could not create account. Try again.' });
   }

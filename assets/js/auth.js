@@ -565,6 +565,32 @@
     QCCAuth.applySession(data);
   };
 
+  async function promoteLocalAccountToServer(options) {
+    try {
+      await migrateLocalAccountsIfNeeded();
+    } catch {
+      /* keep the browser copy if the server is still unreachable */
+    }
+    if (QCCAuth.mode !== 'local') return;
+    try {
+      let data = null;
+      if (options && options.credential) {
+        data = await api('/api/auth/google/id-token', {
+          method: 'POST',
+          body: JSON.stringify({ credential: options.credential })
+        });
+      } else if (options && options.email && options.password) {
+        data = await api('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email: options.email, password: options.password })
+        });
+      }
+      if (data && data.user) QCCAuth.applySession(data);
+    } catch {
+      /* stay on the local account until the next page load can sync */
+    }
+  }
+
   QCCAuth.login = async function (email, password) {
     sessionStorage.setItem('clt-guest-bookmarks', JSON.stringify(guestBookmarks()));
     if (QCCAuth.mode !== 'local') {
@@ -582,6 +608,7 @@
       }
     }
     await localLogin(email, password);
+    await promoteLocalAccountToServer({ email, password });
     await QCCAuth.mergeGuestOnLogin();
     return QCCAuth;
   };
@@ -603,6 +630,7 @@
       }
     }
     await localRegister(name, email, password);
+    await promoteLocalAccountToServer({ email, password });
     await QCCAuth.mergeGuestOnLogin();
     return QCCAuth;
   };
@@ -624,6 +652,7 @@
       }
     }
     localGoogle(credential);
+    await promoteLocalAccountToServer({ credential });
     await QCCAuth.mergeGuestOnLogin();
     return QCCAuth;
   };

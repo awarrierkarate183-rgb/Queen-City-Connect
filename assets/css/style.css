@@ -4547,9 +4547,22 @@
     max-width: 880px;
   }
 
-  .admin-total {
+  .admin-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     margin: 24px 0 12px;
+  }
+
+  .admin-total {
+    margin: 0;
     font-weight: 600;
+  }
+
+  .admin-refresh {
+    min-height: 40px;
+    padding: 8px 14px;
   }
 
   .admin-table-wrap {

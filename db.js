@@ -94,14 +94,16 @@ async function initDb() {
 module.exports = {
   initDb,
   getClient: requireClient,
-  insertUser(name, email, passwordHash, googleId, createdAt) {
-    return run(
-      'INSERT INTO users (name, email, password_hash, google_id, created_at) VALUES (?, ?, ?, ?, ?)',
+  async insertUser(name, email, passwordHash, googleId, createdAt) {
+    const inserted = await one(
+      'INSERT INTO users (name, email, password_hash, google_id, created_at) VALUES (?, ?, ?, ?, ?) RETURNING *',
       [name, email, passwordHash, googleId, createdAt]
     );
+    if (inserted && inserted.id) return inserted;
+    return one('SELECT * FROM users WHERE lower(email) = lower(?)', [email]);
   },
   findUserByEmail(email) {
-    return one('SELECT * FROM users WHERE email = ?', [email]);
+    return one('SELECT * FROM users WHERE lower(email) = lower(?)', [email]);
   },
   findUserById(id) {
     return one('SELECT * FROM users WHERE id = ?', [id]);
@@ -138,7 +140,33 @@ module.exports = {
     return run('UPDATE users SET created_at = ? WHERE id = ?', [createdAt, userId]);
   },
   listUsers() {
-    return all('SELECT id, name, email, password_hash, google_id, created_at FROM users ORDER BY created_at DESC');
+    return all(
+      `SELECT
+         u.id,
+         u.name,
+         u.email,
+         u.password_hash,
+         u.google_id,
+         u.created_at,
+         (
+           SELECT e.method FROM login_events e
+           WHERE e.user_id = u.id
+           ORDER BY e.at DESC, e.id DESC
+           LIMIT 1
+         ) AS last_method,
+         (
+           SELECT e.at FROM login_events e
+           WHERE e.user_id = u.id
+           ORDER BY e.at DESC, e.id DESC
+           LIMIT 1
+         ) AS last_login_at,
+         (
+           SELECT COUNT(*) FROM login_events e
+           WHERE e.user_id = u.id
+         ) AS login_count
+       FROM users u
+       ORDER BY datetime(u.created_at) DESC, u.id DESC`
+    );
   },
   listUserStates() {
     return all('SELECT user_id, state_json FROM user_state');
