@@ -1827,19 +1827,19 @@
       "lng": -80.848584
     },
     {
-      "name": "Charlotte Mecklenburg Workforce Development / NCWorks Morehead",
+      "name": "NCWorks Career Center – Charlotte",
       "category": "Employment",
-      "description": "Free job center: resumes, hiring events, and youth work-based learning info. It is listed at 1401 W Morehead Street, Charlotte, NC 28208. Hours: Mon–Fri 8am–5pm. Call (704) 206-1350 before you visit. Details are on https://charlotteworks.com. Use this listing to get help or check student roles on the official site. Confirm hours before you go.",
-      "address": "1401 W Morehead Street, Charlotte, NC 28208",
-      "phone": "(704) 206-1350",
-      "website": "https://charlotteworks.com",
-      "hours": "Mon–Fri 8am–5pm",
+      "description": "Free job center: resumes, hiring events, and youth work-based learning info. It is listed at 8601 McAlpine Park Drive, Suite 110, Charlotte, NC 28211. Hours: Mon–Fri 8am–4:30pm. Call (704) 566-2870 before you visit. Details are on https://www.charlotteworks.com/about/contact/. Confirm hours before you go.",
+      "address": "8601 McAlpine Park Drive, Suite 110, Charlotte, NC 28211",
+      "phone": "(704) 566-2870",
+      "website": "https://www.charlotteworks.com/about/contact/",
+      "hours": "Mon–Fri 8am–4:30pm",
       "opportunities": [
         "intern",
         "help"
       ],
-      "lat": 35.228946,
-      "lng": -80.863999
+      "lat": 35.142705,
+      "lng": -80.900249
     },
     {
       "name": "Guardian ad Litem – Mecklenburg",

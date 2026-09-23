@@ -7,3 +7,11 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
   script.dataset.qccVa = 'true';
   document.head.appendChild(script);
 })();
+
+(function keepWarm() {
+  function ping() {
+    fetch('/api/health', { credentials: 'omit', cache: 'no-store' }).catch(function () {});
+  }
+  ping();
+  setInterval(ping, 4 * 60 * 1000);
+})();

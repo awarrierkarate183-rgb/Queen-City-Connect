@@ -3,7 +3,7 @@ async function loadSpotlight() {
   const grid = document.getElementById('spotlight-grid');
   if (!grid) return;
   try {
-    const response = await fetch('data/resources.json?v=desc60');
+    const response = await fetch('data/resources.json?v=desc61');
     const data = await response.json();
     const spotlights = data.resources.filter(r => r.spotlight === true);
     spotlights.forEach(resource => {
@@ -45,7 +45,7 @@ async function loadHomeMap() {
   const map = window.QCCMap.create('home-map');
   const layer = L.layerGroup().addTo(map);
   try {
-    const response = await fetch('data/resources.json?v=desc60');
+    const response = await fetch('data/resources.json?v=desc61');
     const data = await response.json();
     window.QCCMap.draw(layer, data.resources || []);
     setTimeout(() => map.invalidateSize(), 80);
@@ -58,7 +58,14 @@ async function loadHomeMap() {
 function initTypewriter() {
   const el = document.getElementById('typewriter');
   if (!el) return;
-  const words = ['support.', 'community.', 'a neighborhood.', 'a school that fits.', 'a way to help.'];
+  const words = [
+    'a warm meal tonight.',
+    'a first real job.',
+    'someone in their corner.',
+    'a quiet place to study.',
+    'a path after graduation.',
+    'a neighbor who knows the way.'
+  ];
   let wordIndex = 0;
   let charIndex = 0;
   let deleting = false;

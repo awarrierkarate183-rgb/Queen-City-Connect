@@ -23,10 +23,10 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:image" content="https://queencityconnect.org/og-image.png" />
   <meta name="description"
-    content="Browse verified food, housing, health, and youth resources across Charlotte and Mecklenburg County neighborhoods." />
+    content="Browse verified food, housing, health, youth, and career resources across the greater Charlotte area." />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Charlotte-Mecklenburg Resource Directory | QueenCityConnect</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=phone5" />
+  <title>Greater Charlotte Resource Directory | QueenCityConnect</title>
+  <link rel="stylesheet" href="assets/css/style.css?v=phone6" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 
@@ -49,12 +49,12 @@
     </div>
   </nav>
 
-  <header class="hub-masthead is-open" id="hub-masthead">
+  <header class="hub-masthead" id="hub-masthead">
     <div class="hub-title-block" id="hub-title-block">
       <span class="section-eyebrow">Schools · Neighborhoods · Communities · Areas</span>
       <h1 class="section-title">Find help near you</h1>
     </div>
-    <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="true"
+    <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="false"
       aria-controls="hub-controls" onclick="toggleHubFilters()">
       <span class="hub-title-chevron" aria-hidden="true"></span>
       <span class="hub-filter-toggle-label">Filters &amp; Search</span>
@@ -90,6 +90,18 @@
             <option value="intern">I want to: Intern / work</option>
             <option value="help">I want to: Get help</option>
           </select>
+          <select class="hub-select" id="career-select" onchange="onCareerSelect(this.value)">
+            <option value="All">Future work: All</option>
+            <option value="healthcare">Future work: Healthcare</option>
+            <option value="teaching">Future work: Teaching</option>
+            <option value="trades">Future work: Skilled trades</option>
+            <option value="business">Future work: Business</option>
+            <option value="arts">Future work: Arts</option>
+            <option value="tech">Future work: Tech</option>
+            <option value="public-service">Future work: Public service</option>
+            <option value="sports">Future work: Sports &amp; rec</option>
+            <option value="hospitality">Future work: Culinary &amp; hospitality</option>
+          </select>
           <select class="hub-select" id="hours-select" onchange="onHoursSelect(this.value)">
             <option value="All">All Hours</option>
             <option value="24/7">24/7 Services</option>
@@ -102,7 +114,7 @@
           </select>
           <button class="filter-btn clear-btn" onclick="clearAllFilters()">Clear All</button>
         </div>
-        <p class="hub-filter-hint">Schools, neighborhoods, rec centers, clinics, libraries, and community groups across Mecklenburg and nearby towns. Filter by volunteer, internships, or help.</p>
+        <p class="hub-filter-hint">Schools, neighborhoods, rec centers, clinics, libraries, and community groups across the greater Charlotte area. Filter by volunteer, internships, help, or the kind of work you want to do later.</p>
         <p class="hub-filter-hint" id="directory-updated"></p>
       </div>
     </section>
@@ -177,7 +189,7 @@
         <div class="footer-inner">
           <div class="footer-brand">
             <div class="footer-brand-name"><img src="assets/images/logo.png?v=2" alt="" class="footer-brand-mark" width="28" height="28" />QueenCityConnect</div>
-            <p class="footer-brand-tagline">Connecting Charlotte-Mecklenburg residents to food, housing, health care,
+            <p class="footer-brand-tagline">Connecting neighbors across the greater Charlotte area to food, housing, health care,
               and more.</p>
           </div>
           <div class="footer-col">
@@ -226,7 +238,7 @@
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/auth.js?v=phone5"></script>
   <script src="assets/js/saves.js"></script>
-  <script src="assets/js/hub.js"></script>
+  <script src="assets/js/hub.js?v=career1"></script>
   <script src="assets/js/main.js"></script>
   <script>
     function onMultiCategorySelect(sel) {
@@ -245,6 +257,14 @@
 
     function onOpportunitySelect(val) {
       opportunityFilter = val;
+      visibleCount = 24;
+      renderResources();
+      if (currentView === 'map') renderMap();
+      persistHubState();
+    }
+
+    function onCareerSelect(val) {
+      careerFilter = val;
       visibleCount = 24;
       renderResources();
       if (currentView === 'map') renderMap();
@@ -271,6 +291,7 @@
       activeCategories.add('All');
       hoursFilter = 'All';
       opportunityFilter = 'All';
+      careerFilter = 'All';
       sortOrder = 'best';
       searchQuery = '';
       visibleCount = 24;
@@ -280,6 +301,8 @@
       document.getElementById('hours-select').value = 'All';
       const opp = document.getElementById('opportunity-select');
       if (opp) opp.value = 'All';
+      const career = document.getElementById('career-select');
+      if (career) career.value = 'All';
       document.getElementById('sort-select').value = 'best';
       renderResources();
       if (currentView === 'map') renderMap();

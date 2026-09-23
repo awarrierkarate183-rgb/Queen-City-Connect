@@ -1,0 +1,162 @@
+{
+  "resources": [
+    {
+      "name": "Community Culinary School of Charlotte",
+      "category": "Employment",
+      "description": "Job training for restaurant and kitchen careers. Students cook, serve, and get help finding food-service work after the program. It is listed at 9315-D Monroe Road, Charlotte, NC 28270. Hours: Mon–Fri 9am–2pm. Call (704) 375-4500 before you visit. Details are on https://communityculinary.org/.",
+      "address": "9315-D Monroe Road, Charlotte, NC 28270",
+      "phone": "(704) 375-4500",
+      "website": "https://communityculinary.org/",
+      "hours": "Mon–Fri 9am–2pm",
+      "lat": 35.1372,
+      "lng": -80.7385,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "hospitality"
+      ]
+    },
+    {
+      "name": "Gaston College Career Counseling – Dallas Campus",
+      "category": "Employment",
+      "description": "Free career counseling, program advising, and workforce training just west of Charlotte. Ask about health, trades, business, and transfer paths. It is listed at 201 Highway U.S. 321 S, Dallas, NC 28034. Call (704) 922-6200 before you visit. Details are on https://www.gaston.edu/.",
+      "address": "201 Highway U.S. 321 S, Dallas, NC 28034",
+      "phone": "(704) 922-6200",
+      "website": "https://www.gaston.edu/",
+      "hours": "Call ahead for counseling hours",
+      "lat": 35.3164,
+      "lng": -81.1762,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "healthcare",
+        "trades",
+        "business",
+        "tech",
+        "teaching"
+      ]
+    },
+    {
+      "name": "United Way of Greater Charlotte – Cabarrus Office",
+      "category": "General Support",
+      "description": "United Way’s Concord office connects neighbors in Cabarrus County to 211, local partners, and volunteer roles. It is listed at 57 Union St. S #1002, Concord, NC 28025. Call (704) 371-6239 before you visit. Details are on https://unitedwaygreaterclt.org/contact-us/.",
+      "address": "57 Union St. S #1002, Concord, NC 28025",
+      "phone": "(704) 371-6239",
+      "website": "https://unitedwaygreaterclt.org/contact-us/",
+      "hours": "Call ahead",
+      "lat": 35.4099,
+      "lng": -80.5813,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ],
+      "careers": [
+        "business",
+        "public-service"
+      ]
+    },
+    {
+      "name": "Rowan-Cabarrus Community College – South Campus",
+      "category": "Education",
+      "description": "Community college programs in Concord for healthcare, trades, tech, and transfer degrees. Career and College Promise is open to eligible high school students. It is listed at 1531 Trinity Church Road, Concord, NC 28027. Hours of access: Mon–Thu 8am–6pm, Fri 8am–5pm. Call (704) 216-7222 before you visit. Details are on https://www.rccc.edu/.",
+      "address": "1531 Trinity Church Road, Concord, NC 28027",
+      "phone": "(704) 216-7222",
+      "website": "https://www.rccc.edu/",
+      "hours": "Mon–Thu 8am–6pm, Fri 8am–5pm",
+      "lat": 35.3698,
+      "lng": -80.6495,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "healthcare",
+        "trades",
+        "tech",
+        "business",
+        "teaching"
+      ]
+    },
+    {
+      "name": "York Technical College",
+      "category": "Education",
+      "description": "Public two-year college in Rock Hill with more than 100 programs, including health, trades, and transfer degrees for students in the south Charlotte metro. It is listed at 452 South Anderson Road, Rock Hill, SC 29730. Enrollment Services: Mon–Fri 8am–5pm. Call (803) 327-8000 before you visit. Details are on https://www.yorktech.edu/.",
+      "address": "452 South Anderson Road, Rock Hill, SC 29730",
+      "phone": "(803) 327-8000",
+      "website": "https://www.yorktech.edu/",
+      "hours": "Enrollment Services Mon–Fri 8am–5pm",
+      "lat": 34.9244,
+      "lng": -80.995,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "healthcare",
+        "trades",
+        "tech",
+        "business"
+      ]
+    },
+    {
+      "name": "ABC Carolinas Apprenticeship",
+      "category": "Internships",
+      "description": "Earn-while-you-learn construction apprenticeships in electrical and other trades. You usually need a job with a participating contractor first. It is listed at 610 Minuet Lane, Charlotte, NC 28217. Call (704) 367-1331 before you visit. Details are on https://abccarolinas.org/workforce-development/apprenticeship-and-craft-education/.",
+      "address": "610 Minuet Lane, Charlotte, NC 28217",
+      "phone": "(704) 367-1331",
+      "website": "https://abccarolinas.org/workforce-development/apprenticeship-and-craft-education/",
+      "hours": "Call ahead",
+      "lat": 35.1653,
+      "lng": -80.885,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "trades"
+      ]
+    },
+    {
+      "name": "Cabarrus Health Alliance",
+      "category": "Health",
+      "description": "Public health clinics, WIC, immunizations, and school-health careers in Cabarrus County. Main campus is in Kannapolis, with Concord sites for dental and counseling. It is listed at 300 Mooresville Road, Kannapolis, NC 28081. Call (704) 920-1000, or (704) 920-1205 for appointments. Details are on https://www.cabarrushealth.org/.",
+      "address": "300 Mooresville Road, Kannapolis, NC 28081",
+      "phone": "(704) 920-1000",
+      "website": "https://www.cabarrushealth.org/",
+      "hours": "Call (704) 920-1205 for appointments",
+      "lat": 35.4875,
+      "lng": -80.621,
+      "opportunities": [
+        "help",
+        "intern"
+      ],
+      "careers": [
+        "healthcare"
+      ]
+    },
+    {
+      "name": "Johnson C. Smith University – Smith Institute Career Services",
+      "category": "Employment",
+      "description": "Resume help, mock interviews, career fairs, and internship advising for JCSU students and people exploring college paths. Call (704) 378-1045 or email career_services@jcsu.edu to schedule. It is listed at 100 Beatties Ford Road, Charlotte, NC 28216. Details are on https://www.jcsu.edu/admissions/why-choose-jcsu/career-readiness-starts-today.",
+      "address": "100 Beatties Ford Road, Charlotte, NC 28216",
+      "phone": "(704) 378-1045",
+      "website": "https://www.jcsu.edu/admissions/why-choose-jcsu/career-readiness-starts-today",
+      "hours": "Call to schedule",
+      "lat": 35.2436,
+      "lng": -80.856,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "business",
+        "tech",
+        "teaching"
+      ]
+    }
+  ]
+}

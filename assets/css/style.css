@@ -3647,6 +3647,10 @@
     box-sizing: border-box;
   }
 
+  .hub-masthead:not(.is-open) .hub-controls {
+    display: none;
+  }
+
   .hub-controls .container {
     max-width: none;
     padding: 0;

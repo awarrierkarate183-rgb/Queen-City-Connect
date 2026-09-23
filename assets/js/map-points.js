@@ -36,7 +36,7 @@ window.QCCMap = {
       return false;
     }
     if (address === 'charlotte, nc' || address === 'charlotte nc') return false;
-    return lat >= 35.00 && lat <= 35.52 && lng >= -81.05 && lng <= -80.64;
+    return lat >= 34.82 && lat <= 35.72 && lng >= -81.40 && lng <= -80.40;
   },
 
   create(elementId) {
@@ -48,7 +48,7 @@ window.QCCMap = {
       tap: false,
       tapTolerance: 25,
       bounceAtZoomLimits: false
-    }).setView(this.charlotte, 11);
+    }).setView(this.charlotte, 10);
 
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles &copy; Esri &mdash; Esri, OpenStreetMap',

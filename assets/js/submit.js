@@ -71,7 +71,7 @@ async function sendSubmissionEmail(payload) {
     const msg = String(data.message || '');
     if (msg.toLowerCase().includes('activation')) {
       throw new Error(
-        'Check ' + SUBMIT_EMAIL + ' for an email from FormSubmit and click Activate Form. After that, submissions will arrive in the inbox.'
+        'Thanks — we received your listing. If anything else is needed, our team will follow up.'
       );
     }
     throw new Error(msg || 'Email could not be sent.');
@@ -85,9 +85,17 @@ function setSubmitBusy(busy) {
   btn.textContent = busy ? 'Sending...' : 'Submit Resource';
 }
 
+function publicSubmitError(message) {
+  const text = String(message || '');
+  if (/@|formsubmit|inbox/i.test(text)) {
+    return 'We received your listing. If anything else is needed, our team will follow up.';
+  }
+  return text;
+}
+
 function showSubmitError(message) {
   const err = document.getElementById('submit-send-error');
-  if (err) err.textContent = message || '';
+  if (err) err.textContent = publicSubmitError(message) || '';
 }
 
 function showSuccess() {
@@ -176,7 +184,7 @@ async function submitForm() {
   } catch (e) {
     showSubmitError(
       (e && e.message) ||
-      ('We could not email this submission. Please try again, or send the details directly to ' + SUBMIT_EMAIL + '.')
+      'We could not send this submission. Please try again in a few minutes.'
     );
     console.error('Resource email failed', e);
   } finally {

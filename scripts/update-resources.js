@@ -10,6 +10,7 @@ const ROOT = path.join(__dirname, '..');
 const CURATED_PATH = path.join(ROOT, 'data', 'curated-resources.json');
 const STUDENT_PATH = path.join(ROOT, 'data', 'student-resources.json');
 const LOCAL_PATH = path.join(ROOT, 'data', 'local-sites.json');
+const CAREER_PATH = path.join(ROOT, 'data', 'career-resources.json');
 const OUT_PATH = path.join(ROOT, 'data', 'resources.json');
 const META_PATH = path.join(ROOT, 'data', 'resources-meta.json');
 
@@ -46,13 +47,10 @@ function sleep(ms) {
 
 function inCharlotteServiceArea(lat, lng, address) {
   const a = String(address || '').toLowerCase();
-  if (/\b(sc|south carolina|rock hill|fort mill|york sc|indian land|cherryville|kings mountain|lincolnton|maiden|gastonia|bessemer city|dallas nc|kannapolis|concord nc|mooresville|china grove|rockwell|locust|midland nc|stanley nc|terrell|sherrills|monroe nc|waxhaw|wingate|indian trail)\b/.test(a)
-    && !/\b(charlotte|matthews|mint hill|pineville|huntersville|cornelius|davidson|belmont)\b/.test(a)) {
-    return false;
-  }
+  const namedMetro = /\b(charlotte|matthews|mint hill|pineville|huntersville|cornelius|davidson|belmont|gastonia|dallas|mount holly|stanley|concord|kannapolis|harrisburg|monroe|waxhaw|indian trail|stallings|weddington|rock hill|fort mill|york|tega cay|mooresville|salisbury|locust|midland|bessemer city|kings mountain|indian land)\b/.test(a);
+  if (namedMetro && (!Number.isFinite(lat) || !Number.isFinite(lng))) return true;
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
-  if (lat >= 35.17 && lat <= 35.20 && lng >= -81.05 && lng <= -81.00) return true;
-  return lat >= 35.00 && lat <= 35.52 && lng >= -81.05 && lng <= -80.64;
+  return lat >= 34.82 && lat <= 35.72 && lng >= -81.40 && lng <= -80.40;
 }
 
 function decimalPlaces(n) {
@@ -168,6 +166,7 @@ function persistCuratedCoords(refined) {
   persistCoordsFile(CURATED_PATH, refined);
   persistCoordsFile(STUDENT_PATH, refined);
   persistCoordsFile(LOCAL_PATH, refined);
+  persistCoordsFile(CAREER_PATH, refined);
 }
 
 function categorize(tags) {
@@ -283,6 +282,29 @@ async function fetchOverpass() {
   return all;
 }
 
+const CAREER_KEYS = [
+  'healthcare', 'teaching', 'trades', 'business', 'arts',
+  'tech', 'public-service', 'sports', 'hospitality'
+];
+
+function defaultCareers(resource) {
+  if (Array.isArray(resource.careers) && resource.careers.length) {
+    return resource.careers.filter((item) => CAREER_KEYS.includes(item));
+  }
+  const blob = `${resource.name || ''} ${resource.category || ''} ${resource.description || ''}`.toLowerCase();
+  const set = new Set();
+  if (/\b(clinic|hospital|dental|nurs|medic|health department|pharmacy|care ring|atrium|novant|ems|wic|public health)\b/.test(blob) || resource.category === 'Health') set.add('healthcare');
+  if (/\b(cms|classroom|tutor|teacher|school volunteer|upward bound|college promise)\b/.test(blob) || resource.category === 'Education') set.add('teaching');
+  if (/\b(habitat|construction|apprentice|electrician|plumbing|hvac|carpenter|cte|harper campus|trades)\b/.test(blob)) set.add('trades');
+  if (/\b(junior achievement|urban league|year up|dress for success|workforce|ncworks|goodwill|entrepreneur)\b/.test(blob) || resource.category === 'Employment') set.add('business');
+  if (/\b(theatre|theater|museum|art |music|ballet|blumenthal|mint museum|imaginon)\b/.test(blob)) set.add('arts');
+  if (/\b(year up|coding|computer|stem|software|central piedmont|discovery place)\b/.test(blob)) set.add('tech');
+  if (/\b(police|fire|teen court|guardian ad litem|cmpd|explorer)\b/.test(blob)) set.add('public-service');
+  if (/\b(ymca|recreation|park and rec|athletic|sports|lifeguard|camp counselor)\b/.test(blob)) set.add('sports');
+  if (/\b(culinary|hospitality|restaurant|chef|community culinary)\b/.test(blob)) set.add('hospitality');
+  return [...set];
+}
+
 function defaultOpportunities(resource) {
   if (Array.isArray(resource.opportunities) && resource.opportunities.length) {
     return resource.opportunities;
@@ -354,6 +376,7 @@ function fromOsm(elements) {
       osmTimestamp: el.timestamp || null
     };
     resource.opportunities = defaultOpportunities(resource);
+    resource.careers = defaultCareers(resource);
     resource.score = scoreResource(resource);
     out.push(resource);
   }
@@ -370,7 +393,12 @@ function loadJsonResources(filePath) {
 }
 
 function loadCurated() {
-  const combined = [...loadJsonResources(CURATED_PATH), ...loadJsonResources(STUDENT_PATH), ...loadJsonResources(LOCAL_PATH)];
+  const combined = [
+    ...loadJsonResources(CURATED_PATH),
+    ...loadJsonResources(STUDENT_PATH),
+    ...loadJsonResources(LOCAL_PATH),
+    ...loadJsonResources(CAREER_PATH)
+  ];
   const seen = new Set();
   return combined.map((resource, index) => {
     const key = keyName(resource.name);
@@ -384,6 +412,7 @@ function loadCurated() {
       spotlight: resource.spotlight === true
     };
     next.opportunities = defaultOpportunities(next);
+    next.careers = defaultCareers(next);
     next.score = scoreResource(next) + 20;
     if (!next.id) next.id = index + 1;
     return next;

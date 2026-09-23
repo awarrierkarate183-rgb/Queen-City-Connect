@@ -1,16 +1,16 @@
 {
-  "lastUpdated": "2026-09-18T19:27:11.983Z",
-  "lastAttempt": "2026-09-18T19:27:11.984Z",
+  "lastUpdated": "2026-09-23T23:27:52.811Z",
+  "lastAttempt": "2026-09-23T23:27:52.814Z",
   "nextUpdateDays": 14,
-  "count": 344,
-  "curatedCount": 298,
-  "liveCount": 46,
+  "count": 350,
+  "curatedCount": 305,
+  "liveCount": 45,
   "source": "openstreetmap+curated",
   "ai": {
     "used": true,
-    "model": "openai/gpt-oss-120b",
-    "newlyEnriched": 192,
-    "cached": 152,
-    "dropped": 12
+    "model": "openai/gpt-oss-20b",
+    "newlyEnriched": 10,
+    "cached": 340,
+    "dropped": 0
   }
 }

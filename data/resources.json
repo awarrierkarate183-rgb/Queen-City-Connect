@@ -17,6 +17,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "tech"
+      ],
       "score": 163,
       "id": 1,
       "aiEnriched": true
@@ -37,6 +40,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 2,
       "aiEnriched": true
@@ -58,8 +62,35 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 3,
+      "aiEnriched": true
+    },
+    {
+      "name": "ABC Carolinas Apprenticeship",
+      "category": "Internships",
+      "description": "Earn-while-you-learn construction apprenticeships in electrical and other trades. You usually need a job with a participating contractor first.",
+      "address": "610 Minuet Lane, Charlotte, NC 28217",
+      "phone": "(704) 367-1331",
+      "website": "https://abccarolinas.org/workforce-development/apprenticeship-and-craft-education/",
+      "hours": "Call ahead",
+      "lat": 35.1653,
+      "lng": -80.885,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "trades"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10087,
       "aiEnriched": true
     },
     {
@@ -79,6 +110,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -99,6 +131,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 5,
       "aiEnriched": true
@@ -121,6 +154,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 6,
       "aiEnriched": true
@@ -142,6 +178,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -163,6 +200,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 8,
       "aiEnriched": true
@@ -183,6 +223,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 9,
       "aiEnriched": true
@@ -204,6 +245,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 10,
       "aiEnriched": true
@@ -225,6 +267,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -246,6 +289,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 12,
       "aiEnriched": true
@@ -268,6 +314,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 13,
       "aiEnriched": true
@@ -288,6 +335,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 14,
       "aiEnriched": true
@@ -308,6 +358,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 15,
       "aiEnriched": true
@@ -328,6 +381,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 16,
       "aiEnriched": true
@@ -348,6 +404,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 17,
       "aiEnriched": true
@@ -369,6 +428,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 18,
       "aiEnriched": true
@@ -391,6 +453,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 287,
       "aiEnriched": true
@@ -411,6 +476,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 19,
       "aiEnriched": true
@@ -431,6 +497,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 20,
       "aiEnriched": true
@@ -452,6 +519,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 21,
       "aiEnriched": true
@@ -473,6 +543,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 22,
       "aiEnriched": true
@@ -494,6 +567,9 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -513,6 +589,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 24,
       "aiEnriched": true
@@ -533,6 +612,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 25,
       "aiEnriched": true
@@ -555,6 +637,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 26,
       "aiEnriched": true
@@ -575,6 +660,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 27,
       "aiEnriched": true
@@ -597,6 +683,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 28,
       "aiEnriched": true
@@ -618,6 +707,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 29,
       "aiEnriched": true
@@ -638,6 +728,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 30,
       "aiEnriched": true
@@ -658,6 +751,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts",
+        "hospitality"
+      ],
       "score": 163,
       "id": 31,
       "aiEnriched": true
@@ -678,6 +775,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 32,
       "aiEnriched": true
@@ -699,6 +797,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 33,
       "aiEnriched": true
@@ -721,8 +822,35 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 34,
+      "aiEnriched": true
+    },
+    {
+      "name": "Cabarrus Health Alliance",
+      "category": "Health",
+      "description": "Public health clinics, WIC, immunizations, and school-health careers are available in Cabarrus County. Main campus is in Kannapolis, with Concord sites for dental and counseling.",
+      "address": "300 Mooresville Road, Kannapolis, NC 28081",
+      "phone": "(704) 920-1000",
+      "website": "https://www.cabarrushealth.org/",
+      "hours": "Call (704) 920-1205 for appointments",
+      "lat": 35.4875,
+      "lng": -80.621,
+      "opportunities": [
+        "help",
+        "intern"
+      ],
+      "careers": [
+        "healthcare"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10088,
       "aiEnriched": true
     },
     {
@@ -742,6 +870,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 35,
       "aiEnriched": true
@@ -763,6 +894,9 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -783,6 +917,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 37,
       "aiEnriched": true
@@ -803,6 +940,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 38,
       "aiEnriched": true
@@ -824,6 +962,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -844,6 +983,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 40,
       "aiEnriched": true
@@ -865,6 +1005,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -886,6 +1027,9 @@
         "help",
         "intern"
       ],
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -905,6 +1049,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "tech"
+      ],
       "score": 163,
       "id": 43,
       "aiEnriched": true
@@ -926,6 +1074,11 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "trades",
+        "tech"
+      ],
       "score": 163,
       "id": 44,
       "aiEnriched": true
@@ -947,6 +1100,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "tech"
+      ],
       "score": 163,
       "id": 288,
       "aiEnriched": true
@@ -968,6 +1125,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "tech"
+      ],
       "score": 163,
       "id": 45,
       "aiEnriched": true
@@ -989,6 +1150,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "tech"
+      ],
       "score": 163,
       "id": 46,
       "aiEnriched": true
@@ -1009,6 +1174,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 47,
       "aiEnriched": true
@@ -1029,6 +1197,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 48,
       "aiEnriched": true
@@ -1050,6 +1221,9 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -1069,6 +1243,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 50,
       "aiEnriched": true
@@ -1090,6 +1265,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -1110,6 +1286,9 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -1129,6 +1308,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 53,
       "aiEnriched": true
@@ -1151,6 +1333,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -1172,6 +1355,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 55,
       "aiEnriched": true
@@ -1192,6 +1376,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 56,
       "aiEnriched": true
@@ -1212,29 +1397,12 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare",
+        "public-service"
+      ],
       "score": 163,
       "id": 57,
-      "aiEnriched": true
-    },
-    {
-      "name": "Charlotte Mecklenburg Workforce Development / NCWorks Morehead",
-      "category": "Employment",
-      "description": "The NCWorks Morehead center offers free resume help, hiring events, and info on work‑based learning for students. It’s at 1401 W Morehead St; call ahead to confirm hours.",
-      "address": "1401 W Morehead Street, Charlotte, NC 28208",
-      "phone": "(704) 206-1350",
-      "website": "https://charlotteworks.com",
-      "hours": "Mon–Fri 8am–5pm",
-      "opportunities": [
-        "intern",
-        "help"
-      ],
-      "lat": 35.228946,
-      "lng": -80.863999,
-      "verified": true,
-      "source": "curated",
-      "spotlight": false,
-      "score": 163,
-      "id": 58,
       "aiEnriched": true
     },
     {
@@ -1254,6 +1422,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 59,
       "aiEnriched": true
@@ -1275,6 +1446,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 60,
       "aiEnriched": true
@@ -1295,6 +1469,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 61,
       "aiEnriched": true
@@ -1317,6 +1492,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -1337,6 +1513,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 63,
       "aiEnriched": true
@@ -1357,6 +1536,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 64,
       "aiEnriched": true
@@ -1364,13 +1546,13 @@
     {
       "name": "Charlotte Works Youth Services",
       "category": "Internships",
-      "description": "Workforce board serving Mecklenburg. Helps teens and young adults find jobs, internships, job-readiness workshops, and paid work experience.",
-      "address": "1401 W Morehead Street, Charlotte, NC 28208",
-      "phone": "(704) 206-1350",
-      "website": "https://charlotteworks.com",
-      "hours": "Mon–Fri 8am–5pm",
-      "lat": 35.228946,
-      "lng": -80.863999,
+      "description": "Workforce board serving the greater Charlotte area. Helps teens and young adults find jobs, internships, job-readiness workshops, and paid work experience.",
+      "address": "8601 McAlpine Park Drive, Suite 110, Charlotte, NC 28211",
+      "phone": "(704) 566-2870",
+      "website": "https://www.charlotteworks.com/about/contact/",
+      "hours": "Mon–Fri 8am–4:30pm",
+      "lat": 35.142705,
+      "lng": -80.900249,
       "opportunities": [
         "intern",
         "help"
@@ -1378,6 +1560,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 65,
       "aiEnriched": true
@@ -1398,6 +1583,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "public-service"
+      ],
       "score": 163,
       "id": 66,
       "aiEnriched": true
@@ -1418,6 +1606,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 67,
       "aiEnriched": true
@@ -1439,6 +1630,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 68,
       "aiEnriched": true
@@ -1460,6 +1654,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "public-service"
+      ],
       "score": 163,
       "id": 69,
       "aiEnriched": true
@@ -1481,6 +1678,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "public-service"
+      ],
       "score": 163,
       "id": 70,
       "aiEnriched": true
@@ -1502,6 +1702,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "trades"
+      ],
       "score": 163,
       "id": 71,
       "aiEnriched": true
@@ -1523,6 +1727,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "trades"
+      ],
       "score": 163,
       "id": 72,
       "aiEnriched": true
@@ -1543,6 +1751,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 73,
       "aiEnriched": true
@@ -1564,6 +1775,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 74,
       "aiEnriched": true
@@ -1586,6 +1800,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 75,
       "aiEnriched": true
@@ -1606,6 +1823,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 76,
       "aiEnriched": true
@@ -1627,6 +1845,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 77,
       "aiEnriched": true
@@ -1648,6 +1867,9 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -1668,6 +1890,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 79,
       "aiEnriched": true
@@ -1689,6 +1914,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 80,
       "aiEnriched": true
@@ -1710,6 +1938,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 81,
       "aiEnriched": true
@@ -1731,6 +1962,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 82,
       "aiEnriched": true
@@ -1752,6 +1986,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 83,
       "aiEnriched": true
@@ -1773,6 +2010,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 84,
       "aiEnriched": true
@@ -1794,6 +2034,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 85,
       "aiEnriched": true
@@ -1815,6 +2058,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 86,
       "aiEnriched": true
@@ -1836,6 +2082,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 87,
       "aiEnriched": true
@@ -1857,6 +2106,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 88,
       "aiEnriched": true
@@ -1878,6 +2130,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 89,
       "aiEnriched": true
@@ -1899,6 +2154,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 90,
       "aiEnriched": true
@@ -1920,6 +2178,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 91,
       "aiEnriched": true
@@ -1941,6 +2202,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 92,
       "aiEnriched": true
@@ -1962,6 +2226,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 93,
       "aiEnriched": true
@@ -1983,6 +2250,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 94,
       "aiEnriched": true
@@ -2004,6 +2274,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 95,
       "aiEnriched": true
@@ -2025,6 +2298,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 96,
       "aiEnriched": true
@@ -2046,6 +2322,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 97,
       "aiEnriched": true
@@ -2067,6 +2346,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 98,
       "aiEnriched": true
@@ -2088,6 +2370,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 99,
       "aiEnriched": true
@@ -2109,6 +2394,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 100,
       "aiEnriched": true
@@ -2130,6 +2418,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 101,
       "aiEnriched": true
@@ -2150,6 +2441,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 102,
       "aiEnriched": true
@@ -2171,6 +2465,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 103,
       "aiEnriched": true
@@ -2192,7 +2489,34 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
+      "aiEnriched": true
+    },
+    {
+      "name": "Community Culinary School of Charlotte",
+      "category": "Employment",
+      "description": "Job training for restaurant and kitchen careers. Students cook, serve, and get help finding food-service work after the program.",
+      "address": "9315-D Monroe Road, Charlotte, NC 28270",
+      "phone": "(704) 375-4500",
+      "website": "https://communityculinary.org/",
+      "hours": "Mon–Fri 9am–2pm",
+      "lat": 35.1372,
+      "lng": -80.7385,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "hospitality"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10082,
       "aiEnriched": true
     },
     {
@@ -2213,6 +2537,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 105,
       "aiEnriched": true
@@ -2233,6 +2558,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "trades",
+        "sports"
+      ],
       "score": 163,
       "id": 106,
       "aiEnriched": true
@@ -2254,6 +2583,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -2274,6 +2604,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 108,
       "aiEnriched": true
@@ -2295,6 +2626,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 109,
       "aiEnriched": true
@@ -2317,6 +2649,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 110,
       "aiEnriched": true
@@ -2339,6 +2672,9 @@
         "help",
         "intern"
       ],
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -2359,6 +2695,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 112,
       "aiEnriched": true
@@ -2379,6 +2716,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 113,
       "aiEnriched": true
@@ -2401,6 +2741,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -2420,6 +2761,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts",
+        "tech"
+      ],
       "score": 163,
       "id": 115,
       "aiEnriched": true
@@ -2428,9 +2773,9 @@
       "name": "Discovery Place Science",
       "category": "Volunteer",
       "description": "Museum volunteer and teen intern-style roles (floor interpreter, camps, events). Great for students interested in STEM.",
-      "address": "301 N Tryon Street, Charlotte, NC 28202",
-      "phone": "(704) 372-6261",
-      "website": "https://discoveryplace.org",
+      "address": "168 W 6th Street, Charlotte, NC 28202",
+      "phone": "(704) 286-8302",
+      "website": "https://discoveryplace.org/support/volunteer/",
       "hours": "See website for volunteer application",
       "lat": 35.229618,
       "lng": -80.841197,
@@ -2441,6 +2786,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts",
+        "tech"
+      ],
       "score": 163,
       "id": 116,
       "aiEnriched": true
@@ -2463,6 +2812,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 117,
       "aiEnriched": true
@@ -2485,6 +2837,9 @@
         "help",
         "intern"
       ],
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -2506,6 +2861,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 119,
       "aiEnriched": true
@@ -2528,6 +2886,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -2547,6 +2906,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 121,
       "aiEnriched": true
@@ -2569,6 +2929,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 122,
       "aiEnriched": true
@@ -2589,6 +2952,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 123,
       "aiEnriched": true
@@ -2609,6 +2973,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 124,
       "aiEnriched": true
@@ -2631,6 +2996,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 125,
       "aiEnriched": true
@@ -2653,6 +3019,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -2672,6 +3039,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 127,
       "aiEnriched": true
@@ -2692,8 +3060,37 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 128,
+      "aiEnriched": true
+    },
+    {
+      "name": "Gaston College Career Counseling – Dallas Campus",
+      "category": "Employment",
+      "description": "Free career counseling, program advising, and workforce training just west of Charlotte. Ask about health, trades, business, and transfer paths.",
+      "address": "201 Highway U.S. 321 S, Dallas, NC 28034",
+      "phone": "(704) 922-6200",
+      "website": "https://www.gaston.edu/",
+      "hours": "Call ahead for counseling hours",
+      "lat": 35.3164,
+      "lng": -81.1762,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "healthcare",
+        "trades",
+        "business",
+        "tech",
+        "teaching"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10083,
       "aiEnriched": true
     },
     {
@@ -2714,6 +3111,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 129,
       "aiEnriched": true
@@ -2735,6 +3133,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 130,
       "aiEnriched": true
@@ -2757,6 +3156,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 131,
       "aiEnriched": true
@@ -2779,6 +3181,9 @@
         "help",
         "intern"
       ],
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -2800,6 +3205,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 133,
       "aiEnriched": true
@@ -2820,6 +3228,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 134,
       "aiEnriched": true
@@ -2842,6 +3253,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -2861,6 +3273,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "public-service"
+      ],
       "score": 163,
       "id": 136,
       "aiEnriched": true
@@ -2883,6 +3298,9 @@
         "help",
         "volunteer"
       ],
+      "careers": [
+        "trades"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -2902,6 +3320,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "trades"
+      ],
       "score": 163,
       "id": 138,
       "aiEnriched": true
@@ -2922,6 +3343,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "trades"
+      ],
       "score": 163,
       "id": 139,
       "aiEnriched": true
@@ -2942,6 +3366,7 @@
       "spotlight": true,
       "verified": true,
       "source": "curated",
+      "careers": [],
       "score": 163,
       "id": 140,
       "aiEnriched": true
@@ -2964,6 +3389,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 141,
       "aiEnriched": true
@@ -2986,6 +3414,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 142,
       "aiEnriched": true
@@ -3007,6 +3438,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 143,
       "aiEnriched": true
@@ -3028,6 +3462,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 144,
       "aiEnriched": true
@@ -3050,6 +3487,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 145,
       "aiEnriched": true
@@ -3072,6 +3512,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 146,
       "aiEnriched": true
@@ -3092,6 +3535,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 147,
       "aiEnriched": true
@@ -3113,6 +3559,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 148,
       "aiEnriched": true
@@ -3135,6 +3582,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -3155,6 +3603,10 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "healthcare",
+        "hospitality"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -3174,6 +3626,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 151,
       "aiEnriched": true
@@ -3196,6 +3649,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 152,
       "aiEnriched": true
@@ -3217,6 +3673,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 153,
       "aiEnriched": true
@@ -3238,6 +3697,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 154,
       "aiEnriched": true
@@ -3260,6 +3722,7 @@
         "help",
         "intern"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -3280,6 +3743,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 156,
       "aiEnriched": true
@@ -3302,6 +3766,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 157,
       "aiEnriched": true
@@ -3322,8 +3789,35 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 158,
+      "aiEnriched": true
+    },
+    {
+      "name": "Johnson C. Smith University – Smith Institute Career Services",
+      "category": "Employment",
+      "description": "Resume help, mock interviews, career fairs, and internship advising for JCSU students and people exploring college paths.",
+      "address": "100 Beatties Ford Road, Charlotte, NC 28216",
+      "phone": "(704) 378-1045",
+      "website": "https://www.jcsu.edu/admissions/why-choose-jcsu/career-readiness-starts-today",
+      "hours": "Call to schedule",
+      "lat": 35.2436,
+      "lng": -80.856,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "business",
+        "tech",
+        "teaching"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10089,
       "aiEnriched": true
     },
     {
@@ -3342,6 +3836,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 159,
       "aiEnriched": true
@@ -3362,6 +3859,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 160,
       "aiEnriched": true
@@ -3384,6 +3884,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 161,
       "aiEnriched": true
@@ -3405,6 +3908,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "business"
+      ],
       "score": 163,
       "id": 162,
       "aiEnriched": true
@@ -3427,6 +3934,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 163,
       "aiEnriched": true
@@ -3447,6 +3957,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts",
+        "hospitality"
+      ],
       "score": 163,
       "id": 164,
       "aiEnriched": true
@@ -3469,6 +3983,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 165,
       "aiEnriched": true
@@ -3490,6 +4007,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -3510,6 +4028,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 167,
       "aiEnriched": true
@@ -3531,6 +4050,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 168,
       "aiEnriched": true
@@ -3551,6 +4071,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 169,
       "aiEnriched": true
@@ -3571,6 +4092,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 170,
       "aiEnriched": true
@@ -3593,6 +4115,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 171,
       "aiEnriched": true
@@ -3614,6 +4139,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 172,
       "aiEnriched": true
@@ -3635,6 +4163,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 173,
       "aiEnriched": true
@@ -3657,6 +4188,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -3677,6 +4209,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 175,
       "aiEnriched": true
@@ -3697,6 +4230,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 176,
       "aiEnriched": true
@@ -3719,6 +4253,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 177,
       "aiEnriched": true
@@ -3741,6 +4278,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 178,
       "aiEnriched": true
@@ -3762,6 +4302,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 179,
       "aiEnriched": true
@@ -3782,6 +4323,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 180,
       "aiEnriched": true
@@ -3802,6 +4344,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 181,
       "aiEnriched": true
@@ -3823,6 +4366,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 182,
       "aiEnriched": true
@@ -3845,6 +4391,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 183,
       "aiEnriched": true
@@ -3865,6 +4414,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 184,
       "aiEnriched": true
@@ -3886,6 +4436,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -3905,6 +4456,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 186,
       "aiEnriched": true
@@ -3927,6 +4479,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 187,
       "aiEnriched": true
@@ -3948,6 +4503,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -3967,6 +4523,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 189,
       "aiEnriched": true
@@ -3987,6 +4546,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 190,
       "aiEnriched": true
@@ -4007,6 +4569,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 191,
       "aiEnriched": true
@@ -4027,6 +4592,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 192,
       "aiEnriched": true
@@ -4048,6 +4616,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 193,
       "aiEnriched": true
@@ -4069,6 +4640,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "public-service"
+      ],
       "score": 163,
       "id": 194,
       "aiEnriched": true
@@ -4090,6 +4664,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -4110,6 +4685,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare",
+        "public-service"
+      ],
       "score": 163,
       "id": 196,
       "aiEnriched": true
@@ -4131,6 +4710,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 197,
       "aiEnriched": true
@@ -4153,6 +4733,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 293,
       "aiEnriched": true
@@ -4174,6 +4757,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 198,
       "aiEnriched": true
@@ -4195,6 +4781,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 199,
       "aiEnriched": true
@@ -4216,6 +4805,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 200,
       "aiEnriched": true
@@ -4238,6 +4830,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 201,
       "aiEnriched": true
@@ -4259,6 +4854,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -4279,6 +4875,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -4299,6 +4896,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 204,
       "aiEnriched": true
@@ -4321,6 +4919,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 294,
       "aiEnriched": true
@@ -4342,6 +4943,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -4362,6 +4964,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 206,
       "aiEnriched": true
@@ -4384,6 +4987,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 207,
       "aiEnriched": true
@@ -4404,6 +5010,11 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts",
+        "sports",
+        "hospitality"
+      ],
       "score": 163,
       "id": 208,
       "aiEnriched": true
@@ -4424,6 +5035,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts",
+        "hospitality"
+      ],
       "score": 163,
       "id": 209,
       "aiEnriched": true
@@ -4444,6 +5059,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 210,
       "aiEnriched": true
@@ -4465,19 +5081,22 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "aiEnriched": true
     },
     {
       "name": "NCWorks Career Center – Charlotte",
       "category": "Employment",
-      "description": "NCWorks Career Center offers free job search help, resume assistance, and hiring events for high‑school students 16+, plus work‑based learning info. Visit 1401 W Morehead Street and call ahead.",
-      "address": "1401 W Morehead Street, Charlotte, NC 28208",
-      "phone": "(704) 206-1350",
-      "website": "https://www.ncworks.gov/",
-      "hours": "Mon–Fri 8am–5pm",
-      "lat": 35.228946,
-      "lng": -80.863999,
+      "description": "NCWorks Career Center offers free job search help, resume building, and hiring events for high school students. It also provides work‑based learning info and summer job leads.",
+      "address": "8601 McAlpine Park Drive, Suite 110, Charlotte, NC 28211",
+      "phone": "(704) 566-2870",
+      "website": "https://www.charlotteworks.com/about/contact/",
+      "hours": "Mon–Fri 8am–4:30pm",
+      "lat": 35.142705,
+      "lng": -80.900249,
       "opportunities": [
         "intern",
         "help"
@@ -4485,6 +5104,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 212,
       "aiEnriched": true
@@ -4507,6 +5129,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 213,
       "aiEnriched": true
@@ -4529,6 +5154,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -4549,6 +5175,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 215,
       "aiEnriched": true
@@ -4570,6 +5197,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 216,
       "aiEnriched": true
@@ -4590,6 +5218,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 217,
       "aiEnriched": true
@@ -4610,6 +5241,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 218,
       "aiEnriched": true
@@ -4630,6 +5264,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 219,
       "aiEnriched": true
@@ -4650,6 +5287,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 220,
       "aiEnriched": true
@@ -4670,6 +5310,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 221,
       "aiEnriched": true
@@ -4690,6 +5331,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 222,
       "aiEnriched": true
@@ -4712,6 +5354,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -4732,6 +5375,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 224,
       "aiEnriched": true
@@ -4754,6 +5398,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 225,
       "aiEnriched": true
@@ -4774,6 +5421,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 226,
       "aiEnriched": true
@@ -4794,6 +5444,9 @@
       "source": "curated",
       "opportunities": [
         "help"
+      ],
+      "careers": [
+        "healthcare"
       ],
       "score": 163,
       "aiEnriched": true
@@ -4816,6 +5469,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 228,
       "aiEnriched": true
@@ -4837,6 +5493,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 229,
       "aiEnriched": true
@@ -4858,6 +5517,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 230,
       "aiEnriched": true
@@ -4880,6 +5540,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 231,
       "aiEnriched": true
@@ -4902,6 +5565,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 232,
       "aiEnriched": true
@@ -4922,6 +5588,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 233,
       "aiEnriched": true
@@ -4942,6 +5609,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 234,
       "aiEnriched": true
@@ -4962,6 +5632,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 235,
       "aiEnriched": true
@@ -4984,6 +5657,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5004,8 +5678,37 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 237,
+      "aiEnriched": true
+    },
+    {
+      "name": "Rowan-Cabarrus Community College – South Campus",
+      "category": "Education",
+      "description": "Rowan‑Cabarrus Community College offers community college programs in healthcare, trades, tech, and transfer degrees, and its Career and College Promise program is open to eligible high school students.",
+      "address": "1531 Trinity Church Road, Concord, NC 28027",
+      "phone": "(704) 216-7222",
+      "website": "https://www.rccc.edu/",
+      "hours": "Mon–Thu 8am–6pm, Fri 8am–5pm",
+      "lat": 35.3698,
+      "lng": -80.6495,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "healthcare",
+        "trades",
+        "tech",
+        "business",
+        "teaching"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10085,
       "aiEnriched": true
     },
     {
@@ -5025,6 +5728,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5045,6 +5749,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 239,
       "aiEnriched": true
@@ -5066,6 +5771,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 240,
       "aiEnriched": true
@@ -5087,6 +5793,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5107,6 +5814,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 242,
       "aiEnriched": true
@@ -5129,6 +5837,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 243,
       "aiEnriched": true
@@ -5150,6 +5861,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 244,
       "aiEnriched": true
@@ -5172,6 +5884,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5191,6 +5904,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 246,
       "aiEnriched": true
@@ -5211,6 +5925,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 247,
       "aiEnriched": true
@@ -5233,6 +5948,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 248,
       "aiEnriched": true
@@ -5255,6 +5973,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 249,
       "aiEnriched": true
@@ -5275,6 +5996,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 250,
       "aiEnriched": true
@@ -5297,6 +6019,9 @@
         "help",
         "intern"
       ],
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -5318,6 +6043,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 252,
       "aiEnriched": true
@@ -5340,6 +6068,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 253,
       "aiEnriched": true
@@ -5362,6 +6093,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 254,
       "aiEnriched": true
@@ -5384,6 +6118,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 255,
       "aiEnriched": true
@@ -5405,6 +6140,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 256,
       "aiEnriched": true
@@ -5426,6 +6162,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "id": 257,
       "aiEnriched": true
@@ -5448,6 +6187,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 258,
       "aiEnriched": true
@@ -5470,6 +6210,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5490,6 +6231,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 260,
       "aiEnriched": true
@@ -5510,6 +6252,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 163,
       "id": 261,
       "aiEnriched": true
@@ -5532,6 +6277,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5553,6 +6299,7 @@
         "help",
         "volunteer"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5573,6 +6320,9 @@
       "opportunities": [
         "help"
       ],
+      "careers": [
+        "healthcare"
+      ],
       "score": 163,
       "aiEnriched": true
     },
@@ -5592,6 +6342,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 265,
       "aiEnriched": true
@@ -5614,6 +6367,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 266,
       "aiEnriched": true
@@ -5636,6 +6392,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 267,
       "aiEnriched": true
@@ -5657,6 +6416,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 268,
       "aiEnriched": true
@@ -5677,6 +6437,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 269,
       "aiEnriched": true
@@ -5698,6 +6461,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching",
+        "tech"
+      ],
       "score": 163,
       "id": 270,
       "aiEnriched": true
@@ -5719,7 +6486,33 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
+      "aiEnriched": true
+    },
+    {
+      "name": "United Way of Greater Charlotte – Cabarrus Office",
+      "category": "General Support",
+      "description": "United Way’s Concord office connects neighbors to 211, local partners, and volunteer roles, helping residents find resources.",
+      "address": "57 Union St. S #1002, Concord, NC 28025",
+      "phone": "(704) 371-6239",
+      "website": "https://unitedwaygreaterclt.org/contact-us/",
+      "hours": "Call ahead",
+      "lat": 35.4099,
+      "lng": -80.5813,
+      "opportunities": [
+        "volunteer",
+        "help"
+      ],
+      "careers": [
+        "business",
+        "public-service"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10084,
       "aiEnriched": true
     },
     {
@@ -5740,6 +6533,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 272,
       "aiEnriched": true
@@ -5762,6 +6558,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business"
+      ],
       "score": 163,
       "id": 273,
       "aiEnriched": true
@@ -5783,6 +6582,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 163,
       "id": 274,
       "aiEnriched": true
@@ -5804,6 +6604,7 @@
       "opportunities": [
         "help"
       ],
+      "careers": [],
       "score": 163,
       "aiEnriched": true
     },
@@ -5825,6 +6626,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 276,
       "aiEnriched": true
@@ -5847,6 +6651,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 277,
       "aiEnriched": true
@@ -5869,6 +6676,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 278,
       "aiEnriched": true
@@ -5890,6 +6700,10 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "business",
+        "tech"
+      ],
       "score": 163,
       "id": 279,
       "aiEnriched": true
@@ -5912,6 +6726,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 280,
       "aiEnriched": true
@@ -5934,8 +6751,38 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 163,
       "id": 281,
+      "aiEnriched": true
+    },
+    {
+      "name": "York Technical College",
+      "category": "Education",
+      "description": "York Technical College offers more than 100 programs, including health, trades, and transfer degrees for students in the south Charlotte metro.",
+      "address": "452 South Anderson Road, Rock Hill, SC 29730",
+      "phone": "(803) 327-8000",
+      "website": "https://www.yorktech.edu/",
+      "hours": "Enrollment Services Mon–Fri 8am–5pm",
+      "lat": 34.9244,
+      "lng": -80.995,
+      "opportunities": [
+        "intern",
+        "help"
+      ],
+      "careers": [
+        "healthcare",
+        "trades",
+        "tech",
+        "business"
+      ],
+      "verified": true,
+      "source": "curated",
+      "spotlight": false,
+      "score": 163,
+      "id": 10086,
       "aiEnriched": true
     },
     {
@@ -5955,6 +6802,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 163,
       "id": 282,
       "aiEnriched": true
@@ -5975,6 +6825,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 155,
       "id": 283,
       "aiEnriched": true
@@ -5996,6 +6849,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 155,
       "id": 284,
       "aiEnriched": true
@@ -6016,6 +6872,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 155,
       "id": 285,
       "aiEnriched": true
@@ -6034,6 +6893,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "arts"
+      ],
       "score": 153,
       "id": 286,
       "aiEnriched": true
@@ -6053,6 +6915,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 153,
       "id": 289,
       "aiEnriched": true
@@ -6071,6 +6936,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 153,
       "id": 290,
       "aiEnriched": true
@@ -6091,6 +6957,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "sports"
+      ],
       "score": 153,
       "id": 291,
       "aiEnriched": true
@@ -6109,6 +6978,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "trades"
+      ],
       "score": 153,
       "id": 292,
       "aiEnriched": true
@@ -6127,6 +6999,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 153,
       "id": 295,
       "aiEnriched": true
@@ -6145,6 +7018,7 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [],
       "score": 153,
       "id": 296,
       "aiEnriched": true
@@ -6164,6 +7038,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 145,
       "id": 297,
       "aiEnriched": true
@@ -6182,6 +7059,9 @@
       "verified": true,
       "source": "curated",
       "spotlight": false,
+      "careers": [
+        "teaching"
+      ],
       "score": 121,
       "id": 298,
       "aiEnriched": true
@@ -6201,11 +7081,11 @@
       "lat": 35.267726,
       "lng": -80.853339,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 300,
@@ -6222,11 +7102,11 @@
       "lat": 35.118629,
       "lng": -80.724471,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 301,
@@ -6243,11 +7123,11 @@
       "lat": 35.171709,
       "lng": -80.658843,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 302,
@@ -6264,11 +7144,11 @@
       "lat": 35.440678,
       "lng": -80.863987,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 303,
@@ -6285,11 +7165,11 @@
       "lat": 35.086471,
       "lng": -80.892756,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 304,
@@ -6306,11 +7186,11 @@
       "lat": 35.310833,
       "lng": -80.751448,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 305,
@@ -6327,11 +7207,11 @@
       "lat": 35.211214,
       "lng": -80.896181,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 306,
@@ -6348,11 +7228,11 @@
       "lat": 35.483327,
       "lng": -80.864087,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 328,
@@ -6369,11 +7249,11 @@
       "lat": 35.498438,
       "lng": -80.848311,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10065,
@@ -6390,30 +7270,10 @@
       "lat": 35.450909,
       "lng": -80.990734,
       "osmTimestamp": null,
-      "opportunities": [
-        "help"
-      ],
-      "score": 63
-    },
-    {
-      "id": 10067,
-      "name": "Founders Hall Library",
-      "category": "Education",
-      "description": "Founders Hall Library is a Charlotte-area education organization. Check the website for volunteer, internship, or help options for high school students.",
-      "address": "100 North Tryon Street Charlotte NC 28202",
-      "phone": "+1 704-416-0300",
-      "website": "https://www.foundershallevents.com/",
-      "hours": "Mo-Fr 08:00-16:00",
-      "spotlight": false,
-      "verified": false,
-      "source": "openstreetmap",
-      "lat": 35.226734,
-      "lng": -80.842232,
-      "osmTimestamp": null,
-      "opportunities": [
-        "help"
-      ],
       "score": 63,
+      "opportunities": [
+        "help"
+      ],
       "aiEnriched": true
     },
     {
@@ -6431,11 +7291,11 @@
       "lat": 35.128998,
       "lng": -80.894242,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 308,
@@ -6452,11 +7312,11 @@
       "lat": 35.222982,
       "lng": -80.728157,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 309,
@@ -6473,11 +7333,11 @@
       "lat": 35.220618,
       "lng": -80.811024,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 310,
@@ -6494,12 +7354,12 @@
       "lat": 35.238678,
       "lng": -80.83869,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help",
         "volunteer"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 311,
@@ -6516,11 +7376,11 @@
       "lat": 35.182966,
       "lng": -80.875185,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 312,
@@ -6537,11 +7397,11 @@
       "lat": 35.086536,
       "lng": -80.81158,
       "osmTimestamp": null,
+      "score": 63,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 63,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10078,
@@ -6558,14 +7418,14 @@
       "lat": 35.335094,
       "lng": -80.960403,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
-      "id": 313,
+      "id": 10090,
       "name": "Charlotte-Mecklenburg Library",
       "category": "Education",
       "description": "Charlotte-Mecklenburg Library is a Charlotte-area education organization. Check the website for volunteer, internship, or help options for high school students.",
@@ -6579,11 +7439,11 @@
       "lat": 35.257526,
       "lng": -80.797508,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 315,
@@ -6600,11 +7460,11 @@
       "lat": 35.502288,
       "lng": -80.994453,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 316,
@@ -6621,11 +7481,11 @@
       "lat": 35.318221,
       "lng": -80.658911,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 317,
@@ -6642,11 +7502,11 @@
       "lat": 35.176477,
       "lng": -80.755432,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 318,
@@ -6663,11 +7523,11 @@
       "lat": 35.115909,
       "lng": -80.718411,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 319,
@@ -6684,11 +7544,11 @@
       "lat": 35.116929,
       "lng": -80.72319,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 320,
@@ -6705,11 +7565,11 @@
       "lat": 35.196456,
       "lng": -80.827405,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 321,
@@ -6726,11 +7586,11 @@
       "lat": 35.151739,
       "lng": -80.822947,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 322,
@@ -6747,11 +7607,11 @@
       "lat": 35.106839,
       "lng": -80.988948,
       "osmTimestamp": null,
+      "score": 55,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 55,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 323,
@@ -6768,11 +7628,11 @@
       "lat": 35.233421,
       "lng": -80.850206,
       "osmTimestamp": null,
+      "score": 51,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 51,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10081,
@@ -6789,11 +7649,11 @@
       "lat": 35.224512,
       "lng": -80.83464,
       "osmTimestamp": null,
+      "score": 51,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 51,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10072,
@@ -6810,11 +7670,11 @@
       "lat": 35.190741,
       "lng": -80.776234,
       "osmTimestamp": null,
+      "score": 51,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 51,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10071,
@@ -6831,11 +7691,11 @@
       "lat": 35.287934,
       "lng": -80.761178,
       "osmTimestamp": null,
+      "score": 51,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 51,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 324,
@@ -6852,11 +7712,11 @@
       "lat": 35.243525,
       "lng": -81.042636,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 325,
@@ -6873,11 +7733,11 @@
       "lat": 35.190483,
       "lng": -80.909309,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 326,
@@ -6894,11 +7754,11 @@
       "lat": 35.200681,
       "lng": -80.749101,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 327,
@@ -6915,11 +7775,11 @@
       "lat": 35.147614,
       "lng": -80.78628,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 329,
@@ -6936,11 +7796,11 @@
       "lat": 35.192432,
       "lng": -80.778562,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 330,
@@ -6957,11 +7817,11 @@
       "lat": 35.2958,
       "lng": -81.020482,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 331,
@@ -6978,11 +7838,11 @@
       "lat": 35.194301,
       "lng": -80.79567,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 332,
@@ -6999,11 +7859,11 @@
       "lat": 35.118088,
       "lng": -80.723879,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 333,
@@ -7020,11 +7880,11 @@
       "lat": 35.33973,
       "lng": -80.856368,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10076,
@@ -7041,11 +7901,11 @@
       "lat": 35.389158,
       "lng": -80.754883,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10062,
@@ -7062,11 +7922,11 @@
       "lat": 35.115968,
       "lng": -80.72213,
       "osmTimestamp": null,
+      "score": 43,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 43,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 334,
@@ -7083,11 +7943,11 @@
       "lat": 35.189035,
       "lng": -80.833548,
       "osmTimestamp": null,
+      "score": 35,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 35,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 10077,
@@ -7104,11 +7964,11 @@
       "lat": 35.193308,
       "lng": -80.796308,
       "osmTimestamp": null,
+      "score": 35,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 35,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 335,
@@ -7125,11 +7985,11 @@
       "lat": 35.243041,
       "lng": -80.857344,
       "osmTimestamp": null,
+      "score": 35,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 35,
-      "aiEnriched": true
+      ]
     },
     {
       "id": 336,
@@ -7146,11 +8006,11 @@
       "lat": 35.079897,
       "lng": -80.773499,
       "osmTimestamp": null,
+      "score": 35,
+      "aiEnriched": true,
       "opportunities": [
         "help"
-      ],
-      "score": 35,
-      "aiEnriched": true
+      ]
     }
   ]
 }

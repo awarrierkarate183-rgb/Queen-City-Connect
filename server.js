@@ -15,7 +15,13 @@ const db = require('./db');
 const PORT = Number(process.env.PORT) || 8000;
 const ROOT = __dirname;
 const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(ROOT, 'data'));
-const BASE_URL = (process.env.BASE_URL || `http://127.0.0.1:${PORT}`).replace(/\/$/, '');
+const PUBLIC_HOST = String(process.env.PUBLIC_HOST || 'queencityconnect.org')
+  .replace(/^https?:\/\//, '')
+  .replace(/\/$/, '');
+const rawBaseUrl = (process.env.BASE_URL || `http://127.0.0.1:${PORT}`).replace(/\/$/, '');
+const BASE_URL = (/onrender\.com/i.test(rawBaseUrl) && PUBLIC_HOST)
+  ? `https://${PUBLIC_HOST}`
+  : rawBaseUrl;
 const isProd = process.env.NODE_ENV === 'production' || BASE_URL.startsWith('https://');
 const SESSION_SECRET = (process.env.SESSION_SECRET || '').trim() || (isProd ? '' : crypto.randomBytes(32).toString('hex'));
 if (!SESSION_SECRET) {
@@ -565,6 +571,13 @@ if (behindHttps) {
   app.set('trust proxy', 1);
 }
 app.use((req, res, next) => {
+  const host = String(req.headers.host || '').split(':')[0];
+  if (PUBLIC_HOST && /\.onrender\.com$/i.test(host)) {
+    return res.redirect(301, `https://${PUBLIC_HOST}${req.originalUrl || '/'}`);
+  }
+  next();
+});
+app.use((req, res, next) => {
   const origin = String(req.headers.origin || '');
   if (origin && ALLOWED_ORIGINS.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -1113,7 +1126,11 @@ async function refreshDirectoryIfStale(force) {
   const lastTry = Date.parse(meta.lastAttempt || 0) || 0;
   const hasLive = meta.source && meta.source !== 'curated-only';
   if (!force) {
-    if (hasLive && last && Date.now() - last < TWO_WEEKS_MS) return meta;
+    if (hasLive && last && Date.now() - last < TWO_WEEKS_MS) {
+      const daysLeft = Math.ceil((TWO_WEEKS_MS - (Date.now() - last)) / 86400000);
+      console.log(`Directory is current (${meta.count} listings). Next auto-refresh in about ${daysLeft} day(s).`);
+      return meta;
+    }
     if (!hasLive && lastTry && Date.now() - lastTry < 60 * 60 * 1000) return meta;
   }
   if (directoryRefreshing) return meta;

@@ -11,6 +11,7 @@ let activeCategories = new Set(['All']);
 let searchQuery = '';
 let hoursFilter = 'All';
 let opportunityFilter = 'All';
+let careerFilter = 'All';
 let sortOrder = 'best';
 let currentView = 'list';
 let map = null;
@@ -113,6 +114,12 @@ function applySavedHubPrefs() {
     if (opp) opp.value = prefs.opportunity;
   }
 
+  if (prefs.career && !params.get('career')) {
+    careerFilter = prefs.career;
+    const career = document.getElementById('career-select');
+    if (career) career.value = prefs.career;
+  }
+
   if (prefs.sort) {
     sortOrder = prefs.sort === 'default' ? 'best' : prefs.sort;
     const sort = document.getElementById('sort-select');
@@ -141,7 +148,8 @@ function persistHubState(immediate) {
       hours: hoursFilter,
       sort: sortOrder,
       view: currentView,
-      opportunity: opportunityFilter
+      opportunity: opportunityFilter,
+      career: careerFilter
     }
   }, { immediate: !!immediate });
 }
@@ -151,13 +159,14 @@ async function loadResources() {
     await QCCAuth.ready;
   }
   try {
-    const response = await fetch('data/resources.json?v=desc60');
+    const response = await fetch('data/resources.json?v=desc61');
     const data = await response.json();
     allResources = data.resources;
 
     const params = new URLSearchParams(window.location.search);
     const urlCategory = params.get('category');
     const urlOpportunity = params.get('opportunity');
+    const urlCareer = params.get('career');
 
     hubHydrating = true;
     if (urlCategory) {
@@ -175,6 +184,11 @@ async function loadResources() {
       const opp = document.getElementById('opportunity-select');
       if (opp) opp.value = urlOpportunity;
     }
+    if (urlCareer) {
+      careerFilter = urlCareer;
+      const career = document.getElementById('career-select');
+      if (career) career.value = urlCareer;
+    }
     applySavedHubPrefs();
     hubHydrating = false;
 
@@ -184,6 +198,37 @@ async function loadResources() {
     hubHydrating = false;
     console.error('Could not load resources', e);
   }
+}
+
+const CAREER_LABELS = {
+  healthcare: 'Healthcare',
+  teaching: 'Teaching',
+  trades: 'Skilled trades',
+  business: 'Business',
+  arts: 'Arts',
+  tech: 'Tech',
+  'public-service': 'Public service',
+  sports: 'Sports & rec',
+  hospitality: 'Culinary & hospitality'
+};
+
+function listingCareers(resource) {
+  const listed = Array.isArray(resource && resource.careers)
+    ? resource.careers.filter((item) => CAREER_LABELS[item])
+    : [];
+  if (listed.length) return listed;
+  const blob = `${resource.name || ''} ${resource.category || ''} ${resource.description || ''}`.toLowerCase();
+  const set = new Set();
+  if (/\b(clinic|hospital|dental|nurs|medic|health department|pharmacy|care ring|atrium|novant|ems|wic|public health)\b/.test(blob) || resource.category === 'Health') set.add('healthcare');
+  if (/\b(cms|classroom|tutor|teacher|school volunteer|upward bound|college promise)\b/.test(blob) || resource.category === 'Education') set.add('teaching');
+  if (/\b(habitat|construction|apprentice|electrician|plumbing|hvac|carpenter|cte|harper campus|trades)\b/.test(blob)) set.add('trades');
+  if (/\b(junior achievement|urban league|year up|dress for success|workforce|ncworks|goodwill|entrepreneur)\b/.test(blob) || resource.category === 'Employment') set.add('business');
+  if (/\b(theatre|theater|museum|art |music|ballet|blumenthal|mint museum|imaginon)\b/.test(blob)) set.add('arts');
+  if (/\b(year up|coding|computer|stem|software|central piedmont|discovery place)\b/.test(blob)) set.add('tech');
+  if (/\b(police|fire|teen court|guardian ad litem|cmpd|explorer)\b/.test(blob)) set.add('public-service');
+  if (/\b(ymca|recreation|park and rec|athletic|sports|lifeguard|camp counselor)\b/.test(blob)) set.add('sports');
+  if (/\b(culinary|hospitality|restaurant|chef|community culinary)\b/.test(blob)) set.add('hospitality');
+  return [...set];
 }
 
 // ─── FILTER + SORT ───
@@ -202,7 +247,11 @@ function getFiltered() {
     const matchOpportunity =
       opportunityFilter === 'All' ||
       opps.includes(opportunityFilter);
-    return matchCategory && matchSearch && matchHours && matchOpportunity;
+    const careers = listingCareers(r);
+    const matchCareer =
+      careerFilter === 'All' ||
+      careers.includes(careerFilter);
+    return matchCategory && matchSearch && matchHours && matchOpportunity && matchCareer;
   });
 
   if (sortOrder === 'az') results.sort((a, b) => a.name.localeCompare(b.name));
@@ -253,6 +302,9 @@ function renderResources() {
   if (!activeCategories.has('All') && activeCategories.size > 0) {
     const cats = [...activeCategories].join(', ');
     filterLabel = ` in <strong>${escapeHtml(cats)}</strong>`;
+  }
+  if (careerFilter !== 'All' && CAREER_LABELS[careerFilter]) {
+    filterLabel += ` for <strong>${escapeHtml(CAREER_LABELS[careerFilter])}</strong>`;
   }
   const page = filtered.slice(0, visibleCount);
   countEl.innerHTML = `${filtered.length.toLocaleString()} resource${filtered.length !== 1 ? 's' : ''}${filterLabel}`;
@@ -338,7 +390,7 @@ function renderMap() {
   if (bounds.length && (!activeCategories.has('All') || searchQuery)) {
     map.fitBounds(L.latLngBounds(bounds).pad(0.08), { maxZoom: 13, animate: false });
   } else {
-    map.setView(window.QCCMap.charlotte, 11);
+    map.setView(window.QCCMap.charlotte, 10);
   }
   setTimeout(() => map.invalidateSize(), 80);
 }
@@ -481,11 +533,12 @@ async function loadDirectoryMeta() {
     const meta = await fetch('/api/resources/meta').then((r) => r.json());
     const count = Number(meta.count || allResources.length).toLocaleString();
     const when = meta.lastUpdated ? new Date(meta.lastUpdated).toLocaleDateString() : 'today';
-    el.textContent = `${count} listings in Charlotte-Mecklenburg · updated ${when} · auto-refreshes every 2 weeks`;
+    el.textContent = `${count} listings in the greater Charlotte area · updated ${when} · auto-refreshes every 2 weeks`;
   } catch {
-    el.textContent = `${allResources.length.toLocaleString()} listings in Charlotte-Mecklenburg`;
+    el.textContent = `${allResources.length.toLocaleString()} listings in the greater Charlotte area`;
   }
 }
 
+setHubFilters(false, false);
 loadResources();
 initHubTitleFade();

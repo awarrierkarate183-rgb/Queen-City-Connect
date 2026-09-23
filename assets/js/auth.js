@@ -90,7 +90,8 @@
         hours: 'All',
         sort: 'best',
         view: 'list',
-        opportunity: 'All'
+        opportunity: 'All',
+        career: 'All'
       },
       recentlyViewed: [],
       submissions: [],
