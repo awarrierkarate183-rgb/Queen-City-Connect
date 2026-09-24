@@ -374,7 +374,7 @@
           '<button type="button" class="nav-sign-out" id="nav-sign-out">Sign out</button>';
         bindSignOut('nav-sign-out');
       } else {
-        host.innerHTML = '<a href="' + signInHref() + '" class="nav-sign-in">Sign In</a>';
+        host.innerHTML = '<a href="' + signInHref() + '" class="nav-sign-in">Sign In / Sign Up</a>';
       }
     }
 
@@ -391,7 +391,7 @@
       } else {
         menu.insertAdjacentHTML(
           'beforeend',
-          '<li class="nav-auth-item"><a href="' + signInHref() + '">Sign In</a></li>'
+          '<li class="nav-auth-item"><a href="' + signInHref() + '">Sign In / Sign Up</a></li>'
         );
       }
     }

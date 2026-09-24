@@ -1215,15 +1215,25 @@
     transition: opacity 0.25s ease, transform 0.25s ease;
   }
 
-  .hub-title-block .section-eyebrow {
-    color: var(--accent);
+  .hub-title-block .page-header-eyebrow {
     margin-bottom: 8px;
   }
 
-  .hub-title-block .section-title {
-    margin-bottom: 0;
-    letter-spacing: 0;
-    word-spacing: 0.04em;
+  .hub-title-block h1 {
+    font-family: var(--font-sans);
+    font-size: 46px;
+    letter-spacing: -1px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.1;
+  }
+
+  .hub-title-block p {
+    font-size: 16px;
+    color: var(--ink-3);
+    max-width: 520px;
+    margin: 0;
+    line-height: 1.5;
   }
 
   .hub-title-block.is-faded {
@@ -2896,7 +2906,8 @@
       grid-column: 1;
     }
 
-    .page-header h1 {
+    .page-header h1,
+    .hub-title-block h1 {
       font-size: 34px;
     }
 
