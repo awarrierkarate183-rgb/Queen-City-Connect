@@ -26,7 +26,7 @@
     content="Browse verified food, housing, health, youth, and career resources across the greater Charlotte area." />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Greater Charlotte Resource Directory | QueenCityConnect</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=phone6" />
+  <link rel="stylesheet" href="assets/css/style.css?v=hubfmt1" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 
@@ -63,58 +63,74 @@
       <div class="container">
         <div class="search-bar">
           <span class="search-icon">&#x2315;</span>
-          <input type="text" id="search-input" placeholder="Search schools, neighborhoods, clinics, libraries, community groups..." />
+          <input type="text" id="search-input" placeholder="Search schools, clinics, libraries, or community groups" />
         </div>
-        <div class="hub-filter-row">
-          <span class="sort-label">Filter by:</span>
-          <select class="hub-select" id="category-select" multiple size="1" onchange="onMultiCategorySelect(this)">
-            <option value="All" selected>All Categories</option>
-            <option value="Food">Food</option>
-            <option value="Housing">Housing</option>
-            <option value="Health">Health</option>
-            <option value="Mental Health">Mental Health</option>
-            <option value="Youth">Youth</option>
-            <option value="Volunteer">Volunteer</option>
-            <option value="Internships">Internships</option>
-            <option value="Safety">Safety</option>
-            <option value="Legal Aid">Legal Aid</option>
-            <option value="Financial Aid">Financial Aid</option>
-            <option value="Veterans">Veterans</option>
-            <option value="Employment">Employment</option>
-            <option value="Education">Education</option>
-            <option value="General Support">General Support</option>
-          </select>
-          <select class="hub-select" id="opportunity-select" onchange="onOpportunitySelect(this.value)">
-            <option value="All">I want to: All</option>
-            <option value="volunteer">I want to: Volunteer</option>
-            <option value="intern">I want to: Intern / work</option>
-            <option value="help">I want to: Get help</option>
-          </select>
-          <select class="hub-select" id="career-select" onchange="onCareerSelect(this.value)">
-            <option value="All">Future work: All</option>
-            <option value="healthcare">Future work: Healthcare</option>
-            <option value="teaching">Future work: Teaching</option>
-            <option value="trades">Future work: Skilled trades</option>
-            <option value="business">Future work: Business</option>
-            <option value="arts">Future work: Arts</option>
-            <option value="tech">Future work: Tech</option>
-            <option value="public-service">Future work: Public service</option>
-            <option value="sports">Future work: Sports &amp; rec</option>
-            <option value="hospitality">Future work: Culinary &amp; hospitality</option>
-          </select>
-          <select class="hub-select" id="hours-select" onchange="onHoursSelect(this.value)">
-            <option value="All">All Hours</option>
-            <option value="24/7">24/7 Services</option>
-            <option value="Weekday">Weekday Only</option>
-          </select>
-          <select class="hub-select" id="sort-select" onchange="onSortSelect(this.value)">
-            <option value="best" selected>Sort: Best match</option>
-            <option value="az">Sort: A to Z</option>
-            <option value="za">Sort: Z to A</option>
-          </select>
-          <button class="filter-btn clear-btn" onclick="clearAllFilters()">Clear All</button>
+        <div class="hub-filter-grid">
+          <label class="hub-field">
+            <span>Category</span>
+            <select class="hub-select" id="category-select" onchange="onCategorySelect(this.value)">
+              <option value="All" selected>All categories</option>
+              <option value="Food">Food</option>
+              <option value="Housing">Housing</option>
+              <option value="Health">Health</option>
+              <option value="Mental Health">Mental Health</option>
+              <option value="Youth">Youth</option>
+              <option value="Volunteer">Volunteer</option>
+              <option value="Internships">Internships</option>
+              <option value="Safety">Safety</option>
+              <option value="Legal Aid">Legal Aid</option>
+              <option value="Financial Aid">Financial Aid</option>
+              <option value="Veterans">Veterans</option>
+              <option value="Employment">Employment</option>
+              <option value="Education">Education</option>
+              <option value="General Support">General Support</option>
+            </select>
+          </label>
+          <label class="hub-field">
+            <span>I want to</span>
+            <select class="hub-select" id="opportunity-select" onchange="onOpportunitySelect(this.value)">
+              <option value="All">All</option>
+              <option value="volunteer">Volunteer</option>
+              <option value="intern">Intern / work</option>
+              <option value="help">Get help</option>
+            </select>
+          </label>
+          <label class="hub-field">
+            <span>Future work</span>
+            <select class="hub-select" id="career-select" onchange="onCareerSelect(this.value)">
+              <option value="All">All</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="teaching">Teaching</option>
+              <option value="trades">Skilled trades</option>
+              <option value="business">Business</option>
+              <option value="arts">Arts</option>
+              <option value="tech">Tech</option>
+              <option value="public-service">Public service</option>
+              <option value="sports">Sports &amp; rec</option>
+              <option value="hospitality">Culinary &amp; hospitality</option>
+            </select>
+          </label>
+          <label class="hub-field">
+            <span>Hours</span>
+            <select class="hub-select" id="hours-select" onchange="onHoursSelect(this.value)">
+              <option value="All">All hours</option>
+              <option value="24/7">24/7</option>
+              <option value="Weekday">Weekdays</option>
+            </select>
+          </label>
+          <label class="hub-field">
+            <span>Sort</span>
+            <select class="hub-select" id="sort-select" onchange="onSortSelect(this.value)">
+              <option value="best" selected>Best match</option>
+              <option value="az">A to Z</option>
+              <option value="za">Z to A</option>
+            </select>
+          </label>
+          <div class="hub-field hub-field-action">
+            <button type="button" class="filter-btn clear-btn" onclick="clearAllFilters()">Clear all</button>
+          </div>
         </div>
-        <p class="hub-filter-hint">Schools, neighborhoods, rec centers, clinics, libraries, and community groups across the greater Charlotte area. Filter by volunteer, internships, help, or the kind of work you want to do later.</p>
+        <p class="hub-filter-hint">Volunteer, internships, help, and career paths across the greater Charlotte area.</p>
         <p class="hub-filter-hint" id="directory-updated"></p>
       </div>
     </section>
@@ -238,17 +254,12 @@
   <script src="assets/js/analytics.js"></script>
   <script src="assets/js/auth.js?v=phone5"></script>
   <script src="assets/js/saves.js"></script>
-  <script src="assets/js/hub.js?v=career1"></script>
+  <script src="assets/js/hub.js?v=hubfmt1"></script>
   <script src="assets/js/main.js"></script>
   <script>
-    function onMultiCategorySelect(sel) {
-      const selected = Array.from(sel.selectedOptions).map(o => o.value);
+    function onCategorySelect(val) {
       activeCategories.clear();
-      if (selected.includes('All') || selected.length === 0) {
-        activeCategories.add('All');
-      } else {
-        selected.forEach(v => activeCategories.add(v));
-      }
+      activeCategories.add(val || 'All');
       visibleCount = 24;
       renderResources();
       if (currentView === 'map') renderMap();
@@ -297,7 +308,7 @@
       visibleCount = 24;
       document.getElementById('search-input').value = '';
       const sel = document.getElementById('category-select');
-      Array.from(sel.options).forEach(o => o.selected = o.value === 'All');
+      if (sel) sel.value = 'All';
       document.getElementById('hours-select').value = 'All';
       const opp = document.getElementById('opportunity-select');
       if (opp) opp.value = 'All';

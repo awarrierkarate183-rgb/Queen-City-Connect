@@ -87,13 +87,10 @@ function applySavedHubPrefs() {
   if (!prefs) return;
 
   if (!params.get('category') && Array.isArray(prefs.categories) && prefs.categories.length) {
-    activeCategories = new Set(prefs.categories);
+    const first = prefs.categories.includes('All') ? 'All' : prefs.categories[0];
+    activeCategories = new Set([first]);
     const sel = document.getElementById('category-select');
-    if (sel) {
-      Array.from(sel.options).forEach(o => {
-        o.selected = activeCategories.has(o.value);
-      });
-    }
+    if (sel) sel.value = first;
   }
 
   if (typeof prefs.search === 'string' && !params.get('q')) {
@@ -173,11 +170,7 @@ async function loadResources() {
       activeCategories.clear();
       activeCategories.add(urlCategory);
       const sel = document.getElementById('category-select');
-      if (sel) {
-        Array.from(sel.options).forEach(o => {
-          o.selected = o.value === urlCategory;
-        });
-      }
+      if (sel) sel.value = urlCategory;
     }
     if (urlOpportunity === 'volunteer' || urlOpportunity === 'intern' || urlOpportunity === 'help') {
       opportunityFilter = urlOpportunity;
