@@ -13,5 +13,5 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
     fetch('/api/health', { credentials: 'omit', cache: 'no-store' }).catch(function () {});
   }
   ping();
-  setInterval(ping, 4 * 60 * 1000);
+  setInterval(ping, 2.5 * 60 * 1000);
 })();

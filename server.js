@@ -1162,6 +1162,10 @@ app.use(express.static(ROOT, {
     if (filePath.endsWith('.html')) {
       res.setHeader('Cache-Control', 'no-store');
     }
+    if (filePath.endsWith(`${path.sep}sw.js`) || filePath.endsWith('/sw.js')) {
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Service-Worker-Allowed', '/');
+    }
     if (filePath.endsWith(`${path.sep}admin.html`) || filePath.endsWith('/admin.html')) {
       res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     }
