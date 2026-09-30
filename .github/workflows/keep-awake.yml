@@ -1,0 +1,15 @@
+name: Keep QueenCityConnect awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake the directory
+        run: |
+          curl -fsS --retry 8 --retry-delay 8 --retry-all-errors --max-time 90 \
+            https://queencityconnect.org/api/health
