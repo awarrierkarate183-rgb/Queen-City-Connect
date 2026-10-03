@@ -59,12 +59,10 @@ function initTypewriter() {
   const el = document.getElementById('typewriter');
   if (!el) return;
   const words = [
-    'a warm meal tonight.',
-    'a first real job.',
-    'someone in their corner.',
-    'a quiet place to study.',
-    'a path after graduation.',
-    'a neighbor who knows the way.'
+    'support.',
+    'community.',
+    'connection.',
+    'hope.'
   ];
   let wordIndex = 0;
   let charIndex = 0;
