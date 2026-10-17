@@ -586,10 +586,8 @@ const SITEMAP_BODY = [
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   '  <url><loc>https://queencityconnect.org/</loc><lastmod>2026-10-17</lastmod></url>',
   '  <url><loc>https://queencityconnect.org/hub.html</loc><lastmod>2026-10-17</lastmod></url>',
-  '  <url><loc>https://queencityconnect.org/neighborhood.html</loc><lastmod>2026-10-17</lastmod></url>',
   '  <url><loc>https://queencityconnect.org/submit.html</loc><lastmod>2026-10-17</lastmod></url>',
   '  <url><loc>https://queencityconnect.org/about.html</loc><lastmod>2026-10-17</lastmod></url>',
-  '  <url><loc>https://queencityconnect.org/references.html</loc><lastmod>2026-10-17</lastmod></url>',
   '</urlset>',
   ''
 ].join('\n');
@@ -1221,55 +1219,6 @@ app.get('/api/resources/meta', (_req, res) => {
 app.get('/index.html', (req, res) => {
   const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
   res.redirect(301, `/${query === '?' ? '' : query}`);
-});
-
-function escapeHubHtml(value) {
-  return String(value || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-let hubCrawlHtml = '';
-function buildHubCrawlIndex() {
-  const groups = {};
-  loadDirectoryResources().forEach((resource) => {
-    const category = String(resource.category || 'General Support').trim() || 'General Support';
-    const name = String(resource.name || '').trim();
-    if (!name) return;
-    if (!groups[category]) groups[category] = new Set();
-    groups[category].add(name);
-  });
-  const categories = Object.keys(groups).sort((a, b) => a.localeCompare(b));
-  const parts = [
-    '<section class="hub-crawl-index" id="hub-crawl-index"><div class="container">',
-    '<h2>Directory by category</h2>',
-    '<p>These names come from the QueenCityConnect resource file. Use the filters above to open the interactive list.</p>'
-  ];
-  categories.forEach((category) => {
-    const names = [...groups[category]].sort((a, b) => a.localeCompare(b));
-    parts.push('<h3>' + escapeHubHtml(category) + '</h3><ul class="hub-crawl-names">');
-    names.forEach((name) => {
-      parts.push('<li><a href="/hub.html?category=' + encodeURIComponent(category) + '">' + escapeHubHtml(name) + '</a></li>');
-    });
-    parts.push('</ul>');
-  });
-  parts.push('</div></section>');
-  hubCrawlHtml = parts.join('');
-}
-
-buildHubCrawlIndex();
-
-app.get('/hub.html', (req, res) => {
-  if (!hubCrawlHtml) buildHubCrawlIndex();
-  fs.readFile(path.join(ROOT, 'hub.html'), 'utf8', (err, html) => {
-    if (err) return res.status(500).type('text').send('Could not load the hub.');
-    res.status(200);
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Cache-Control', 'no-store');
-    res.send(String(html).replace('<!--HUB_CRAWL_INDEX-->', hubCrawlHtml));
-  });
 });
 
 app.use(express.static(ROOT, {
