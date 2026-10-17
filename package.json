@@ -3,7 +3,7 @@
   "private": true,
   "description": "QueenCityConnect local server with accounts and saved user activity",
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   },
   "scripts": {
     "start": "node server.js",

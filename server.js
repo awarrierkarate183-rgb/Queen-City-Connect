@@ -55,8 +55,11 @@ const LOCAL_HASH_PREFIX = 'local-v1$';
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
+let dbReady = false;
+
 class TursoSessionStore extends session.Store {
   get(sid, callback) {
+    if (!dbReady) return callback(null, undefined);
     db.purgeSessions(Date.now())
       .then(() => db.getSession(sid))
       .then((row) => {
@@ -70,6 +73,7 @@ class TursoSessionStore extends session.Store {
   }
 
   set(sid, sess, callback) {
+    if (!dbReady) return callback(null);
     const maxAge = (sess.cookie && sess.cookie.maxAge) || 1000 * 60 * 60 * 24 * 30;
     const expires = sess.cookie && sess.cookie.expires
       ? new Date(sess.cookie.expires).getTime()
@@ -80,12 +84,14 @@ class TursoSessionStore extends session.Store {
   }
 
   destroy(sid, callback) {
+    if (!dbReady) return callback(null);
     db.destroySession(sid)
       .then(() => callback(null))
       .catch(callback);
   }
 
   touch(sid, sess, callback) {
+    if (!dbReady) return callback(null);
     const maxAge = (sess.cookie && sess.cookie.maxAge) || 1000 * 60 * 60 * 24 * 30;
     const expires = sess.cookie && sess.cookie.expires
       ? new Date(sess.cookie.expires).getTime()
@@ -644,6 +650,14 @@ app.use((req, res, next) => {
 });
 app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api/')) return next();
+  if (req.path === '/api/health' || req.path === '/api/auth/config' || req.path === '/api/resources/meta') {
+    return next();
+  }
+  if (dbReady) return next();
+  return res.status(503).json({ error: 'The directory is still starting. Try again in a moment.' });
+});
 app.use(session({
   name: 'qcc.sid',
   secret: SESSION_SECRET,
@@ -1284,11 +1298,17 @@ app.use((req, res) => {
 
 const HOST = process.env.HOST || '0.0.0.0';
 
-function start() {
-  app.listen(PORT, HOST, () => {
-    console.log(`QueenCityConnect listening on ${HOST}:${PORT}`);
-    console.log(`Public URL: ${BASE_URL}`);
-    db.initDb().then(() => {
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function connectDbWithRetry() {
+  const delays = [2000, 5000, 10000];
+  let attempt = 0;
+  while (true) {
+    try {
+      await db.initDb();
+      dbReady = true;
       console.log('Account database: Turso');
       if (!googleEnabled) {
         console.log('Google Sign-In is off until GOOGLE_CLIENT_ID is set in .env or data/auth-config.json');
@@ -1309,9 +1329,29 @@ function start() {
       setInterval(() => {
         refreshDirectoryIfStale(false).catch(() => {});
       }, 6 * 60 * 60 * 1000);
-    }).catch((err) => {
+      return;
+    } catch (err) {
+      dbReady = false;
+      const delay = attempt < delays.length ? delays[attempt] : 30000;
       console.error('Could not connect the account database yet:', err.message || err);
+      console.error(`Retrying database connection in ${delay / 1000}s`);
+      attempt += 1;
+      await sleep(delay);
+    }
+  }
+}
+
+async function start() {
+  await new Promise((resolve, reject) => {
+    const server = app.listen(PORT, HOST, () => {
+      console.log(`QueenCityConnect listening on ${HOST}:${PORT}`);
+      console.log(`Public URL: ${BASE_URL}`);
+      resolve(server);
     });
+    server.once('error', reject);
+  });
+  connectDbWithRetry().catch((err) => {
+    console.error('Database retry loop stopped:', err.message || err);
   });
 }
 
