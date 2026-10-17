@@ -566,6 +566,52 @@ function queueNewAccountEmail(user, method) {
 
 const app = express();
 app.disable('x-powered-by');
+
+const ROBOTS_BODY = [
+  'User-agent: *',
+  'Disallow: /api/',
+  'Disallow: /admin.html',
+  'Sitemap: https://queencityconnect.org/sitemap.xml',
+  ''
+].join('\n');
+
+const SITEMAP_BODY = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  '  <url><loc>https://queencityconnect.org/</loc><lastmod>2026-10-17</lastmod></url>',
+  '  <url><loc>https://queencityconnect.org/hub.html</loc><lastmod>2026-10-17</lastmod></url>',
+  '  <url><loc>https://queencityconnect.org/neighborhood.html</loc><lastmod>2026-10-17</lastmod></url>',
+  '  <url><loc>https://queencityconnect.org/submit.html</loc><lastmod>2026-10-17</lastmod></url>',
+  '  <url><loc>https://queencityconnect.org/about.html</loc><lastmod>2026-10-17</lastmod></url>',
+  '  <url><loc>https://queencityconnect.org/references.html</loc><lastmod>2026-10-17</lastmod></url>',
+  '</urlset>',
+  ''
+].join('\n');
+
+function sendRobots(_req, res) {
+  res.status(200);
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.send(ROBOTS_BODY);
+}
+
+function sendSitemap(_req, res) {
+  res.status(200);
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.send(SITEMAP_BODY);
+}
+
+app.get('/robots.txt', sendRobots);
+app.head('/robots.txt', sendRobots);
+app.get('/sitemap.xml', sendSitemap);
+app.head('/sitemap.xml', sendSitemap);
+app.get('/api/health', (_req, res) => {
+  res.status(200);
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({ ok: true });
+});
+
 const behindHttps = isProd || BASE_URL.startsWith('https://');
 if (behindHttps) {
   app.set('trust proxy', 1);
@@ -574,6 +620,13 @@ app.use((req, res, next) => {
   const host = String(req.headers.host || '').split(':')[0];
   if (PUBLIC_HOST && /\.onrender\.com$/i.test(host)) {
     return res.redirect(301, `https://${PUBLIC_HOST}${req.originalUrl || '/'}`);
+  }
+  if (host === 'www.queencityconnect.org' || (PUBLIC_HOST && host === `www.${PUBLIC_HOST}`)) {
+    return res.redirect(301, `https://${PUBLIC_HOST || 'queencityconnect.org'}${req.originalUrl || '/'}`);
+  }
+  const proto = String(req.headers['x-forwarded-proto'] || req.protocol || '').split(',')[0].trim();
+  if (behindHttps && proto === 'http' && host !== '127.0.0.1' && host !== 'localhost') {
+    return res.redirect(301, `https://${PUBLIC_HOST || host}${req.originalUrl || '/'}`);
   }
   next();
 });
@@ -687,10 +740,6 @@ if (googleRedirectEnabled) {
       .catch(done);
   }));
 }
-
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true });
-});
 
 app.get('/api/auth/config', (_req, res) => {
   res.json(googlePublicConfig());
@@ -1155,6 +1204,60 @@ app.get('/api/resources/meta', (_req, res) => {
   res.json(readDirectoryMeta());
 });
 
+app.get('/index.html', (req, res) => {
+  const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+  res.redirect(301, `/${query === '?' ? '' : query}`);
+});
+
+function escapeHubHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+let hubCrawlHtml = '';
+function buildHubCrawlIndex() {
+  const groups = {};
+  loadDirectoryResources().forEach((resource) => {
+    const category = String(resource.category || 'General Support').trim() || 'General Support';
+    const name = String(resource.name || '').trim();
+    if (!name) return;
+    if (!groups[category]) groups[category] = new Set();
+    groups[category].add(name);
+  });
+  const categories = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+  const parts = [
+    '<section class="hub-crawl-index" id="hub-crawl-index"><div class="container">',
+    '<h2>Directory by category</h2>',
+    '<p>These names come from the QueenCityConnect resource file. Use the filters above to open the interactive list.</p>'
+  ];
+  categories.forEach((category) => {
+    const names = [...groups[category]].sort((a, b) => a.localeCompare(b));
+    parts.push('<h3>' + escapeHubHtml(category) + '</h3><ul class="hub-crawl-names">');
+    names.forEach((name) => {
+      parts.push('<li><a href="/hub.html?category=' + encodeURIComponent(category) + '">' + escapeHubHtml(name) + '</a></li>');
+    });
+    parts.push('</ul>');
+  });
+  parts.push('</div></section>');
+  hubCrawlHtml = parts.join('');
+}
+
+buildHubCrawlIndex();
+
+app.get('/hub.html', (req, res) => {
+  if (!hubCrawlHtml) buildHubCrawlIndex();
+  fs.readFile(path.join(ROOT, 'hub.html'), 'utf8', (err, html) => {
+    if (err) return res.status(500).type('text').send('Could not load the hub.');
+    res.status(200);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.send(String(html).replace('<!--HUB_CRAWL_INDEX-->', hubCrawlHtml));
+  });
+});
+
 app.use(express.static(ROOT, {
   extensions: ['html'],
   index: 'index.html',
@@ -1167,7 +1270,7 @@ app.use(express.static(ROOT, {
       res.setHeader('Service-Worker-Allowed', '/');
     }
     if (filePath.endsWith(`${path.sep}admin.html`) || filePath.endsWith('/admin.html')) {
-      res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+      res.setHeader('X-Robots-Tag', 'noindex, follow');
     }
   }
 }));
@@ -1181,31 +1284,34 @@ app.use((req, res) => {
 
 const HOST = process.env.HOST || '0.0.0.0';
 
-async function start() {
-  await db.initDb();
+function start() {
   app.listen(PORT, HOST, () => {
     console.log(`QueenCityConnect listening on ${HOST}:${PORT}`);
     console.log(`Public URL: ${BASE_URL}`);
-    console.log('Account database: Turso');
-    if (!googleEnabled) {
-      console.log('Google Sign-In is off until GOOGLE_CLIENT_ID is set in .env or data/auth-config.json');
-    } else if (googleRedirectEnabled) {
-      console.log(`Google OAuth callback: ${BASE_URL}/api/auth/google/callback`);
-    }
-    if (!mailConfigured()) {
-      console.log('Account emails are off until GMAIL_USER and GMAIL_APP_PASSWORD are set in .env');
-    }
-    if (!ADMIN_PASSWORD) {
-      console.log('Admin user list is off until ADMIN_PASSWORD is set in .env');
-    }
-    setTimeout(() => {
-      refreshDirectoryIfStale(false).then((meta) => {
-        if (meta && meta.count) console.log(`Resource directory: ${meta.count} listings (${meta.source})`);
-      }).catch(() => {});
-    }, 4000);
-    setInterval(() => {
-      refreshDirectoryIfStale(false).catch(() => {});
-    }, 6 * 60 * 60 * 1000);
+    db.initDb().then(() => {
+      console.log('Account database: Turso');
+      if (!googleEnabled) {
+        console.log('Google Sign-In is off until GOOGLE_CLIENT_ID is set in .env or data/auth-config.json');
+      } else if (googleRedirectEnabled) {
+        console.log(`Google OAuth callback: ${BASE_URL}/api/auth/google/callback`);
+      }
+      if (!mailConfigured()) {
+        console.log('Account emails are off until GMAIL_USER and GMAIL_APP_PASSWORD are set in .env');
+      }
+      if (!ADMIN_PASSWORD) {
+        console.log('Admin user list is off until ADMIN_PASSWORD is set in .env');
+      }
+      setTimeout(() => {
+        refreshDirectoryIfStale(false).then((meta) => {
+          if (meta && meta.count) console.log(`Resource directory: ${meta.count} listings (${meta.source})`);
+        }).catch(() => {});
+      }, 4000);
+      setInterval(() => {
+        refreshDirectoryIfStale(false).catch(() => {});
+      }, 6 * 60 * 60 * 1000);
+    }).catch((err) => {
+      console.error('Could not connect the account database yet:', err.message || err);
+    });
   });
 }
 

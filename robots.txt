@@ -1,6 +1,4 @@
 User-agent: *
-Disallow: /admin.html
 Disallow: /api/
-Allow: /
-
+Disallow: /admin.html
 Sitemap: https://queencityconnect.org/sitemap.xml
