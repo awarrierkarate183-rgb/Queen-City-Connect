@@ -1,5 +1,5 @@
 /* QueenCityConnect: never show the host startup page. */
-const CACHE = 'qcc-wake-v3';
+const CACHE = 'qcc-wake-v4';
 const WAKE_URL = '/wake.html';
 const PRECACHE = [WAKE_URL, '/assets/images/logo.png', '/assets/images/logo.svg', '/favicon.ico'];
 
@@ -97,7 +97,7 @@ self.addEventListener('fetch', (event) => {
     const network = networkIfOurs(request).catch(() => null);
     const waited = await Promise.race([
       network.then((res) => (res ? { kind: 'ok', res } : { kind: 'bad' })),
-      new Promise((resolve) => setTimeout(() => resolve({ kind: 'slow' }), 400))
+      new Promise((resolve) => setTimeout(() => resolve({ kind: 'slow' }), 15000))
     ]);
     if (waited.kind === 'ok') return waited.res;
     return wakeResponse(request);
