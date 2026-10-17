@@ -13,6 +13,8 @@
     gtag('config', 'G-EEYPV4WGL4');
   </script>
   <meta charset="UTF-8" />
+  <link rel="canonical" href="https://queencityconnect.org/hub.html" />
+  <meta property="og:url" content="https://queencityconnect.org/hub.html" />
   <link rel="icon" href="favicon.ico?v=2" sizes="any" />
   <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png?v=2" />
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png?v=2" />
@@ -27,7 +29,8 @@
     content="Browse verified food, housing, health, youth, and career resources across the greater Charlotte area." />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Resource Hub | QueenCityConnect</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=hubfmt2" />
+  <link rel="stylesheet" href="assets/css/style.css?v=seo1" />
+  <link rel="stylesheet" href="assets/css/loader.css?v=1" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 
@@ -35,12 +38,14 @@
 
   <nav class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo"><img src="assets/images/logo.png?v=2" alt="" class="nav-logo-mark" width="32" height="32" /><span class="nav-logo-word">Queen<span>City</span>Connect</span></a>
+      <a href="/" class="nav-logo"><img src="assets/images/logo.png?v=2" alt="" class="nav-logo-mark" width="32" height="32" /><span class="nav-logo-word">Queen<span>City</span>Connect</span></a>
       <ul class="nav-links" id="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="hub.html">Resource Hub</a></li>
-        <li><a href="submit.html">Submit a Resource</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/hub.html">Resource Hub</a></li>
+        <li><a href="/neighborhood.html">Neighborhood Guide</a></li>
+        <li><a href="/submit.html">Submit a Resource</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/references.html">References</a></li>
       </ul>
       <div class="nav-right">
         <div class="nav-account" id="nav-account"></div>
@@ -55,6 +60,9 @@
       <span class="page-header-eyebrow">Greater Charlotte</span>
       <h1>Resource Hub</h1>
       <p>Find schools, clinics, volunteer sites, and career paths near you.</p>
+      <div class="hub-seo-intro">
+        <p>The QueenCityConnect Resource Hub is a free directory of community listings for Charlotte-Mecklenburg and nearby towns. Neighbors can browse food programs, housing and shelter contacts, health and mental-health services, youth and school programs, and volunteer or internship openings from one page. Each card is built from the site’s resource files and may include a name, category, short description, address, phone number, website, and hours when those details were available. Use the filters to narrow the list by category, by whether you want to volunteer, intern, or get help, or by a career area such as healthcare, teaching, or skilled trades. The interactive list and map load in your browser; the category index below is part of the HTML so the directory can be read without JavaScript. QueenCityConnect does not replace a hotline, hospital, or caseworker. Confirm hours, eligibility, and intake steps with the organization before you visit or call. If you know a listing we should add, use the submit page. The neighborhood guide can help you start from an area of town instead of a category.</p>
+      </div>
     </div>
     <button type="button" class="hub-filter-dropdown" id="hub-title-toggle" aria-expanded="false"
       aria-controls="hub-controls" onclick="toggleHubFilters()">
@@ -148,6 +156,7 @@
   </header>
 
   <div class="hub-scroll">
+  <!--HUB_CRAWL_INDEX-->
   <section class="hub-grid-section">
     <div class="container">
       <div id="list-view">
@@ -231,12 +240,14 @@
             </ul>
           </div>
           <div class="footer-col">
-            <h4>Resources</h4>
+            <h4>Explore</h4>
             <ul>
-              <li><a href="hub.html">Full Directory</a></li>
-              <li><a href="neighborhood.html">Neighborhood Guide</a></li>
-              <li><a href="hub.html?category=General%20Support">Get Involved</a></li>
-              <li><a href="submit.html">Add a Resource</a></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/hub.html">Resource Hub</a></li>
+              <li><a href="/neighborhood.html">Neighborhood Guide</a></li>
+              <li><a href="/submit.html">Submit a Resource</a></li>
+              <li><a href="/about.html">About</a></li>
+              <li><a href="/references.html">References</a></li>
             </ul>
           </div>
         </div>
@@ -321,6 +332,7 @@
       persistHubState();
     }
   </script>
+  <script src="assets/js/loader.js?v=1"></script>
 </body>
 
 </html>
